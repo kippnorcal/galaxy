@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  db:
+    restart: always
+    image: postgres:11
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - 5432
+  web:
+    restart: always
+    build: .
+    command: pipenv run python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+
+volumes:
+  postgres_data:
