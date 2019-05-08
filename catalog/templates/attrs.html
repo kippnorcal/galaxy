@@ -4,46 +4,29 @@
 
 {% if paint_logout %}
 {% if attributes %}
-<p>You have the following attributes:</p>
-<table class="table table-striped">
-    <thead>
-        <th>Name</th>
-        <th>Values</th>
-    </thead>
-    <tbody>
-        {% for attr in attributes %}
-        <tr>
-            <td>{{ attr.0 }}</td>
-            <td>
-                <ul class="list-unstyled">
-                    {% for val in attr.1 %}
-                    <li>{{ val }}</li>
-                    {% endfor %}
-                </ul>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="container">
+  <table class="table table-striped">
+      <thead>
+          <th>Name</th>
+          <th>Values</th>
+      </thead>
+      <tbody>
+        {% for key, value in attributes.items %}
+          <tr>
+            <td>{{ key }}</td>
+            <td>{{ value }}</td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+</div>
 {% else %}
 <div class="alert alert-danger" role="alert">You don't have any attributes</div>
-{% endif %}
-<a href="{% url "index" %}?slo" class="btn btn-danger">Logout</a>
-{% else %}
-<a href="{% url "index" %}?sso2" class="btn btn-primary">Login and access again to this page</a>
-{% endif %}
-
-<script type='text/javascript' src='https://tableau.kipp.org/javascripts/api/viz_v1.js'></script>
-<div class='tableauPlaceholder' style='width: 1000px; height: 850px;'>
-    <object class='tableauViz' width='1000' height='850' style='display:none;'>
-        <param name='host_url' value='https%3A%2F%2Ftableau.kipp.org%2F' />
-        <param name='embed_code_version' value='3' />
-        <param name='site_root' value='&#47;t&#47;Foundation' />
-        <param name='name' value='ACTDashboard&#47;SchoolGrowth' />
-        <param name='tabs' value='yes' />
-        <param name='toolbar' value='yes' />
-        <param name='showAppBanner' value='false' />
-    </object>
+  {% endif %}
+  <a href="{% url "index" %}?slo" class="btn btn-danger">Logout</a>
+  {% else %}
+  <a href="{% url "index" %}?sso2" class="btn btn-primary">Login and access again to this page</a>
+  {% endif %}
 </div>
 
 {% endblock %}

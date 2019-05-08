@@ -1,58 +1,32 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
-
-{% if errors %}
-<div class="alert alert-danger" role="alert">
-  <strong>Errors:</strong>
-  <ul class="list-unstyled">
-    {% for err in errors %}
-    <li>{{err}}</li>
-    {% endfor %}
-  </ul>
-  {% if error_reason %}
-  <p><b>Reason:</b> {{error_reason}}</p>
-  {% endif %}
+<div class="jumbotron jumbotron-fluid galaxy-banner">
+  <div class="container text-center">
+    <h1 class="text-white">Explore your data</h1>
+    <a href="{% url "index" %}?sso2" class="btn btn-lg btn-warning">Login</a>
+  </div>
 </div>
-{% endif %}
 
-{% if not_auth_warn %}
-<div class="alert alert-danger" role="alert">Not authenticated</div>
-{% endif %}
-
-{% if success_slo %}
-<div class="alert alert-success" role="alert">Successfully logged out</div>
-{% endif %}
-
-{% if paint_logout %}
-{% if attributes %}
-<table class="table table-striped">
-  <thead>
-    <th>Name</th>
-    <th>Values</th>
-  </thead>
-  <tbody>
-    {% for attr in attributes %}
-    <tr>
-      <td>{{ attr.0 }}</td>
-      <td>
-        <ul class="list-unstyled">
-          {% for val in attr.1 %}
-          <li>{{ val }}</li>
-          {% endfor %}
-        </ul>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<div class="alert alert-danger" role="alert">You don't have any attributes</div>
-{% endif %}
-<a href="{% url "index" %}?slo" class="btn btn-danger">Logout</a>
-{% else %}
-<a href="{% url "index" %}?sso" class="btn btn-primary">Login</a>
-<a href="{% url "index" %}?sso2" class="btn btn-info">Login and access to attrs page</a>
-{% endif %}
-
+<div class="container">
+  <div class="row">
+    <div class="col-sm-2 offset-sm-2 text-center">
+      <h1 class="text-warning">15</h1>
+      <h5 class="text-secondary">Schools</h5>
+    </div>
+    <div class="col-sm-2 text-center">
+      <h1 class="text-warning">5,718</h1>
+      <h5 class="text-secondary">Students Enrolled</h5>
+    </div>
+    <div class="col-sm-2 text-center">
+      <h1 class="text-warning">3,789</h1>
+      <h5 class="text-secondary">Total Alumni</h5>
+    </div>
+    <div class="col-sm-2 text-center">
+      <h1 class="text-warning">634</h1>
+      <h5 class="text-secondary">Team & Family <br>on a Mission</h5>
+    </div>
+  </div>
+  <img class="logo mx-auto d-block"  src="{% static "images/kipp_logo_primary.png" %}">
+</div>
 {% endblock %}

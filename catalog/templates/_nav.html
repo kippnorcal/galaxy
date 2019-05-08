@@ -1,0 +1,34 @@
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #255694">
+  <a class="navbar-brand" href="/"><strong>KIPP:</strong> Galaxy</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
+    <form class="form-inline">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+    </form>
+      <ul class="navbar-nav pl-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="profile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {% if attributes %}
+            {{ attributes.name }} 
+            <img class="avatar" src="{{ attributes.profile_pic }}">
+            {% else %}
+            Unknown
+            <i class="fas fa-user-circle"></i>
+            {% endif %}
+
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profile">
+            <a class="dropdown-item"><strong>Email:</strong>{{ attributes.email }}</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"><strong>Location:</strong> RSO</a>
+            <a class="dropdown-item"><strong>Role:</strong>{{ attributes.job }}</a>
+            <a class="dropdown-item"><strong>Department:</strong> Data &amp; Evaluation</a>
+          </div>
+        </li>
+      </ul>
+  </div>
+</nav>

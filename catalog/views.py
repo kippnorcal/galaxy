@@ -89,7 +89,14 @@ def index(request):
     if "samlUserdata" in request.session:
         paint_logout = True
         if len(request.session["samlUserdata"]) > 0:
-            attributes = request.session["samlUserdata"].items()
+            attrs = request.session["samlUserdata"].items()
+            attrs = dict(attrs)
+            attributes = {
+                'profile_pic': attrs['Profile Pic'][0],
+                'email': attrs['User.email'][0],
+                'name': f"{attrs['User.FirstName'][0]} {attrs['User.LastName'][0]}",
+                'job': attrs['Job Title'][0],
+            }
 
     return render(
         request,
@@ -112,7 +119,14 @@ def attrs(request):
     if "samlUserdata" in request.session:
         paint_logout = True
         if len(request.session["samlUserdata"]) > 0:
-            attributes = request.session["samlUserdata"].items()
+            attrs = request.session["samlUserdata"].items()
+            attrs = dict(attrs)
+            attributes = {
+                'profile_pic': attrs['Profile Pic'][0],
+                'email': attrs['User.email'][0],
+                'name': f"{attrs['User.FirstName'][0]} {attrs['User.LastName'][0]}",
+                'job': attrs['Job Title'][0],
+            }
     return render(
         request, "attrs.html", {"paint_logout": paint_logout, "attributes": attributes}
     )
