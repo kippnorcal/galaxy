@@ -124,4 +124,4 @@ STATICFILES_DIRS = (
 SAML_FOLDER = os.path.join(BASE_DIR, "saml")
 
 SESSION_ENGINE = "django.contrib.sessions.backends.file"
-
+TEST_RUNNER = "redgreenunittest.django.runner.RedGreenDiscoverRunner"
