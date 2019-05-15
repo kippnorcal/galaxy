@@ -12,7 +12,9 @@ from onelogin.saml2.utils import OneLogin_Saml2_Utils
 @csrf_exempt
 def index(request):
     attributes = None
+    # print(request.session.items())
     if "samlUserdata" in request.session:
+        print(True)
         paint_logout = True
         if len(request.session["samlUserdata"]) > 0:
             attrs = request.session["samlUserdata"].items()
@@ -23,7 +25,8 @@ def index(request):
                 'name': f"{attrs['User.FirstName'][0]} {attrs['User.LastName'][0]}",
                 'job': attrs['Job Title'][0],
             }
-    return render(request, "index.html", attributes)
+
+    return render(request, "index.html", {"attributes": attributes})
 
 
 def attrs(request):
