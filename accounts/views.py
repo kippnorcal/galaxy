@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseServerEr
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
+from django.contrib.auth import login, logout
 
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
 from onelogin.saml2.settings import OneLogin_Saml2_Settings
@@ -44,16 +45,20 @@ def get_saml_attributes(request):
             }
         return attributes
 
-def create_user(request):
+def find_or_create_user(request):
     attrs = get_saml_attributes(request)
-    if not User.objects.filter(email=attrs['email']).exists():
-        u = User(
+    if User.objects.filter(email=attrs['email']).exists():
+        user = User.objects.get(email=attrs['email'])
+    else:
+        user = User(
             username=attrs['username'],
             first_name=attrs['first_name'],
             last_name=attrs['last_name'],
             email=attrs['email']
         )
-        u.save()
+        user.save()
+    return user
+
 
 def metadata(request):
     saml_settings = OneLogin_Saml2_Settings(
@@ -68,14 +73,20 @@ def metadata(request):
         resp = HttpResponseServerError(content=", ".join(errors))
     return resp
 
-def login(request):
+def saml_login(request):
     auth = init_saml_auth(request)
     return HttpResponseRedirect(auth.login())
 
-def logout(request):
+def saml_logout(request):
     auth = init_saml_auth(request)
-    name_id = request.session["samlNameId"]
-    session_index = request.session["samlSessionIndex"]
+    name_id = None
+    session_index = None
+    if 'samlNameId' in request.session:
+        name_id = request.session['samlNameId']
+    if 'samlSessionIndex' in request.session:
+        session_index = request.session['samlSessionIndex']
+
+    logout(request)
     return HttpResponseRedirect(
         auth.logout(name_id=name_id, session_index=session_index)
     )
@@ -93,9 +104,10 @@ def acs(request):
         request.session["samlNameId"] = auth.get_nameid()
         request.session["samlSessionIndex"] = auth.get_session_index()
         base_url = OneLogin_Saml2_Utils.get_self_url(req)
-        create_user(request)
+        user = find_or_create_user(request)
+        login(request, user)
         return HttpResponseRedirect(
-            auth.redirect_to(f"{base_url}/attrs")
+            auth.redirect_to(f"{base_url}/profile")
         )
     else:
         if auth.get_settings().is_debug_active():

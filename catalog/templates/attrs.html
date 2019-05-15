@@ -15,7 +15,7 @@
     <li class="list-group-item"><strong>Job Title: </strong> {{ attributes.job }}</li>
   </ul>
   <div class="card-body">
-    <a href="{% url "index" %}?slo" class="btn btn-danger float-right">Logout</a>
+    <a href="{% url "logout" %}" class="btn btn-danger float-right">Logout</a>
   </div>
 </div>
 </div>
@@ -23,7 +23,7 @@
 <div class="alert alert-danger" role="alert">You don't have any attributes</div>
 {% endif %}
 {% else %}
-  <a href="{% url "index" %}?sso2" class="btn btn-primary">Login and access again to this page</a>
+  <a href="{% url "login" %}" class="btn btn-primary">Login and access again to this page</a>
 {% endif %}
 </div>
 
