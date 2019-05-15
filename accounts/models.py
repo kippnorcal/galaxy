@@ -36,7 +36,7 @@ class Job(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.PROTECT, blank=True, null=True)
-    employee_number =  models.IntegerField(blank=True)
+    employee_number =  models.CharField(max_length=5, blank=True)
     email = models.EmailField()
     job_title = models.ForeignKey(Job, on_delete=models.PROTECT, blank=True, null=True)
     site = models.ForeignKey(Site, on_delete=models.PROTECT, blank=True, null=True)

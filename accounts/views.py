@@ -10,6 +10,8 @@ from onelogin.saml2.auth import OneLogin_Saml2_Auth
 from onelogin.saml2.settings import OneLogin_Saml2_Settings
 from onelogin.saml2.utils import OneLogin_Saml2_Utils
 
+from .models import Profile
+
 
 def prepare_django_request(request):
     result = {
@@ -59,6 +61,20 @@ def find_or_create_user(request):
         user.save()
     return user
 
+def connect_profile(user):
+    if Profile.objects.filter(email__iexact=user.email).exists():
+        profile = Profile.objects.get(email__iexact=user.email)
+        profile.user = user
+        profile.save()
+
+def save_avatar(request, user):
+    attrs = get_saml_attributes(request)
+    try:
+        url = attrs['profile_pic']
+        user.profile.avatar_url = url
+        user.profile.save()
+    except:
+        pass
 
 def metadata(request):
     saml_settings = OneLogin_Saml2_Settings(
@@ -106,6 +122,8 @@ def acs(request):
         base_url = OneLogin_Saml2_Utils.get_self_url(req)
         user = find_or_create_user(request)
         login(request, user)
+        connect_profile(user)
+        save_avatar(request, user)
         return HttpResponseRedirect(
             auth.redirect_to(f"{base_url}/profile")
         )

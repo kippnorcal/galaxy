@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+  <div class="card col-sm-6 mr-auto ml-auto mt-3 pt-1">
+    <img class="card-img-top" style="border-radius: 50%; width: 175px; height: 175px; margin: auto;" src="{{ user.profile.avatar_url }}" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title text-center">{{ user.first_eame }} {{ user.last_name }}</h5>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item"><strong>Email: </strong>{{ user.email }}</li>
+      <li class="list-group-item"><strong>Employee Number: </strong>{{ user.profile.employee_number }}</li>
+      <li class="list-group-item"><strong>Job Title: </strong> {{ user.profile.job_title }}</li>
+    </ul>
+    <div class="card-body">
+      <a href="{% url "logout" %}" class="btn btn-danger float-right">Logout</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
