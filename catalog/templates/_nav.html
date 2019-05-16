@@ -19,12 +19,11 @@
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profile">
             <a class="dropdown-item"><strong>Email:</strong>{{ user.email }}</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item"><strong>Location:</strong> RSO</a>
+            <a class="dropdown-item"><strong>Location:</strong> {{ user.profile.site }}</a>
             <a class="dropdown-item"><strong>Role:</strong>{{ user.profile.job_title }}</a>
-            <a class="dropdown-item"><strong>Department:</strong> Data &amp; Evaluation</a>
-            <a class="dropdown-item text-center text-primary" href="{% url "profile" %}">View Profile</a>
-            <a class="dropdown-item text-center text-danger" href="{% url "logout" %}">Log out</a>
+            <div class="dropdown-divider"></div>
+            <a class="text-center btn btn-outline-primary mr-2 ml-3" href="{% url "profile" %}">View Profile</a>
+            <a class="float-right text-center btn btn-outline-danger mr-3 ml-3" href="{% url "logout" %}">Log out</a>
           </div>
         </li>
       </ul>
