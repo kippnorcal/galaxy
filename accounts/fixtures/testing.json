@@ -5,5 +5,20 @@
 		"fields": {
 			"name": "Test Role"
 		}
+	},
+	{
+		"model": "accounts.site",
+		"pk": 1,
+		"fields": {
+			"name": "Test Site"
+		}
+	},
+	{
+		"model": "accounts.job",
+		"pk": 1,
+		"fields": {
+			"name": "Test Site",
+			"role": 1
+		}
 	}
 ]
