@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="jumbotron jumbotron-fluid galaxy-banner">
+  <div class="container text-center">
+    <h1 class="text-white">Explore your data</h1>
+    <a href="{% url "login" %}" class="btn btn-lg btn-warning">Login</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-2 offset-sm-2 text-center">
+      <h1 class="text-warning">15</h1>
+      <h5 class="text-secondary">Schools</h5>
+    </div>
+    <div class="col-sm-2 text-center">
+      <h1 class="text-warning">5,718</h1>
+      <h5 class="text-secondary">Students Enrolled</h5>
+    </div>
+    <div class="col-sm-2 text-center">
+      <h1 class="text-warning">3,789</h1>
+      <h5 class="text-secondary">Total Alumni</h5>
+    </div>
+    <div class="col-sm-2 text-center">
+      <h1 class="text-warning">634</h1>
+      <h5 class="text-secondary">Team & Family <br>on a Mission</h5>
+    </div>
+  </div>
+  <img class="logo mx-auto d-block"  src="{% static "images/kipp_logo_primary.png" %}">
+</div>
+{% endblock %}
