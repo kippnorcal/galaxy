@@ -13,6 +13,7 @@ class Category(models.Model):
 
     class Meta:
         ordering = ('name',)
+        verbose_name_plural = "categories"
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -29,6 +30,7 @@ class SubCategory(models.Model):
 
     class Meta:
         ordering = ('name',)
+        verbose_name_plural = "subcategories"
 
 
 class SubCategoryAdmin(admin.ModelAdmin):
