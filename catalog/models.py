@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.forms.models import ModelChoiceField
 from urllib.parse import urlparse
 from accounts.models import Role, Site
@@ -134,3 +135,27 @@ class FavoriteAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'user', 'report', 'timestamp')
     list_filter = ('timestamp',)
     search_fields = ['user', 'report']
+
+
+class Feedback(models.Model):
+    score = models.IntegerField(validators=[
+        MaxValueValidator(5),
+        MinValueValidator(1)
+    ])
+    comment = models.TextField(blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    report = models.ForeignKey(Report, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.report} -- {self.user.get_full_name()}'
+
+    class Meta:
+        ordering = ('report', 'user', 'timestamp',)
+        verbose_name_plural = 'feedback'
+
+
+class FeedbackAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'score', 'timestamp',)
+    list_filter = ('score', 'report',)
+    search_fields = ['report__name', 'user__first_name', 'user__last_name']
