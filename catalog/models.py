@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.forms.models import ModelChoiceField
 from urllib.parse import urlparse
 from accounts.models import Role, Site
 
@@ -106,3 +107,12 @@ class ReportAdmin(admin.ModelAdmin):
         'category',
         'subcategory',
     )
+
+    search_fields = ['name', 'category__name']
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'owner':
+            queryset = User.objects.filter(is_staff=True)
+            return ModelChoiceField(queryset, initial=request.user)
+        else:
+            return super(ReportAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
