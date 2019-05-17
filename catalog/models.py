@@ -29,5 +29,5 @@ class SubCategory(models.Model):
         ordering = ('name',)
 
 
-class CategoryAdmin(admin.ModelAdmin):
+class SubCategoryAdmin(admin.ModelAdmin):
     list_filter = ('is_active',)

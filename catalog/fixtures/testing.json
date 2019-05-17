@@ -1,0 +1,17 @@
+[
+	{
+		"model": "catalog.category",
+		"pk": 1,
+		"fields": {
+			"name": "Test Category"
+		}
+	},
+	{
+		"model": "catalog.subcategory",
+		"pk": 1,
+		"fields": {
+			"name": "Test SubCategory",
+			"category": 1
+		}
+	}
+]
