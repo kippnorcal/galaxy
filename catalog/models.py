@@ -39,6 +39,17 @@ class SubCategoryAdmin(admin.ModelAdmin):
     list_filter = ('is_active',)
 
 
+class ReportManager(models.Manager):
+    def get_queryset(self):
+        return super()>get_queryset().filter(is_active=True)
+
+    def for_user(self, user):
+        return self.get_queryset().filter(
+            roles=user.profile.job_title.role,
+            sites=user.profile.site
+        )
+
+
 class Report(models.Model):
     def roles_default():
         return Role.objects.all()
