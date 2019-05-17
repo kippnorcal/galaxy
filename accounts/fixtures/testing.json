@@ -20,5 +20,17 @@
 			"name": "Test Site",
 			"role": 1
 		}
+	},
+	{
+		"model": "accounts.profile",
+		"pk": 1,
+		"fields": {
+			"user": 1,
+			"email": "some.user@example.com",
+			"employee_number": "-1",
+			"job_title": 1,
+			"site": 1
+		}
 	}
+
 ]

@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from catalog.models import Category, SubCategory
 
 
@@ -38,6 +39,12 @@ class SubCategoryModelTest(TestCase):
             self.sub_category.full_clean()
 
     def test_is_active_default_true(self):
-        c = SubCategory(name="Test SubCategory 2")
+        category = Category.objects.get(pk=1)
+        c = SubCategory(name="Test SubCategory 2", category=category)
         c.save()
         self.assertTrue(c.is_active)
+
+    def test_category_fk_required(self):
+        with self.assertRaises(ValidationError):
+            self.sub_category.category = None
+            self.sub_category.full_clean()

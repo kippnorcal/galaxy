@@ -43,7 +43,7 @@ class SubCategoryAdmin(admin.ModelAdmin):
 
 class ReportManager(models.Manager):
     def get_queryset(self):
-        return super()>get_queryset().filter(is_active=True)
+        return super().get_queryset().filter(is_active=True)
 
     def for_user(self, user):
         return self.get_queryset().filter(
@@ -75,6 +75,9 @@ class Report(models.Model):
 	limit_choices_to={'is_staff': True}
     )
 
+    objects = models.Manager()
+    active = ReportManager()
+
     def __str__(self):
         return self.name
 
@@ -87,11 +90,11 @@ class Report(models.Model):
 
     def embed_name(self):
         # Substring everything after views/
-        return self.path.split('views/')[1]
+        return self.path().split('views/')[1]
 
     def site_root(self):
         # Substring between site/ and the next /
-        site_root = self.path.split('site/')[1].split('/')[0]
+        site_root = self.path().split('site/')[1].split('/')[0]
         return f"/t/{site_root}"
 
 

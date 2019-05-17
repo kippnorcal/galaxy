@@ -13,5 +13,37 @@
 			"name": "Test SubCategory",
 			"category": 1
 		}
+	},
+	{
+		"model": "catalog.report",
+		"pk": 1,
+		"fields": {
+			"name": "Test Report 1",
+			"url": "https://tableau/#/site/Test/views/TestWorkbook/TestWorkSheet",
+			"category": 1,
+			"subcategory": 1,
+			"description": "This is a test description"
+		}
+	},
+	{
+		"model": "catalog.report",
+		"pk": 2,
+		"fields": {
+			"name": "Test Report 2",
+			"url": "https://tableau/#/site/Test/views/TestWorkbook/TestWorkSheet2",
+			"category": 1,
+			"subcategory": 1,
+			"description": "This is a test description",
+			"is_active": "False"
+		}
+	},
+	{
+        	"model": "auth.user",
+        	"pk": 1,
+        	"fields": {
+            		"password": "pbkdf2_sha256$100000$kGH9JTSNboqT$vDQwd/ntedfHV8TupSWTPa9AaqG7NPUxzcNXdjkpnvM=",
+            		"username": "some_user",
+	    		"email": "some.user@example.com"
 	}
+    }
 ]
