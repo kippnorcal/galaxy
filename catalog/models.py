@@ -131,6 +131,6 @@ class Favorite(models.Model):
 
 
 class FavoriteAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'user', 'dashboard', 'timestamp')
+    list_display = ('__str__', 'user', 'report', 'timestamp')
     list_filter = ('timestamp',)
-    search_fields = ['user', 'dashboard']
+    search_fields = ['user', 'report']
