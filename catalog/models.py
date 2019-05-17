@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib import admin
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from urllib.parse import urlparse
 from accounts.models import Role, Site
 
@@ -53,6 +55,12 @@ class Report(models.Model):
     sites = models.ManyToManyField(Site, default=sites_default)
     is_active = models.BooleanField(default=True)
     is_embedded = models.BooleanField(default=True)
+    owner = models.ForeignKey(
+	User,
+	on_delete=models.PROTECT,
+	null=True,
+	limit_choices_to={'is_staff': True}
+    )
 
     def __str__(self):
         return self.name
