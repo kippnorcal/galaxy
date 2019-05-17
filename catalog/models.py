@@ -116,3 +116,21 @@ class ReportAdmin(admin.ModelAdmin):
             return ModelChoiceField(queryset, initial=request.user)
         else:
             return super(ReportAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    report = models.ForeignKey(Report, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.id}'
+
+    class Meta:
+        ordering = ('-timestamp',)
+
+
+class FavoriteAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'user', 'dashboard', 'timestamp')
+    list_filter = ('timestamp',)
+    search_fields = ['user', 'dashboard']
