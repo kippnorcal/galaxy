@@ -57,18 +57,18 @@ $ docker-compose up
 ### Running Database Migrations
 
 ```
-$ docker-compose run web pipenv run python manage.py migrate
+$ docker-compose run web python manage.py migrate
 ```
 
 ### Create a superuser
 
 ```
-$ docker-compose run web pipenv run python manage.py createsuperuser
+$ docker-compose run web python manage.py createsuperuser
 ```
 
 ### Running Tests
 
 ```
-$ docker-compose run web pipenv run python manage.py test
+$ docker-compose run web python manage.py test
 ```
 
