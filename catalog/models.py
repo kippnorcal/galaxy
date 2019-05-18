@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.forms.models import ModelChoiceField
 from urllib.parse import urlparse
-from accounts.models import Role, Site
+from accounts.models import Role, Site, Profile
 
 
 class Category(models.Model):
@@ -61,8 +61,8 @@ class Report(models.Model):
 
     name = models.CharField(max_length=255)
     url = models.CharField(max_length=2000)
-    category = models.ForeignKey(Category, on_delete=models.PROTECT, blank=True)
-    subcategory = models.ForeignKey(SubCategory, on_delete=models.PROTECT, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, null=True, blank=True)
+    subcategory = models.ForeignKey(SubCategory, on_delete=models.PROTECT, null=True, blank=True)
     description= models.TextField(blank=True)
     roles = models.ManyToManyField(Role, default=roles_default)
     sites = models.ManyToManyField(Site, default=sites_default)
@@ -123,21 +123,22 @@ class ReportAdmin(admin.ModelAdmin):
 
 
 class Favorite(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     report = models.ForeignKey(Report, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.id}'
+        return f"{self.profile.user} <3 {self.report}"
 
     class Meta:
         ordering = ('-timestamp',)
+        unique_together = ['profile', 'report']
 
 
 class FavoriteAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'user', 'report', 'timestamp')
+    list_display = ('__str__', 'profile', 'report', 'timestamp')
     list_filter = ('timestamp',)
-    search_fields = ['user', 'report']
+    search_fields = ['profile', 'report']
 
 
 class Feedback(models.Model):

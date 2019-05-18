@@ -3,23 +3,57 @@
 {% block content %}
 
 <div class="container">
-  <div class="card col-sm-6 mr-auto ml-auto mt-3 pt-1">
-    <img class="card-img-top" style="border-radius: 50%; width: 175px; height: 175px; margin: auto;" src="{{ user.profile.avatar_url }}" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title text-center">{{ user.first_name }} {{ user.last_name }}</h5>
-    </div>
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item"><strong>Email: </strong>{{ user.email }}</li>
-      <li class="list-group-item"><strong>Employee Number: </strong>{{ user.profile.employee_number }}</li>
-      <li class="list-group-item"><strong>Job Title: </strong> {{ user.profile.job_title }}</li>
-      <li class="list-group-item"><strong>Role: </strong> {{ user.profile.job_title.role }}</li>
-      <li class="list-group-item"><strong>Location: </strong> {{ user.profile.site }}</li>
-      <li class="list-group-item"><strong>Last Login: </strong> {{ user.last_login }}</li>
+  <div class="row">
+  <div class="col-sm-6 mt-3 pt-5">
+    <img  class="avatar_lg"  src="{{ profile.avatar_url }}" alt="user avatar">
+    <h3 class="card-title text-center pt-3">{{ user.first_name }} {{ user.last_name }}</h3>
+    <h6 class="text-center text-muted">{{ profile.job_title }}</h6>
+    <ul class="list-unstyled pt-3">
+      <hr class="col-sm-3">
+      <li class="text-center"><i class="fas fa-map-marker-alt pr-3"></i>{{ profile.site }}</li>
+      <li class="text-center"><i class="far fa-envelope pr-3"></i><a href="mailto:{{ profile.email }}">{{ profile.email}}</a></li>
+      <li class="text-center"><i class="far fa-user-circle pr-3"></i>{{ profile.job_title.role }}</li>
+      <li class="text-center"><i class="far fa-clock pr-3"></i>{{ user.last_login }}</li>
     </ul>
-    <div class="card-body">
-      <a href="{% url "logout" %}" class="btn btn-danger float-right">Logout</a>
-    </div>
   </div>
+  <div class="col-sm-6 pt-5">
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab" aria-controls="favorites" aria-selected="true"><i class="fas fa-heart"></i> Favorites</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="recent-tab" data-toggle="tab" href="#recent" role="tab" aria-controls="recent" aria-selected="false"><i class="fas fa-eye"></i> Recently Viewed</a>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
+    <ul class="list-group">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Report</th>
+            <th scope="col">Category</th>
+            <th scope="col">Timestamp</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for favorite in favorites %}
+          <tr>
+              <td><a href="{{ favorite.report.url }}">{{ favorite.report.name }}</a></td>
+              <td>{{ favorite.report.category }}</td>
+              <td>{{ favorite.timestamp }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </ul>
+  </div>
+  <div class="tab-pane fade" id="recent" role="tabpanel" aria-labelledby="recent-tab">
+  </div>
+</div>
+  </div>
+</div>
+
 </div>
 
 {% endblock %}
