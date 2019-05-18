@@ -9,7 +9,7 @@ from onelogin.saml2.auth import OneLogin_Saml2_Auth
 from onelogin.saml2.settings import OneLogin_Saml2_Settings
 from onelogin.saml2.utils import OneLogin_Saml2_Utils
 
-from .models import Favorite
+from .models import Favorite, Report
 
 
 @csrf_exempt
@@ -21,3 +21,8 @@ def profile(request):
     profile = request.user.profile
     favorites = Favorite.objects.filter(profile=profile)
     return render(request, "profile.html", {"profile": profile, "favorites": favorites})
+
+@login_required(login_url='/login')
+def report(request, report_id):
+    report = Report.objects.get(pk=report_id)
+    return render(request, "report.html", {"report": report})
