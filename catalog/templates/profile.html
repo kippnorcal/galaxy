@@ -4,7 +4,7 @@
 
 <div class="container">
   <div class="row">
-  <div class="col-sm-6 mt-3 pt-5">
+  <div class="col-sm-4 mt-3 pt-5">
     <img  class="avatar_lg"  src="{{ profile.avatar_url }}" alt="user avatar">
     <h3 class="card-title text-center pt-3">{{ user.first_name }} {{ user.last_name }}</h3>
     <h6 class="text-center text-muted">{{ profile.job_title }}</h6>
@@ -16,7 +16,7 @@
       <li class="text-center"><i class="far fa-clock pr-3"></i>{{ user.last_login }}</li>
     </ul>
   </div>
-  <div class="col-sm-6 pt-5">
+  <div class="col-sm-8 pt-5">
 <ul class="nav nav-tabs" id="myTab" role="tablist">
   <li class="nav-item">
     <a class="nav-link active" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab" aria-controls="favorites" aria-selected="true"><i class="fas fa-heart"></i> Favorites</a>
@@ -39,7 +39,7 @@
         <tbody>
         {% for favorite in favorites %}
           <tr>
-              <td><a href="{{ favorite.report.url }}">{{ favorite.report.name }}</a></td>
+              <td><a href="{% url "report" favorite.report.id %}">{{ favorite.report.name }}</a></td>
               <td>{{ favorite.report.category }}</td>
               <td>{{ favorite.timestamp }}</td>
           </tr>

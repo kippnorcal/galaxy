@@ -5,14 +5,33 @@
       <div class="col-sm-9">
         <h2 class="text-muted">{{ report.name }}</h2>
       </div>
+      <div class="col-sm-3 text-right">
+        <button type="button" onclick="openNav()" class="btn btn-primary btn-circle">
+          <i class="fas fa-info"></i>
+        </button>
+      </div>
     </div>
   </div>
 
   <div class="container pb-3">
     {% include "_tableau_iframe.html" %}
   </div>
+
+  {% include "_sidepanel.html" %}
+
 {% endblock %}
 
 {% block scripts %}
   <script type='text/javascript' src='https://stg-tableau.kipp.org/javascripts/api/viz_v1.js'></script>
+  <script>
+    /* Set the width of the side navigation to 250px */
+    function openNav() {
+      document.getElementById("side-panel").style.width = "35%";
+    }
+
+    /* Set the width of the side navigation to 0 */
+    function closeNav() {
+      document.getElementById("side-panel").style.width = "0";
+    }
+  </script>
 {% endblock %}
