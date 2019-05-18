@@ -41,6 +41,7 @@ class Profile(models.Model):
     job_title = models.ForeignKey(Job, on_delete=models.PROTECT, blank=True, null=True)
     site = models.ForeignKey(Site, on_delete=models.PROTECT, blank=True, null=True)
     avatar_url = models.URLField(max_length=2000, blank=True)
+    favorites = models.ManyToManyField('catalog.Report', through='catalog.Favorite')
 
     def __str__(self):
         return self.email
