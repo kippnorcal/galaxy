@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseServerError
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 
@@ -24,5 +24,5 @@ def profile(request):
 
 @login_required(login_url='/login')
 def report(request, report_id):
-    report = Report.objects.get(pk=report_id)
+    report = get_object_or_404(Report, pk=report_id, is_embedded=True)
     return render(request, "report.html", {"report": report})

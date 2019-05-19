@@ -1,3 +1,7 @@
+.navbar-dark {
+  background-color: #255694 !important;
+}
+
 .galaxy-banner{
    background: url('/static/images/galaxy.png') no-repeat center;
    background-size: cover;
