@@ -50,6 +50,7 @@
     font-size: 0.95em;
     line-height: 1.42857;
 }
+
 /* The side navigation menu */
 .sidenav {
   height: 100%; /* 100% Full-height */
@@ -62,6 +63,10 @@
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 60px; /* Place content 60px from the top */
   transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+.btn-collapse {
+  font-size: 1.1em !important;
 }
 
 /* The navigation menu links */
@@ -99,3 +104,4 @@
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
 }
+

@@ -6,6 +6,7 @@
         <h4 class="pl-3 text-info">{{ report.name }}</h4>
       </div>
     </div>
+    
     <div class="row">
       <div class="col-sm-12 mt-3">
         <span class="pl-3 badge badge-light">{{ report.category }}</span>
@@ -13,12 +14,14 @@
         <i class="pl-3 far fa-comment fa-lg text-primary"></i>
       </div>
     </div>
+    
     <div class="row">
       <div class="col-sm-12 mt-3">
         <p class="pl-3 text-secondary">{{ report.description }}</p>
       </div>
       <hr class="col-sm-10">
     </div>
+    
     <div class="row">
       <div class="col-sm-3 offset-sm-1">
         <img class="avatar_md" src="{{ report.owner.profile.avatar_url }}">
@@ -28,26 +31,42 @@
         <span class="text-muted small">{{ report.owner.profile.job_title }}</span>
       </div>
     </div>
+    
     <div class="row mt-5 pl-5">
       <div class="col-sm-12 text-info">
-        <i class="fa fa-heart"></i> favorited by {{ report.favorited_by.count }}
+        <i class="fa fa-heart"></i> favorited by <span class="badge badge-pill badge-info">3</span>
       </div>
       <div class="col-sm-12 text-info">
-        <i class="far fa-user"></i> recently viewed by {{ report.viewed_by.count }}
+        <i class="far fa-user"></i> recently viewed by <span class="badge badge-pill badge-info">10</span> 
       </div>
       <div class="col-sm-12 text-info">
-        <i class="fas fa-chart-pie"></i> average feedback score {{ report.feedback.avg }}
+        <i class="fas fa-chart-pie"></i> average feedback score <span class="badge badge-pill badge-info">4.2 <i class="far fa-smile"></i></span> 
       </div>
     </div>
-      <hr class="col-sm-10">
-      <div class="col-sm-12 text-info">
-        <i class="fas fa-user-tag"></i>Visible to:
-      </div>
-      <div class="col-sm12 pl-3">
-        {% for role in report.roles.all %}
-        <span class="badge badge-light">{{ role }}</span>
-        {% endfor %}
-      </div>
+
+    <hr class="col-sm-10">
+
+    <div class="col-sm-12 pl-3">
+        <a class="btn-collapse text-info" data-toggle="collapse" href="#visible-to" aria-expanded="false" aria-controls="visible-to">
+          <i class="fas fa-user-tag"></i> visible to roles 
+        </a>
+        <div class="collapse pl-3" id="visible-to">
+          {% for role in report.roles.all %}
+            <span class="badge badge-light">{{ role }}</span>
+          {% endfor %}
+        </div>
+    </div>
+      
+    <div class="col-sm-12 pl-3">
+        <a class="btn-collapse text-info" data-toggle="collapse" href="#popular-with" aria-expanded="false" aria-controls="popular-with">
+          <i class="fas fa-fire"></i> popular with roles
+        </a>
+        <div class="collapse pl-3" id="popular-with">
+          {% for role in report.roles.all|slice:"0:4" %}
+            <span class="badge badge-light">{{ role }}</span>
+          {% endfor %}
+        </div>
+    </div>
 
   </div>
 </div> 
