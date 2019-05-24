@@ -109,3 +109,10 @@
   .sidenav a {font-size: 18px;}
 }
 
+.feedback-btn {
+  cursor: pointer;
+}
+
+#comments, label[for="comments"] {
+  display: none;
+}
