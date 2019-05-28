@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseServerEr
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+from django.db.models import Avg
 
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
 from onelogin.saml2.settings import OneLogin_Saml2_Settings
@@ -28,8 +29,11 @@ def report(request, report_id):
     report = get_object_or_404(Report, pk=report_id, is_embedded=True)
     context = { "report": report }
     feedback = Feedback.objects.filter(user=request.user).filter(report=report_id).last()
+    avg_feedback = Feedback.objects.filter(report=report_id).aggregate(Avg('score'))
     if feedback:
         context["feedback"] = feedback
+    if avg_feedback:
+        context["avg_feedback"] = round(avg_feedback['score__avg'], 1)
 
     return render(request, "report.html", context)
 
@@ -46,7 +50,9 @@ def feedback_form(request, report_id):
         try:
             feedback.full_clean()
             feedback.save()
-            return JsonResponse({'success': True, 'score':request.POST['score']})
+            avg_feedback = Feedback.objects.filter(report=report_id).aggregate(Avg('score'))
+            avg_feedback = round(avg_feedback['score__avg'], 1)
+            return JsonResponse({'success': True, 'score':request.POST['score'], 'avg_feedback': avg_feedback})
         except ValidationError as e:
             message = dict(e)
             if message.get('score'):

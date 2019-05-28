@@ -10,6 +10,6 @@
     id="sentiment{{ score }}" 
     value="{{ score }}" 
     required> 
-  <i class="far {{ score|sentiment_icon }} fa-3x" data-toggle="tooltip" title="{{ score|sentiment }}"></i>
+  <i class=" sentiment-icon far {{ score|sentiment_icon }} {{ score|sentiment_color }} fa-3x" data-toggle="tooltip" title="{{ score|sentiment }}"></i>
 </label>
 

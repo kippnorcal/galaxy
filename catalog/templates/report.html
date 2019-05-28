@@ -36,22 +36,19 @@
   </script>
   <script>
       $('.feedback-btn').click(function(){
-        $('.feedback-btn').removeClass('text-success text-danger text-warning');
+        $('.sentiment-icon').removeClass('fas').addClass('far');
         commentLabel = $('label[for="comments"]');
         commentLabel.show();
         $('#comments').show();
+        $(this).find('i.far').removeClass('far').addClass('fas');
         score = $(this).find('[name="score"]').val();
         if(score > 3){
           commentLabel.text("What do you like about this report?");
-          $(this).toggleClass('text-success');
         } else if(score < 3){
           commentLabel.text("How could this report be better?");
-          $(this).toggleClass('text-danger');
         } else {
           commentLabel.text("Optional comments:");
-          $(this).toggleClass('text-warning');
         }
-        
       });
 
 
@@ -72,6 +69,7 @@
               $('.fa-comment').removeClass('far').addClass('fas');
               $('.score-badge').text(response['score']);
               $('.score-badge').removeAttr('hidden');
+              $('.avg-feedback').text(response['avg_feedback']);
             }
             if(response['error']){
               $('.alert').prepend("<strong>Error</strong> Something went wrong.");
