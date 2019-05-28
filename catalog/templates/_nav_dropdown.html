@@ -1,0 +1,17 @@
+<ul class="navbar-nav pl-5">
+  {% for category in categories %}
+    <li class="nav-item dropdown">
+      <a class="text-white nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {{ category.name }}
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+      {% for report in reports %}
+      {% if report.category == category %}
+      <a class="dropdown-item text-secondary small" href="{% url "report" report.id %}">{{ report.name }}</a>
+      {% endif %}
+      {% endfor %}
+    </div>
+    </li>
+    {% endfor %}
+</ul>
+
