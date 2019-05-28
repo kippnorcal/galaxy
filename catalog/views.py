@@ -11,8 +11,13 @@ from onelogin.saml2.auth import OneLogin_Saml2_Auth
 from onelogin.saml2.settings import OneLogin_Saml2_Settings
 from onelogin.saml2.utils import OneLogin_Saml2_Utils
 
-from .models import Favorite, Feedback, Report
+from .models import Favorite, Feedback, Report, Category
 
+def navbar(request):
+    categories = Category.objects.all().order_by('id')
+    reports = Report.active.all()
+    context = {"categories": categories, "reports": reports}
+    return context
 
 @csrf_exempt
 def index(request):
