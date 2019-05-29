@@ -1,3 +1,11 @@
+.fav-icon {
+  display: inline;
+}
+
+#favoriteform {
+  display: inline;
+}
+
 .navbar-dark {
   background-color: #255694 !important;
 }

@@ -32,7 +32,8 @@ def profile(request):
 @login_required(login_url='/login')
 def report(request, report_id):
     report = get_object_or_404(Report, pk=report_id, is_embedded=True)
-    context = { "report": report }
+    favorite = Favorite.objects.filter(report=report_id, profile=request.user.profile).exists()
+    context = { "report": report, "favorite": favorite }
     feedback = Feedback.objects.filter(user=request.user).filter(report=report_id).last()
     avg_feedback = Feedback.objects.filter(report=report_id).aggregate(Avg('score'))
     if feedback:
@@ -44,7 +45,6 @@ def report(request, report_id):
 
 @login_required
 def feedback_form(request, report_id):
-    print(request.method)
     if request.method == 'POST':
         feedback = Feedback(
             user=request.user,
@@ -63,4 +63,16 @@ def feedback_form(request, report_id):
             if message.get('score'):
                 errors = str(message.get('score')[0])
                 return JsonResponse({'error': errors})
+    raise PermissionDenied
+
+
+@login_required
+def favorite_form(request, report_id):
+    if request.method == 'POST':
+        favorite = Favorite.objects.filter(profile=request.user.profile, report=report_id).exists()
+        if favorite:
+            Favorite.objects.filter(profile=request.user.profile, report=report_id).delete()
+        else:
+            Favorite.objects.create(profile=request.user.profile, report_id=report_id)
+        return JsonResponse({'success': True})
     raise PermissionDenied
