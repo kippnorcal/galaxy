@@ -82,7 +82,8 @@ def favorite_form(request, report_id):
 @login_required
 def search(request):
     if request.method == 'POST':
+        search_term = request.POST['search-term']
         reports = Report.objects.annotate(search=SearchVector('name', 'category', 'description'),
-).filter(search=request.POST['search-term'])
-        context = { "reports": reports }
+).filter(search=search_term)
+        context = { "reports": reports, "search_term": search_term }
         return render(request, "search.html", context)
