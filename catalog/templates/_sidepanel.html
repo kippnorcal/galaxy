@@ -15,17 +15,7 @@
     <div class="row">
       <div class="col-sm-12 mt-3">
         <span class="pl-3 badge badge-light">{{ report.category }}</span>
-        <div class="fav-icon">
-          <form id="favoriteform" method="POST" action="{% url 'favorite_form' report.id %}">
-            {% csrf_token %}
-          {% if favorite %}
-            <i class="fav-btn pl-3 fas fa-heart fa-lg text-danger"></i>
-          </form>
-          {% else %}
-            <i class="fav-btn pl-3 far fa-heart fa-lg text-danger"></i>
-          </form>
-          {% endif %}
-        </div>
+        {% include "_favorite_button.html" %}
         {% include "_feedback_button.html" %}
       </div>
     </div>
