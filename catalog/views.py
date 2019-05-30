@@ -32,8 +32,9 @@ def profile(request):
 @login_required(login_url='/login')
 def report(request, report_id):
     report = get_object_or_404(Report, pk=report_id, is_embedded=True)
-    favorite = Favorite.objects.filter(report=report_id, profile=request.user.profile).exists()
-    context = { "report": report, "favorite": favorite }
+    is_favorite = Favorite.objects.filter(report=report_id, profile=request.user.profile).exists()
+    favorited_by = Favorite.objects.filter(report=report_id).count()
+    context = { "report": report, "is_favorite": is_favorite, "favorited_by": favorited_by }
     feedback = Feedback.objects.filter(user=request.user).filter(report=report_id).last()
     avg_feedback = Feedback.objects.filter(report=report_id).aggregate(Avg('score'))
     if feedback:

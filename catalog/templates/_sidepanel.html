@@ -39,14 +39,17 @@
     
     <div class="row mt-5 pl-5">
       <div class="col-sm-12 text-info">
-        <i class="fa fa-heart"></i> favorited by <span class="badge badge-pill badge-info">3</span>
+        <i class="fa fa-heart"></i> favorited by <span class="badge badge-pill badge-info">{{ favorited_by }}</span>
       </div>
       <div class="col-sm-12 text-info">
         <i class="far fa-user"></i> recently viewed by <span class="badge badge-pill badge-info">10</span> 
       </div>
       {% if avg_feedback %}
       <div class="col-sm-12 text-info">
-        <i class="fas {{ avg_feedback|sentiment_icon}} {{ avg_feedback|sentiment_color}}"></i> average feedback score <span class="avg-feedback badge badge-pill badge-info">{{ avg_feedback }}</span> 
+        <i class="fas fa-chart-pie"></i> average feedback score <span class="avg-feedback badge badge-pill badge-info">{{ avg_feedback }}</span> 
+      </div>
+      <div class="col-sm-12 text-info">
+        <i class="fas {{ feedback.score|sentiment_icon}}"></i> your feedback score <span class="avg-feedback badge badge-pill badge-info">{{ feedback.score }}</span> 
       </div>
       {% endif %}
     </div>
