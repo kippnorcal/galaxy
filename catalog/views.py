@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
+from django.contrib.postgres.search import SearchVector
 
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
 from onelogin.saml2.settings import OneLogin_Saml2_Settings
@@ -77,3 +78,12 @@ def favorite_form(request, report_id):
             Favorite.objects.create(profile=request.user.profile, report_id=report_id)
         return JsonResponse({'success': True})
     raise PermissionDenied
+
+@login_required
+def search(request):
+    if request.method == 'POST':
+        search_term = request.POST['search-term']
+        reports = Report.objects.annotate(search=SearchVector('name', 'category', 'description'),
+).filter(search=search_term)
+        context = { "reports": reports, "search_term": search_term }
+        return render(request, "search.html", context)
