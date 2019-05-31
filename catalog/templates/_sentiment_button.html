@@ -1,0 +1,15 @@
+{% load feedback_helpers %}
+<label class="feedback-btn btn col-sm-2 {% if score == 1 %}offset-sm-1{% endif %}" 
+  id="sentiment-label{{ score }}" 
+  for="sentiment{{ score }}"
+  data-delay="50"
+  data-position="bottom"
+  data-tooltip="{{ score|sentiment }}">
+  <input type="radio" 
+    name="score" 
+    id="sentiment{{ score }}" 
+    value="{{ score }}" 
+    required> 
+  <i class=" sentiment-icon far {{ score|sentiment_icon }} {{ score|sentiment_color }} fa-3x" data-toggle="tooltip" title="{{ score|sentiment }}"></i>
+</label>
+

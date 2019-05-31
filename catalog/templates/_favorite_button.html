@@ -1,0 +1,11 @@
+<div class="fav-icon">
+  <form id="favoriteform" method="POST" action="{% url 'favorite_form' report.id %}">
+    {% csrf_token %}
+    {% if is_favorite %}
+      <i class="fav-btn pl-3 fas fa-heart fa-lg text-danger"></i>
+    {% else %}
+      <i class="fav-btn pl-3 far fa-heart fa-lg text-danger"></i>
+    {% endif %}
+  </form>
+</div>
+
