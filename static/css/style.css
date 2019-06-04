@@ -2,6 +2,10 @@
   display: inline;
 }
 
+.fav-btn {
+   cursor: pointer;
+ }
+
 #favoriteform {
   display: inline;
 }
