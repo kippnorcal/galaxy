@@ -8,6 +8,7 @@ $('.fav-btn').click(function(event){
     success: function(response){
       if(response['success']){
         $('.fav-btn').toggleClass('far').toggleClass('fas');
+        $('.fav-badge').text(response['favorited_by']);
       }
     },
     error: function(request, status, error){
