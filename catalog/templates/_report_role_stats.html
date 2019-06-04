@@ -1,0 +1,11 @@
+<div class="col-sm-12 pl-3">
+  <a class="btn-collapse text-info" data-toggle="collapse" href="#{{ collapse_id }}" aria-expanded="false" aria-controls="{{ collapse_id }}">
+    <i class="{{ icon_type }}"></i> {{ collapse_title }} 
+  </a>
+  <div class="collapse pl-3" id="{{ collapse_id }}">
+    {% for role in roles %}
+      <span class="badge badge-light">{{ role }}</span>
+    {% endfor %}
+  </div>
+</div>
+

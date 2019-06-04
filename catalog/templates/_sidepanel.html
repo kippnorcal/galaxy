@@ -7,11 +7,8 @@
         <h4 class="pl-3 text-info">{{ report.name }}</h4>
       </div>
     </div>
-    <div class="alert alert-dismissible fade show" hidden role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div> 
+    {% include "_alert.html" %}
+    <!--Interactive Buttons-->
     <div class="row">
       <div class="col-sm-12 mt-3">
         <span class="pl-3 badge badge-light">{{ report.category }}</span>
@@ -19,64 +16,32 @@
         {% include "_feedback_button.html" %}
       </div>
     </div>
-    
+    <!--Report description -->
     <div class="row">
       <div class="col-sm-12 mt-3">
         <p class="pl-3 text-secondary">{{ report.description }}</p>
       </div>
       <hr class="col-sm-10">
     </div>
-    
+    <!--Report owner-->
     <div class="row">
-      <div class="col-sm-3 offset-sm-1">
-        <img class="avatar_md" src="{{ report.owner.profile.avatar_url }}">
-      </div>
-      <div class="col-sm-8">
-        <h6 class="text-info">{{ report.owner.first_name }} {{ report.owner.last_name}}</h6>
-        <span class="text-muted small">{{ report.owner.profile.job_title }}</span>
-      </div>
+      {% include "_report_owner_info.html" %}
     </div>
-    
+    <!--Report stats -->
     <div class="row mt-5 pl-5">
-      <div class="col-sm-12 text-info">
-        <i class="fa fa-heart"></i> favorited by <span class="badge badge-pill badge-info">{{ favorited_by }}</span>
-      </div>
-      <div class="col-sm-12 text-info">
-        <i class="far fa-user"></i> recently viewed by <span class="badge badge-pill badge-info">10</span> 
-      </div>
+      {% include "_report_stats.html" with icon_type="fa fa-heart" info_title="favorited by" badge_class="fav-badge" info_value=favorited_by %}
+      {% include "_report_stats.html" with icon_type="far fa-user" info_title="recently viewed by" badge_class="view-count-badge" info_value=10 %}
       {% if avg_feedback %}
-      <div class="col-sm-12 text-info">
-        <i class="fas fa-chart-pie"></i> average feedback score <span class="avg-feedback badge badge-pill badge-info">{{ avg_feedback }}</span> 
-      </div>
-      <div class="col-sm-12 text-info">
-        <i class="fas {{ feedback.score|sentiment_icon}}"></i> your feedback score <span class="score-badge badge badge-pill badge-info">{{ feedback.score }}</span> 
-      </div>
+        {% include "_report_stats.html" with icon_type="fas fa-chart-pie" info_title="average feedback score" badge_class="avg-feedback" info_value=avg_feedback %}
+        {% include "_report_stats.html" with icon_type="fas {{ feedback.score|sentiment_icon }}" info_title="your feedback score" badge_class="score-badge" info_value=feedback.score %}
       {% endif %}
     </div>
 
     <hr class="col-sm-10">
-
-    <div class="col-sm-12 pl-3">
-        <a class="btn-collapse text-info" data-toggle="collapse" href="#visible-to" aria-expanded="false" aria-controls="visible-to">
-          <i class="fas fa-user-tag"></i> visible to roles 
-        </a>
-        <div class="collapse pl-3" id="visible-to">
-          {% for role in report.roles.all %}
-            <span class="badge badge-light">{{ role }}</span>
-          {% endfor %}
-        </div>
-    </div>
-      
-    <div class="col-sm-12 pl-3">
-        <a class="btn-collapse text-info" data-toggle="collapse" href="#popular-with" aria-expanded="false" aria-controls="popular-with">
-          <i class="fas fa-fire"></i> popular with roles
-        </a>
-        <div class="collapse pl-3" id="popular-with">
-          {% for role in report.roles.all|slice:"0:4" %}
-            <span class="badge badge-light">{{ role }}</span>
-          {% endfor %}
-        </div>
-    </div>
+    <!--Report visibility-->
+    {% include "_report_role_stats.html" with collapse_id="visible-to" icon_type="fas fa-user-tag" collapse_title="visible to roles" roles=report.roles.all %}
+    <!--Report popularity -->
+    {% include "_report_role_stats.html" with collapse_id="popular-with" icon_type="fas fa-fire" collapse_title="popular with roles" roles=report.roles.all|slice:"0:4" %}
 
   </div>
 </div> 
