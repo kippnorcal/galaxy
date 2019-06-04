@@ -76,7 +76,8 @@ def favorite_form(request, report_id):
             Favorite.objects.filter(profile=request.user.profile, report=report_id).delete()
         else:
             Favorite.objects.create(profile=request.user.profile, report_id=report_id)
-        return JsonResponse({'success': True})
+        favorited_by = Favorite.objects.filter(report=report_id).count()
+        return JsonResponse({'success': True, 'favorited_by': favorited_by})
     raise PermissionDenied
 
 @login_required
