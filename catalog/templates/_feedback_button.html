@@ -1,32 +1,30 @@
 <i class="feedback-btn pl-3 {{ feedback|yesno:"fas,far" }} fa-comment fa-lg text-primary" data-toggle="collapse" data-target="#feedback-form" aria-expanded="false" aria-controls="feedback-form"></i>
 <div class="collapse" id="feedback-form">
   <div class="card">
-  <div class="card-header">
-    Give us Feedback!
-  </div>
-  <form id="feedbackform" method="POST" action="{% url 'feedback_form' report.id %}">
-  <div class="card-body">
-      {% csrf_token %}
-      <div class="form_group">
-        <label>Rating:</label>
-        <div class="row">
-          <div class="btn-group btn-group-toggle" data-toggle="buttons">
-          {% for i in "xxxxx" %}
-            {% include "_sentiment_button.html" with score=forloop.counter %}
-            {% endfor %}
+    <div class="card-header">Give us Feedback!</div>
+    <form id="feedbackform" method="POST" action="{% url 'feedback_form' report.id %}">
+      <div class="card-body">
+        {% csrf_token %}
+        <div class="form_group">
+          <label>Rating:</label>
+          <div class="row">
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+              {% for i in "xxxxx" %}
+                {% include "_sentiment_button.html" with score=forloop.counter %}
+              {% endfor %}
+            </div>
           </div>
         </div>
+        <div class="form-group">
+          <label for="comments">Comments:</label>
+          <textarea class="form-control" name="comment" id="comments" rows="3"></textarea>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="comments">Comments:</label>
-        <textarea class="form-control" name="comment" id="comments" rows="3"></textarea>
-      </div>
-  </div>
-  <div class="card-footer">
+      <div class="card-footer">
         <button type="button" class="btn btn-secondary" data-toggle="collapse" data-target="#feedback-form">Close</button>
         <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
   </div>
-  </form>
-</div>
 </div>
 
