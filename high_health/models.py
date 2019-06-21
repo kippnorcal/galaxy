@@ -63,6 +63,7 @@ class Measure(models.Model):
     )
     value = models.DecimalField(max_digits=5, decimal_places=2)
     date = models.DateField(default=datetime.date.today)
+    is_current = models.BooleanField(default=True)
 
     @property
     def year(self):
