@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from catalog.models import Report
 from accounts.models import Site
@@ -15,69 +16,49 @@ class EssentialQuestion(models.Model):
 
 
 class Metric(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
-    essential_question = models.ForeignKey(EssentialQuestion, on_delete=models.PROTECT, null=True, blank=True)
-    report = models.ForeignKey(Report, on_delete=models.SET_NULL, null=True, blank=True)
-    modified = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        ordering = ('name',)
-
-
-class SchoolLevel(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        ordering = ('name',)
-
-
-class School(models.Model):
-    name = models.CharField(max_length=100)
-    school_level = models.ForeignKey(SchoolLevel, on_delete=models.PROTECT, null=True, blank=True)
-    site = models.ForeignKey(Site, on_delete=models.SET_NULL, null=True, blank=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        ordering = ('name',)
-
-
-class Goal(models.Model):
     goal_type_choices = [
         ("ABOVE", "above"),
         ("BELOW", "below"),
     ]
-    goal_type = models.CharField(max_length=5, choices=goal_type_choices)
-    metric = models.ForeignKey(Metric, on_delete=models.PROTECT)
-    school = models.ForeignKey(School, on_delete=models.PROTECT)
-    value = models.DecimalField(max_digits=5, decimal_places=2)
-    date = models.DateTimeField(auto_now=True)
+    name = models.CharField(max_length=100)
+    definition = models.TextField(blank=True)
+    essential_question = models.ForeignKey(
+        EssentialQuestion,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+    )
+    performance_goal = models.DecimalField(max_digits=5, decimal_places=2, default=100)
+    growth_goal = models.IntegerField(default=0)
+    goal_type = models.CharField(max_length=5, choices=goal_type_choices, default=goal_type_choices[0][0])
+    report = models.ForeignKey(
+        Report,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    date = models.DateField(default=datetime.date.today)
 
     @property
     def year(self):
         return self.date.year
 
     def __str__(self):
-        return f"{self.year} {self.school}: {self.metric}"
+        return self.name
 
     class Meta:
-        ordering = ['-date', 'school', 'metric',]
+        ordering = ('name',)
 
 
 class Measure(models.Model):
     metric = models.ForeignKey(Metric, on_delete=models.PROTECT)
-    school = models.ForeignKey(School, on_delete=models.PROTECT)
+    school = models.ForeignKey(
+        Site,
+        on_delete=models.PROTECT,
+        limit_choices_to={'is_school': True},
+    )
     value = models.DecimalField(max_digits=5, decimal_places=2)
-    goal = models.ForeignKey(Goal, on_delete=models.SET_NULL, null=True, blank=True)
-    date = models.DateTimeField(auto_now=True)
+    date = models.DateField(default=datetime.date.today)
 
     @property
     def year(self):
