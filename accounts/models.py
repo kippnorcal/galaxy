@@ -13,18 +13,19 @@ class Role(models.Model):
         ordering = ('name',)
 
 
+class SchoolLevel(models.Model):
+    name = models.CharField(max_length=2)
+
+    def __str__(self):
+        return self.name
+
+
 class Site(models.Model):
-    school_level_choices = [
-        ('ES', 'ES'),
-        ('MS', 'MS'),
-        ('K8', 'K8'),
-        ('HS', 'HS'),
-    ]
     name = models.CharField(max_length=100)
     is_school = models.BooleanField(default=True)
-    school_level = models.CharField(
-        max_length=2,
-        choices=school_level_choices,
+    school_level = models.ForeignKey(
+        SchoolLevel,
+        on_delete=models.PROTECT,
         null=True,
         blank=True,
     )
@@ -37,7 +38,7 @@ class Site(models.Model):
 
 
 class SiteAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'school_level',)
+    list_display = ('__str__',)
     list_filter = ('is_school', 'school_level')
 
 
