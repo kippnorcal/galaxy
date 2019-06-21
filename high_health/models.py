@@ -1,7 +1,7 @@
 import datetime
 from django.db import models
 from catalog.models import Report
-from accounts.models import Site
+from accounts.models import Site, SchoolLevel
 
 
 class EssentialQuestion(models.Model):
@@ -16,6 +16,9 @@ class EssentialQuestion(models.Model):
 
 
 class Metric(models.Model):
+    def school_level_default():
+        return SchoolLevel.objects.all()
+
     goal_type_choices = [
         ("ABOVE", "above"),
         ("BELOW", "below"),
@@ -28,6 +31,7 @@ class Metric(models.Model):
         null=True,
         blank=True,
     )
+    school_level = models.ManyToManyField(SchoolLevel, default=school_level_default)
     performance_goal = models.DecimalField(max_digits=5, decimal_places=2, default=100)
     growth_goal = models.IntegerField(default=0)
     goal_type = models.CharField(max_length=5, choices=goal_type_choices, default=goal_type_choices[0][0])
