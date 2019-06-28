@@ -1,5 +1,6 @@
 import datetime
 from django.db import models
+from django.contrib import admin
 from catalog.models import Report
 from accounts.models import Site, SchoolLevel
 
@@ -53,6 +54,10 @@ class Metric(models.Model):
     class Meta:
         ordering = ('name',)
 
+class MetricAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'year',)
+    list_filter = ('school_level', 'date',)
+
 
 class Measure(models.Model):
     metric = models.ForeignKey(Metric, on_delete=models.PROTECT)
@@ -78,3 +83,7 @@ class Measure(models.Model):
 
     class Meta:
         ordering = ['-date', 'school', 'metric']
+
+class MeasureAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'value', 'is_current',)
+    list_filter = ('metric', 'school', 'is_current', 'date',)
