@@ -1,7 +1,9 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 <div class="pt-3 container">
+  <meta id="search-id" data-search="{{ search_id }}">
   <h1 class="text-muted pb-3">Search Results for: <span class="small">"{{ search_term }}"</small></h1>
   <ul>
     {% if reports %}
@@ -15,3 +17,6 @@
 </div>
 {% endblock %}
 
+{% block scripts %}
+<script src="{% static "js/search_click.js" %}"></script>
+{% endblock %}

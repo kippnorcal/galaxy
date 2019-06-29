@@ -13,6 +13,7 @@ from onelogin.saml2.settings import OneLogin_Saml2_Settings
 from onelogin.saml2.utils import OneLogin_Saml2_Utils
 
 from .models import Favorite, Feedback, Report, Category
+from analytics.models import Search
 
 def navbar(request):
     categories = Category.objects.all().order_by('id')
@@ -84,7 +85,12 @@ def favorite_form(request, report_id):
 def search(request):
     if request.method == 'POST':
         search_term = request.POST['search-term']
+        tracking = Search(
+            user=request.user,
+            search_term=search_term,
+        )
+        tracking.save()
         reports = Report.objects.annotate(search=SearchVector('name', 'category', 'description'),
 ).filter(search=search_term)
-        context = { "reports": reports, "search_term": search_term }
+        context = { "reports": reports, "search_term": search_term, 'search_id': tracking.id }
         return render(request, "search.html", context)
