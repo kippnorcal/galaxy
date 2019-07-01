@@ -47,3 +47,22 @@ class Search(models.Model):
 class SearchAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'user', 'search_timestamp',)
     list_search = ('search_term',)
+
+
+class Login(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+    )
+    referrer = models.CharField(max_length=255, null=True, blank=True)
+    user_agent = models.CharField(max_length=255, null=True, blank=True)
+    ip_address = models.CharField(max_length=255, null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} - {self.timestamp}"
+
+    class Meta:
+        ordering = ('-timestamp',)
