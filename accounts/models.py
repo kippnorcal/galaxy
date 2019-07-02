@@ -13,8 +13,22 @@ class Role(models.Model):
         ordering = ('name',)
 
 
+class SchoolLevel(models.Model):
+    name = models.CharField(max_length=2)
+
+    def __str__(self):
+        return self.name
+
+
 class Site(models.Model):
     name = models.CharField(max_length=100)
+    is_school = models.BooleanField(default=True)
+    school_level = models.ForeignKey(
+        SchoolLevel,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
         return self.name
@@ -23,9 +37,19 @@ class Site(models.Model):
         ordering = ('name',)
 
 
+class SiteAdmin(admin.ModelAdmin):
+    list_display = ('__str__',)
+    list_filter = ('is_school', 'school_level')
+
+
 class Job(models.Model):
     name = models.CharField(max_length=100)
-    role = models.ForeignKey(Role, on_delete=models.PROTECT, blank=True, null=True)
+    role = models.ForeignKey(
+        Role,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return self.name
@@ -35,11 +59,26 @@ class Job(models.Model):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.PROTECT, blank=True, null=True)
+    user = models.OneToOneField(
+        User,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+    )
     employee_number =  models.CharField(max_length=5, blank=True)
     email = models.EmailField()
-    job_title = models.ForeignKey(Job, on_delete=models.PROTECT, blank=True, null=True)
-    site = models.ForeignKey(Site, on_delete=models.PROTECT, blank=True, null=True)
+    job_title = models.ForeignKey(
+        Job,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+    )
+    site = models.ForeignKey(
+        Site,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+    )
     avatar_url = models.URLField(max_length=2000, blank=True)
     favorites = models.ManyToManyField('catalog.Report', through='catalog.Favorite')
 
