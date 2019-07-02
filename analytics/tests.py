@@ -84,3 +84,40 @@ class SearchModelTest(TestCase):
         except ValidationError:
             self.fail('Null click through timestamp should not throw validation error')
 
+
+class LoginModelTest(TestCase):
+    fixtures = ['testing']
+
+    def setUp(self):
+        self.user = User.objects.get(pk=1)
+        self.login = Login.objects.get(pk=1)
+
+    def test_string_representation(self):
+        self.assertEqual(str(self.login), "some_user - 2019-07-01 00:00:00+00:00")
+
+    def test_user_can_be_null(self):
+        self.login.user = None
+        try:
+            self.login.full_clean()
+        except ValidationError:
+            self.fail('Null user should not throw validation error')
+
+    def test_referrer_max_length_255(self):
+        with self.assertRaises(ValidationError):
+            self.login.referrer = 'x' * 256
+            self.login.full_clean()
+
+    def test_user_agent_max_length_255(self):
+        with self.assertRaises(ValidationError):
+            self.login.user_agent = 'x' * 256
+            self.login.full_clean()
+
+    def test_ip_address_max_length_255(self):
+        with self.assertRaises(ValidationError):
+            self.login.ip_address = 'x' * 256
+            self.login.full_clean()
+
+    def test_timestamp_auto_set(self):
+        login = Login(user=self.user)
+        login.save()
+        self.assertNotEqual(login.timestamp, None)
