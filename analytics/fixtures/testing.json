@@ -1,0 +1,11 @@
+[
+	{
+		"model": "analytics.pageview",
+		"pk": 1,
+		"fields": {
+			"user": 1,
+			"page": "/test",
+			"timestamp": "2019-07-01T00:00:00.00Z"
+		}
+	}
+]
