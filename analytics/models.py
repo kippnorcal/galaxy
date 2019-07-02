@@ -30,6 +30,7 @@ class Search(models.Model):
         User,
         on_delete=models.PROTECT,
         null=True,
+        blank=True,
     )
     search_term = models.CharField(max_length=255)
     search_timestamp = models.DateTimeField(auto_now_add=True)
