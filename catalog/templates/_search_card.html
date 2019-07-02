@@ -1,6 +1,6 @@
 <div class="card">
   <div class="card-body">
-    <h5 class="card-title text-primary"><a href="{% url 'report' report.id %}">{{ report.name }}</a></h5>
+    <h5 class="card-title text-primary"><a class="search_link" href="{% url 'report' report.id %}">{{ report.name }}</a></h5>
     <h6 class="card-subtitle mb-2 text-muted"><span class="badge badge-light">{{ report.category }}</span></h6>
     <p class="card-text">{{ report.description }}</p>
     <span class="text-info"><i class="fas fa-user-tag"></i> Audience(s)</span>

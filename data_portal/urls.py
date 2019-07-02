@@ -21,4 +21,5 @@ urlpatterns = [
     path('', include('catalog.urls')),
     path('', include('accounts.urls')),
     path('', include('high_health.urls')),
+    path('', include('analytics.urls')),
 ]

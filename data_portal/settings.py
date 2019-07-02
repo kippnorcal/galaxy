@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "catalog.apps.CatalogConfig",
     "accounts.apps.AccountsConfig",
     "high_health.apps.HighHealthConfig",
+    "analytics.apps.AnalyticsConfig",
 ]
 
 MIDDLEWARE = [
