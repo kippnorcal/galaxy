@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load high_health_helpers %}
+{% load humanize %}
+
+{% block content %}
+  <div class="container pt-3">
+    <h1>High Health</h1>
+
+    <table class="table table-hover">
+      <thead>
+        <tr class="small text-center">
+          <th>EQ</th>
+          <th>Metric</th>
+          <th>Updated</th>
+          {% for school in schools %}
+            <th>{{ school }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for metric in metrics %}
+          <tr>
+            <td class="text-center">{{ metric.metric.essential_question }}</td>
+            <td>
+              <a href="{% if metric.metric.report %}{% url "report" metric.metric.report.id %}{% endif %}">
+                {{ metric.metric }}
+              </a>
+            </td>
+            <td class="text-center">
+              <span class="small text-muted">
+                {{ metric.last_updated|naturalday }}
+              </span>
+            </td>
+            {% for measure in metric.measures %}
+              {% if measure.measure is None %}
+                <td class="text-center">
+                  <span class="text-{{ measure.measure|goal_format }}">
+                    NA
+                  </span>
+                </td>
+              {% else %}
+                <td class="text-center">
+                  <span class="text-{{ measure.measure|goal_format }}">
+                    {{ measure.measure.value|stringformat:'d' }}%
+                  </span>
+                </td>
+              {% endif %}
+            {% endfor %} 
+          </tr>
+          {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

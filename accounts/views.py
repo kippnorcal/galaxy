@@ -11,6 +11,7 @@ from onelogin.saml2.settings import OneLogin_Saml2_Settings
 from onelogin.saml2.utils import OneLogin_Saml2_Utils
 
 from .models import Profile
+from analytics.models import Login
 
 
 def prepare_django_request(request):
@@ -122,6 +123,14 @@ def acs(request):
         base_url = OneLogin_Saml2_Utils.get_self_url(req)
         user = find_or_create_user(request)
         login(request, user)
+        tracking = Login(
+            user=request.user,
+            referrer=request.META.get('HTTP_REFERER'),
+            user_agent=request.META.get('HTTP_USER_AGENT'),
+            ip_address=request.META.get('REMOTE_ADDR'),
+        )
+        tracking.full_clean()
+        tracking.save()
         connect_profile(user)
         save_avatar(request, user)
         return HttpResponseRedirect(
