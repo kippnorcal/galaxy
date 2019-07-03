@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load high_health_helpers %}
 {% load humanize %}
+{% load static %}
 
 {% block content %}
   <div class="container pt-3">
@@ -20,11 +21,14 @@
       <tbody>
         {% for metric in metrics %}
           <tr>
-            <td class="text-center">{{ metric.metric.essential_question }}</td>
+            <td class="text-center eq" data-toggle="popover" title="{{ metric.metric.essential_question }}" data-content="{{ metric.metric.essential_question.description }}">
+              {{ metric.metric.essential_question }}
+            </td>
             <td>
               <a href="{% if metric.metric.report %}{% url "report" metric.metric.report.id %}{% endif %}">
                 {{ metric.metric }}
               </a>
+              <i class="fas fa-info-circle text-primary pl-2 metric-def" data-toggle="popover" title="{{ metric.metric }}" data-content="{{ metric.metric.definition }}"></i>
             </td>
             <td class="text-center">
               <span class="small text-muted">
@@ -51,4 +55,8 @@
       </tbody>
     </table>
   </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static "js/hh_popover.js" %}"></script>
 {% endblock %}
