@@ -1,9 +1,9 @@
 $(function () {
   $('.metric-def').popover({
-    container: 'body'
+    trigger: 'hover'
   });
 
   $('.eq').popover({
-    container: 'body'
+    trigger: 'hover'
   });
 });
