@@ -72,3 +72,9 @@ $ docker-compose run web python manage.py createsuperuser
 $ docker-compose run web python manage.py test
 ```
 
+### Collect static files for production
+
+```
+$ docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear
+```
+
