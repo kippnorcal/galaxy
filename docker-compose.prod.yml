@@ -20,8 +20,10 @@ services:
       - 1337:80
     volumes:
       - static_volume:/code/staticfiles
+      - static_data:/code/static
     depends_on:
       - web
     
 volumes:
   static_volume:
+  static_data:
