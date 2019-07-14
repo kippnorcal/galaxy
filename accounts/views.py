@@ -19,7 +19,6 @@ def prepare_django_request(request):
         "https": "on" if request.is_secure() else "off",
         "http_host": request.META["HTTP_HOST"],
         "script_name": request.META["PATH_INFO"],
-        "server_port": request.META["SERVER_PORT"],
         "get_data": request.GET.copy(),
         "post_data": request.POST.copy(),
     }
@@ -31,6 +30,7 @@ def init_saml_auth(request):
     auth = OneLogin_Saml2_Auth(req, custom_base_path=settings.SAML_FOLDER)
     return auth
 
+
 def get_saml_attributes(request):
     if "samlUserdata" in request.session:
         paint_logout = True
@@ -38,28 +38,30 @@ def get_saml_attributes(request):
             attrs = request.session["samlUserdata"].items()
             attrs = dict(attrs)
             attributes = {
-                'profile_pic': attrs['Profile Pic'][0],
-                'email': attrs['User.email'][0],
-                'first_name': attrs['User.FirstName'][0],
-                'last_name': attrs['User.LastName'][0],
-                'job': attrs['Job Title'][0],
-                'username': attrs['PersonImmutableID'][0],
+                "profile_pic": attrs["Profile Pic"][0],
+                "email": attrs["User.email"][0],
+                "first_name": attrs["User.FirstName"][0],
+                "last_name": attrs["User.LastName"][0],
+                "job": attrs["Job Title"][0],
+                "username": attrs["PersonImmutableID"][0],
             }
         return attributes
 
+
 def find_or_create_user(request):
     attrs = get_saml_attributes(request)
-    if User.objects.filter(email=attrs['email']).exists():
-        user = User.objects.get(email=attrs['email'])
+    if User.objects.filter(email=attrs["email"]).exists():
+        user = User.objects.get(email=attrs["email"])
     else:
         user = User(
-            username=attrs['username'],
-            first_name=attrs['first_name'],
-            last_name=attrs['last_name'],
-            email=attrs['email']
+            username=attrs["username"],
+            first_name=attrs["first_name"],
+            last_name=attrs["last_name"],
+            email=attrs["email"],
         )
         user.save()
     return user
+
 
 def connect_profile(user):
     if Profile.objects.filter(email__iexact=user.email).exists():
@@ -67,14 +69,16 @@ def connect_profile(user):
         profile.user = user
         profile.save()
 
+
 def save_avatar(request, user):
     attrs = get_saml_attributes(request)
     try:
-        url = attrs['profile_pic']
+        url = attrs["profile_pic"]
         user.profile.avatar_url = url
         user.profile.save()
     except:
         pass
+
 
 def metadata(request):
     saml_settings = OneLogin_Saml2_Settings(
@@ -89,33 +93,37 @@ def metadata(request):
         resp = HttpResponseServerError(content=", ".join(errors))
     return resp
 
+
 def saml_login(request):
     auth = init_saml_auth(request)
     return HttpResponseRedirect(auth.login())
+
 
 def saml_logout(request):
     auth = init_saml_auth(request)
     name_id = None
     session_index = None
-    if 'samlNameId' in request.session:
-        name_id = request.session['samlNameId']
-    if 'samlSessionIndex' in request.session:
-        session_index = request.session['samlSessionIndex']
+    if "samlNameId" in request.session:
+        name_id = request.session["samlNameId"]
+    if "samlSessionIndex" in request.session:
+        session_index = request.session["samlSessionIndex"]
 
     logout(request)
     return HttpResponseRedirect(
         auth.logout(name_id=name_id, session_index=session_index)
     )
 
+
 def track_login(request, user):
     tracking = Login(
         user=user,
-        referrer=request.META.get('HTTP_REFERER'),
-        user_agent=request.META.get('HTTP_USER_AGENT'),
-        ip_address=request.META.get('REMOTE_ADDR'),
+        referrer=request.META.get("HTTP_REFERER"),
+        user_agent=request.META.get("HTTP_USER_AGENT"),
+        ip_address=request.META.get("REMOTE_ADDR"),
     )
     tracking.full_clean()
     tracking.save()
+
 
 @csrf_exempt
 def acs(request):
@@ -135,11 +143,8 @@ def acs(request):
         track_login(request, user)
         connect_profile(user)
         save_avatar(request, user)
-        return HttpResponseRedirect(
-            auth.redirect_to(f"{base_url}/profile")
-        )
+        return HttpResponseRedirect(auth.redirect_to(f"{base_url}/profile"))
     else:
         if auth.get_settings().is_debug_active():
             error_reason = auth.get_last_error_reason()
-
 

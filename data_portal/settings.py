@@ -122,10 +122,7 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = "/staticfiles/"
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-    os.path.join(BASE_DIR, "staticfiles"),
-)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 SAML_FOLDER = os.path.join(BASE_DIR, "saml")
 
 SESSION_ENGINE = "django.contrib.sessions.backends.file"
