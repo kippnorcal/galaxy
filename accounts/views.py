@@ -31,6 +31,13 @@ def init_saml_auth(request):
     return auth
 
 
+def get_first_attr(dict, key):
+    if dict.get(key):
+        return dict[key][0]
+    else:
+        return None
+
+
 def get_saml_attributes(request):
     if "samlUserdata" in request.session:
         paint_logout = True
@@ -38,12 +45,12 @@ def get_saml_attributes(request):
             attrs = request.session["samlUserdata"].items()
             attrs = dict(attrs)
             attributes = {
-                "profile_pic": attrs["Profile Pic"][0],
-                "email": attrs["User.email"][0],
-                "first_name": attrs["User.FirstName"][0],
-                "last_name": attrs["User.LastName"][0],
-                "job": attrs["Job Title"][0],
-                "username": attrs["PersonImmutableID"][0],
+                "profile_pic": get_first_attr(attrs, "Profile Pic"),
+                "email": get_first_attr(attrs, "User.email"),
+                "first_name": get_first_attr(attrs, "User.FirstName"),
+                "last_name": get_first_attr(attrs, "User.LastName"),
+                "job": get_first_attr(attrs, "Job Title"),
+                "username": get_first_attr(attrs, "PersonImmutableID"),
             }
         return attributes
 
