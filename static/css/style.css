@@ -57,6 +57,18 @@
   display: block;
 }
 
+.avatar_empty {
+  vertical-align: middle;
+  margin: auto;
+  display: block;
+}
+
+.profile-pic-link {
+  margin: auto;
+  display: block;
+  text-align: center;
+}
+
 .btn-circle {
     width: 2.75em;
     height: 2.75em;

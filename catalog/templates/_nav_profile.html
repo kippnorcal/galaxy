@@ -1,9 +1,16 @@
 <ul class="navbar-nav pl-auto">
   <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" id="profile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="profile" role="button" data-toggle="dropdown" aria-haspopup="true"
+      aria-expanded="false">
       {{ user.first_name }} {{ user.last_name }}
+      {% if user.profile.avatar_url %}
       <img class="avatar" src="{{ user.profile.avatar_url }}">
-
+      {% else %}
+      <span class="fa-stack fa-lg">
+        <i class="far fa-circle fa-stack-2x"></i>
+        <i class="fas fa-user-astronaut fa-stack-1x"></i>
+      </span>
+      {% endif %}
     </a>
     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profile">
       <a class="dropdown-item"><strong>Email:</strong>{{ user.email }}</a>
