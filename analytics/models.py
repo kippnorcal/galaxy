@@ -1,15 +1,11 @@
+from urllib.parse import urlparse
 from django.db import models
 from django.contrib import admin
 from django.contrib.auth.models import User
 
 
 class PageView(models.Model):
-    user = models.ForeignKey(
-        User,
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-    )
+    user = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
     page = models.CharField(max_length=255)
     timestamp = models.DateTimeField(auto_now_add=True)
 
@@ -17,21 +13,16 @@ class PageView(models.Model):
         return f"{self.page}"
 
     class Meta:
-        ordering = ('-timestamp',)
+        ordering = ("-timestamp",)
 
 
 class PageViewAdmin(admin.ModelAdmin):
-    list_filter = ('user', 'page',)
-    list_display = ('__str__', 'user', 'timestamp',)
+    list_filter = ("user", "page")
+    list_display = ("__str__", "user", "timestamp")
 
 
 class Search(models.Model):
-    user = models.ForeignKey(
-        User,
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-    )
+    user = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
     search_term = models.CharField(max_length=255)
     search_timestamp = models.DateTimeField(auto_now_add=True)
     destination = models.CharField(max_length=255, null=True, blank=True)
@@ -41,21 +32,17 @@ class Search(models.Model):
         return f"{self.search_term}"
 
     class Meta:
-        ordering = ('-search_timestamp',)
+        ordering = ("-search_timestamp",)
         verbose_name_plural = "searches"
 
+
 class SearchAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'user', 'search_timestamp',)
-    list_search = ('search_term',)
+    list_display = ("__str__", "user", "search_timestamp")
+    list_search = ("search_term",)
 
 
 class Login(models.Model):
-    user = models.ForeignKey(
-        User,
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-    )
+    user = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
     referrer = models.CharField(max_length=255, null=True, blank=True)
     user_agent = models.CharField(max_length=255, null=True, blank=True)
     ip_address = models.CharField(max_length=255, null=True, blank=True)
@@ -65,4 +52,4 @@ class Login(models.Model):
         return f"{self.user} - {self.timestamp}"
 
     class Meta:
-        ordering = ('-timestamp',)
+        ordering = ("-timestamp",)

@@ -1,59 +1,104 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 
 <div class="container">
   <div class="row">
-  <div class="col-sm-4 mt-3 pt-5">
-    <img  class="avatar_lg"  src="{{ profile.avatar_url }}" alt="user avatar">
-    <h3 class="card-title text-center pt-3">{{ user.first_name }} {{ user.last_name }}</h3>
-    <h6 class="text-center text-muted">{{ profile.job_title }}</h6>
-    <ul class="list-unstyled pt-3">
-      <hr class="col-sm-3">
-      <li class="text-center"><i class="fas fa-map-marker-alt pr-3"></i>{{ profile.site }}</li>
-      <li class="text-center"><i class="far fa-envelope pr-3"></i><a href="mailto:{{ profile.email }}">{{ profile.email}}</a></li>
-      <li class="text-center"><i class="far fa-user-circle pr-3"></i>{{ profile.job_title.role }}</li>
-      <li class="text-center"><i class="far fa-clock pr-3"></i>{{ user.last_login }}</li>
-    </ul>
+    <div class="col-sm-4 mt-3 pt-5">
+      {% if profile.avatar_url %}
+      <a href="https://kipp.onelogin.com/profile" target="_blank">
+        <img class="avatar_lg" src="{{ profile.avatar_url }}" alt="user avatar">
+      </a>
+      {% else %}
+      <span class="profile-pic-link">
+        <a href="https://kipp.onelogin.com/profile" target="_blank" data-toggle="tooltip" data-placement="bottom"
+          title="Change your KIPP Onelogin profile pic and then log back in to Galaxy.">
+          <i class="text-primary fas fa-plus"></i> add profile pic
+
+          <span class="text-primary fa-stack avatar_empty fa-6x">
+            <i class="far fa-circle fa-stack-2x"></i>
+            <i class="fas fa-user-astronaut fa-stack-1x"></i>
+          </span>
+        </a>
+      </span>
+
+      {% endif %}
+      <h3 class="card-title text-center pt-3">{{ user.first_name }} {{ user.last_name }}</h3>
+      <h6 class="text-center text-muted">{{ profile.job_title }}</h6>
+      <ul class="list-unstyled pt-3">
+        <hr class="col-sm-3">
+        <li class="text-center"><i class="fas fa-map-marker-alt pr-3"></i>{{ profile.site }}</li>
+        <li class="text-center"><i class="far fa-envelope pr-3"></i><a
+            href="mailto:{{ profile.email }}">{{ profile.email}}</a></li>
+        <li class="text-center"><i class="far fa-user-circle pr-3"></i>{{ profile.job_title.role }}</li>
+        <li class="text-center"><i class="far fa-clock pr-3"></i>{{ user.last_login }}</li>
+      </ul>
+    </div>
+    <div class="col-sm-8 pt-5">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab"
+            aria-controls="favorites" aria-selected="true"><i class="fas fa-heart"></i> Favorites</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="recent-tab" data-toggle="tab" href="#recent" role="tab" aria-controls="recent"
+            aria-selected="false"><i class="fas fa-eye"></i> Recently Viewed</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
+          <ul class="list-group">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Report</th>
+                  <th scope="col">Category</th>
+                  <th scope="col">Timestamp</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for favorite in favorites %}
+                <tr>
+                  <td><a href="{% url "report" favorite.report.id %}">{{ favorite.report.name }}</a></td>
+                  <td>{{ favorite.report.category }}</td>
+                  <td>{{ favorite.timestamp }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </ul>
+        </div>
+        <div class="tab-pane fade" id="recent" role="tabpanel" aria-labelledby="recent-tab">
+          <ul class="list-group">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Page</th>
+                  <th scope="col">Timestamp</th>
+                  <th scope="col"># Views</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for rc in recently_viewed %}
+                <tr>
+                  <td><a href="{{ rc.page }}">{{ rc.page }}</a></td>
+                  <td>{{ rc.timestamp }}</td>
+                  <td>{{ rc.views }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="col-sm-8 pt-5">
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-  <li class="nav-item">
-    <a class="nav-link active" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab" aria-controls="favorites" aria-selected="true"><i class="fas fa-heart"></i> Favorites</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="recent-tab" data-toggle="tab" href="#recent" role="tab" aria-controls="recent" aria-selected="false"><i class="fas fa-eye"></i> Recently Viewed</a>
-  </li>
-</ul>
-<div class="tab-content" id="myTabContent">
-  <div class="tab-pane fade show active" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
-    <ul class="list-group">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col">Report</th>
-            <th scope="col">Category</th>
-            <th scope="col">Timestamp</th>
-          </tr>
-        </thead>
-        <tbody>
-        {% for favorite in favorites %}
-          <tr>
-              <td><a href="{% url "report" favorite.report.id %}">{{ favorite.report.name }}</a></td>
-              <td>{{ favorite.report.category }}</td>
-              <td>{{ favorite.timestamp }}</td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
-    </ul>
-  </div>
-  <div class="tab-pane fade" id="recent" role="tabpanel" aria-labelledby="recent-tab">
-  </div>
-</div>
-  </div>
-</div>
 
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static "js/tooltip.js" %}"></script>
 {% endblock %}

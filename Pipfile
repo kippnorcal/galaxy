@@ -10,6 +10,7 @@ django = "*"
 psycopg2-binary = "*"
 python3-saml = "*"
 redgreenunittest = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"

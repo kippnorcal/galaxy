@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  web:
+    restart: always
+    build: .
+    env_file:
+      - .env.prod
+    command: gunicorn data_portal.wsgi:application --bind 0.0.0.0:8000 --workers=5
+    volumes:
+      - .:/code
+      - static_volume:/code/staticfiles
+    ports:
+      - "8000:8000"
+    expose:
+      - 8000
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:80
+    volumes:
+      - static_volume:/code/staticfiles
+      - static_data:/code/static
+    depends_on:
+      - web
+    
+volumes:
+  static_volume:
+  static_data:

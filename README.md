@@ -54,6 +54,15 @@ $ docker-compose up
 ```
 **Note**: The first time running docker-compose you may get an error about the database not being available. Just run `docker-compose down` and then rerun `docker-compose up`.
 
+### Initial Database Setup
+
+```
+$ docker-compose exec db psql -h db -U postgres -d postgres
+postgres=# CREATE USER <username> WITH PASSWORD '<password>';
+postgres=# ALTER USER <username> CREATEDB;
+postgres=# CREATE DATABASE galaxy;
+```
+
 ### Running Database Migrations
 
 ```
@@ -70,5 +79,11 @@ $ docker-compose run web python manage.py createsuperuser
 
 ```
 $ docker-compose run web python manage.py test
+```
+
+### Collect static files for production
+
+```
+$ docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear
 ```
 
