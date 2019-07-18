@@ -109,3 +109,5 @@ settings.json
 certs/
 saml/
 *.swp
+data/
+
