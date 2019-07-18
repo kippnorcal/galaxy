@@ -38,11 +38,17 @@ def high_health(request, school_level=None):
         school_level = user.profile.site.school_level
         measures = Measure.objects.filter(school__school_level=school_level)
     schools = set([ measure.school for measure in measures])
+    school_levels = [
+        {"name":"Elementary Schools","url":"/high_health/1"},
+        {"name":"Middle Schools","url":"/high_health/2"},
+        {"name":"High Schools","url":"/high_health/4"},
+        {"name":"K-8 Schools","url":"/high_health/3"},
+    ]
     context = {
         'measures': measures,
         'schools': schools,
         'metrics': metrics(measures),
-
+        'school_levels': school_levels,
     }
     return render(request, "high_health.html", context)
 

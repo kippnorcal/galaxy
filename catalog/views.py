@@ -23,8 +23,6 @@ def navbar(request):
 
 @csrf_exempt
 def index(request):
-    for k, v in request.META.items():
-        print(k, v)
     return render(request, "index.html")
 
 @login_required(login_url='/login')

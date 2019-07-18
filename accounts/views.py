@@ -33,7 +33,6 @@ def init_saml_auth(request):
 
 def get_saml_attributes(request):
     if "samlUserdata" in request.session:
-        print(True)
         paint_logout = True
         if len(request.session["samlUserdata"]) > 0:
             attrs = request.session["samlUserdata"].items()
@@ -108,6 +107,16 @@ def saml_logout(request):
         auth.logout(name_id=name_id, session_index=session_index)
     )
 
+def track_login(request, user):
+    tracking = Login(
+        user=user,
+        referrer=request.META.get('HTTP_REFERER'),
+        user_agent=request.META.get('HTTP_USER_AGENT'),
+        ip_address=request.META.get('REMOTE_ADDR'),
+    )
+    tracking.full_clean()
+    tracking.save()
+
 @csrf_exempt
 def acs(request):
     req = prepare_django_request(request)
@@ -123,14 +132,7 @@ def acs(request):
         base_url = OneLogin_Saml2_Utils.get_self_url(req)
         user = find_or_create_user(request)
         login(request, user)
-        tracking = Login(
-            user=request.user,
-            referrer=request.META.get('HTTP_REFERER'),
-            user_agent=request.META.get('HTTP_USER_AGENT'),
-            ip_address=request.META.get('REMOTE_ADDR'),
-        )
-        tracking.full_clean()
-        tracking.save()
+        track_login(request, user)
         connect_profile(user)
         save_avatar(request, user)
         return HttpResponseRedirect(
