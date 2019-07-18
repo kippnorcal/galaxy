@@ -33,7 +33,7 @@ def metrics(measures):
 def high_health(request, school_level=None):
     user = request.user
     if school_level:
-        measures = Measure.objects.filter(school__school_level=school_level).order_by('metric__essential_question', 'metric', 'school')
+        measures = Measure.objects.filter(school__school_level=school_level, is_current=True).order_by('metric__essential_question', 'metric', 'school')
     else:
         school_level = user.profile.site.school_level
         measures = Measure.objects.filter(school__school_level=school_level)
