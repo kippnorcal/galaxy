@@ -75,6 +75,18 @@ def month_order(month):
     return months[month]
 
 
+def target(eoy_value, metric_id):
+    metric = Metric.objects.get(pk=metric_id)
+    performance_goal = round(metric.performance_goal)
+    if eoy_value is None:
+        return performance_goal
+    growth_goal = round(eoy_value + metric.growth_goal)
+    if growth_goal <= performance_goal:
+        return growth_goal
+    else:
+        return performance_goal
+
+
 @login_required
 def chart_data(request, metric_id, school_id):
     if request.method == "GET":
@@ -98,12 +110,19 @@ def chart_data(request, metric_id, school_id):
         else:
             py_label = None
 
+        if py_values:
+            eoy_value = py_values[-1]
+        else:
+            eoy_value = None
+        goal = target(eoy_value, metric_id)
+
         data = {
             "months": months,
             "py_label": py_label,
             "previous_year": py_values,
             "cy_label": cy_measures.first().school_year,
             "current_year": cy_values,
+            "goal": goal,
         }
         return JsonResponse({"success": True, "data": data})
     raise PermissionDenied
@@ -127,8 +146,7 @@ def high_health(request, school_level=None):
         {"name": "K-8 Schools", "url": "/high_health/3"},
     ]
     context = {
-        "measures": measures,
-        "yoy_data": historic_measures(measures),
+        # "measures": measures,
         "schools": schools,
         "metrics": metrics(measures.filter(is_current=True)),
         "school_levels": school_levels,

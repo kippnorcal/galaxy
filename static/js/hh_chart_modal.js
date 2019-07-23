@@ -32,12 +32,12 @@ $('.hh_value').click(function (event) {
                         type: 'line',
                         mode: 'horizontal',
                         scaleID: 'y-axis-0',
-                        value: 84,
+                        value: response['data']['goal'],
                         borderColor: '#6CC04A',
                         borderWidth: 2,
                         label: {
                             backgroundColor: '#6CC04A',
-                            content: 'Goal: 84',
+                            content: 'Goal: ' + response['data']['goal'],
                             enabled: true
                         }
                     }]
