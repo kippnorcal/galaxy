@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.http import JsonResponse
 from django.shortcuts import render
-from accounts.models import Site
+from accounts.models import Site, SchoolLevel
 from .models import EssentialQuestion, Metric, Measure
 
 
@@ -68,7 +68,7 @@ def month_order(month):
     return months[month]
 
 
-def target(eoy_value, metric_id):
+def goal(eoy_value, metric_id):
     metric = Metric.objects.get(pk=metric_id)
     performance_goal = round(metric.performance_goal)
     if eoy_value is None:
@@ -80,7 +80,7 @@ def target(eoy_value, metric_id):
         return performance_goal
 
 
-def get_distinct_months(prior_year_measures, current_year_measures):
+def distinct_months(prior_year_measures, current_year_measures):
     py_months = [measure.month_name for measure in prior_year_measures]
     cy_months = [measure.month_name for measure in current_year_measures]
     months = list(set(py_months + cy_months))
@@ -99,15 +99,18 @@ def year_bound_measures(metric_id, school_id, previous_year=False):
     ).order_by("date")
 
 
+def distinct_values(measures):
+    return [measure.value for measure in measures]
+
+
 @login_required
 def chart_data(request, metric_id, school_id):
     cy_measures = year_bound_measures(metric_id, school_id)
     py_measures = year_bound_measures(metric_id, school_id, previous_year=True)
-    cy_values = [measure.value for measure in cy_measures]
-    py_values = [measure.value for measure in py_measures]
-    months = get_distinct_months(py_measures, cy_measures)
+    cy_values = distinct_values(cy_measures)
+    py_values = distinct_values(py_measures)
+    months = distinct_months(py_measures, cy_measures)
     eoy_value = last_value(py_values)
-    goal = target(eoy_value, metric_id)
 
     data = {
         "months": months,
@@ -115,29 +118,22 @@ def chart_data(request, metric_id, school_id):
         "previous_year": py_values,
         "cy_label": chart_label(cy_measures),
         "current_year": cy_values,
-        "goal": goal,
+        "goal": goal(eoy_value, metric_id),
     }
     return JsonResponse({"success": True, "data": data})
 
 
 @login_required
 def high_health(request, school_level=None):
-    if school_level is None:
-        school_level = request.user.profile.site.school_level
+    school_level = school_level or request.user.profile.site.school_level
     measures = Measure.objects.filter(
         school__school_level=school_level, is_current=True
     ).order_by("metric__essential_question", "metric", "school")
-    schools = set([measure.school for measure in measures])
-    school_levels = [
-        {"name": "Elementary Schools", "url": "/high_health/1"},
-        {"name": "Middle Schools", "url": "/high_health/2"},
-        {"name": "High Schools", "url": "/high_health/4"},
-        {"name": "K-8 Schools", "url": "/high_health/3"},
-    ]
+
     context = {
-        "schools": schools,
+        "schools": Site.objects.filter(school_level=school_level),
         "metrics": metrics(measures),
-        "school_levels": school_levels,
+        "school_levels": SchoolLevel.objects.all(),
     }
     return render(request, "high_health.html", context)
 

@@ -1,0 +1,13 @@
+<div class="dropdown col-sm">
+  <button class="float-right btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+    aria-haspopup="true" aria-expanded="false">
+    School Type
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    {% for school_level in school_levels %}
+    <a class="dropdown-item" href="{% url "high_health" school_level.id %}">
+      {{ school_level.display_name }}
+    </a>
+    {% endfor %}
+  </div>
+</div>
