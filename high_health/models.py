@@ -1,4 +1,5 @@
 import datetime
+import calendar
 from django.db import models
 from django.contrib import admin
 from catalog.models import Report
@@ -13,35 +14,26 @@ class EssentialQuestion(models.Model):
         return self.name
 
     class Meta:
-        ordering = ('name',)
+        ordering = ("name",)
 
 
 class Metric(models.Model):
     def school_level_default():
         return SchoolLevel.objects.all()
 
-    goal_type_choices = [
-        ("ABOVE", "above"),
-        ("BELOW", "below"),
-    ]
+    goal_type_choices = [("ABOVE", "above"), ("BELOW", "below")]
     name = models.CharField(max_length=100)
     definition = models.TextField(blank=True)
     essential_question = models.ForeignKey(
-        EssentialQuestion,
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
+        EssentialQuestion, on_delete=models.PROTECT, null=True, blank=True
     )
     school_level = models.ManyToManyField(SchoolLevel, default=school_level_default)
     performance_goal = models.DecimalField(max_digits=5, decimal_places=2, default=100)
     growth_goal = models.IntegerField(default=0)
-    goal_type = models.CharField(max_length=5, choices=goal_type_choices, default=goal_type_choices[0][0])
-    report = models.ForeignKey(
-        Report,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+    goal_type = models.CharField(
+        max_length=5, choices=goal_type_choices, default=goal_type_choices[0][0]
     )
+    report = models.ForeignKey(Report, on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField(default=datetime.date.today)
 
     @property
@@ -52,19 +44,18 @@ class Metric(models.Model):
         return self.name
 
     class Meta:
-        ordering = ('name',)
+        ordering = ("name",)
+
 
 class MetricAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'year',)
-    list_filter = ('school_level', 'date',)
+    list_display = ("__str__", "year")
+    list_filter = ("school_level", "date")
 
 
 class Measure(models.Model):
     metric = models.ForeignKey(Metric, on_delete=models.PROTECT)
     school = models.ForeignKey(
-        Site,
-        on_delete=models.PROTECT,
-        limit_choices_to={'is_school': True},
+        Site, on_delete=models.PROTECT, limit_choices_to={"is_school": True}
     )
     value = models.DecimalField(max_digits=5, decimal_places=2)
     date = models.DateField(default=datetime.date.today)
@@ -75,15 +66,28 @@ class Measure(models.Model):
         return self.date.year
 
     @property
+    def school_year(self):
+        year = int(self.date.strftime("%y"))
+        if self.date.month >= 7 and self.date.month < 12:
+            return f"{year}-{year+1}"
+        else:
+            return f"{year-1}-{year}"
+
+    @property
     def month(self):
         return self.date.month
+
+    @property
+    def month_name(self):
+        return calendar.month_abbr[self.date.month]
 
     def __str__(self):
         return f"{self.year}-{self.month} {self.school}: {self.metric}"
 
     class Meta:
-        ordering = ['-date', 'school', 'metric']
+        ordering = ["-date", "school", "metric"]
+
 
 class MeasureAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'value', 'is_current',)
-    list_filter = ('metric', 'school', 'is_current', 'date',)
+    list_display = ("__str__", "value", "is_current")
+    list_filter = ("metric", "school", "is_current", "date")

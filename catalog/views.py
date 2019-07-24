@@ -44,7 +44,6 @@ def profile(request):
         .annotate(views=Count("page"), timestamp=Max("timestamp"))
         .order_by("-timestamp")
     )
-    print(recently_viewed)
     context = {
         "profile": profile,
         "favorites": favorites,
