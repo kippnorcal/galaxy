@@ -1,3 +1,9 @@
+h1 {
+  font-size: 1.875em;
+  color: #255694;
+  font-weight: 300;
+}
+
 .fav-icon {
   display: inline;
 }
