@@ -25,8 +25,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = ["*"]
-
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
 
 # Application definition
 
@@ -128,3 +127,11 @@ SAML_FOLDER = os.path.join(BASE_DIR, "saml")
 SESSION_ENGINE = "django.contrib.sessions.backends.file"
 TEST_RUNNER = "redgreenunittest.django.runner.RedGreenDiscoverRunner"
 LOGIN_URL = "/login/"
+
+# SSL Config
+SSL = os.getenv("SSL", default=0)
+if SSL:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
