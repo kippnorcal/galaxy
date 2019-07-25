@@ -125,12 +125,13 @@ def chart_data(request, metric_id, school_id):
 
 @login_required
 def high_health(request, school_level=None):
-    school_level = school_level or request.user.profile.site.school_level
+    school_level = school_level or request.user.profile.site.school_level.id
     measures = Measure.objects.filter(
         school__school_level=school_level, is_current=True
     ).order_by("metric__essential_question", "metric", "school")
 
     context = {
+        "school_level": SchoolLevel.objects.get(pk=school_level),
         "schools": Site.objects.filter(school_level=school_level),
         "metrics": metrics(measures),
         "school_levels": SchoolLevel.objects.all(),
