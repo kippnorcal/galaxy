@@ -55,7 +55,7 @@
                 </td>
                 {% else %}
                 <td class="text-center">
-                    <span class="hh_value">
+                    <span class="hh_value text-{{ measure.avg_value|perf_goal_format:metric.metric }}">
                         {{ measure.avg_value|stringformat:'d' }}%
                     </span>
                 </td>
