@@ -3,34 +3,30 @@ from dateutil.relativedelta import relativedelta
 from itertools import chain, groupby
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.db.models import Avg
 from django.http import JsonResponse
 from django.shortcuts import render
 from accounts.models import Site, SchoolLevel
 from .models import EssentialQuestion, Metric, Measure
 
 
-def metrics(measures):
-    metrics_data = []
-    metrics = set([measure.metric for measure in measures])
-    schools = set([measure.school for measure in measures])
+def last_updated(metric_id):
+    return Measure.objects.filter(metric=metric_id).latest("date").date
+
+
+def metrics(school_level):
+    metrics = Metric.objects.filter(school_level=school_level)
+    data = []
     for metric in metrics:
-        metric_data = {}
-        metric_data["metric"] = metric
-        measures_data = []
-        dates = []
-        for school in schools:
-            measure_data = {}
-            measure_data["school"] = school
-            measure_data["measure"] = None
-            for measure in measures:
-                if measure.metric == metric and measure.school == school:
-                    measure_data["measure"] = measure
-                    dates.append(measure.date)
-            measures_data.append(measure_data)
-        metric_data["last_updated"] = max(dates)
-        metric_data["measures"] = measures_data
-        metrics_data.append(metric_data)
-    return metrics_data
+        metric_data = {
+            "metric": metric,
+            "last_updated": last_updated(metric.id),
+            "measures": metric.measure_set.filter(
+                school__school_level=school_level, is_current=True
+            ).order_by("school"),
+        }
+        data.append(metric_data)
+    return data
 
 
 def last_value(values):
@@ -126,15 +122,33 @@ def chart_data(request, metric_id, school_id):
 @login_required
 def high_health(request, school_level=None):
     school_level = school_level or request.user.profile.site.school_level.id
-    measures = Measure.objects.filter(
-        school__school_level=school_level, is_current=True
-    ).order_by("metric__essential_question", "metric", "school")
-
     context = {
         "school_level": SchoolLevel.objects.get(pk=school_level),
         "schools": Site.objects.filter(school_level=school_level),
-        "metrics": metrics(measures),
+        "metrics": metrics(school_level),
         "school_levels": SchoolLevel.objects.all(),
     }
     return render(request, "high_health.html", context)
 
+
+@login_required
+def high_health_agg(request):
+    school_levels = SchoolLevel.objects.all()
+    metrics = Metric.objects.all()
+    data = []
+    for metric in metrics:
+        measures = (
+            metric.measure_set.filter(is_current=True)
+            .values("school__school_level")
+            .annotate(avg_value=Avg("value"))
+            .order_by("school__school_level")
+        )
+        metric_data = {
+            "metric": metric,
+            "last_updated": last_updated(metric.id),
+            "measures": measures,
+        }
+        data.append(metric_data)
+
+    context = {"school_levels": school_levels, "metrics": data}
+    return render(request, "high_health_overall.html", context)

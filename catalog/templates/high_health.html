@@ -46,22 +46,21 @@
           </span>
         </td>
         {% for measure in metric.measures %}
-        {% if measure.measure is None %}
+        {% if measure is None %}
         <td class="text-center">
-          <span class="text-{{ measure.measure|goal_format }}">
+          <span class="text-{{ measure|goal_format }}">
             NA
           </span>
         </td>
         {% else %}
         <td class="text-center">
-          {% with "modal_"|addstr:measure.measure.metric.id|addstr:"_"|addstr:measure.measure.school.id as modal_id %}
-          {% with "chart_"|addstr:measure.measure.metric.id|addstr:"_"|addstr:measure.measure.school.id as chart_id %}
-          <span data-toggle="modal" data-target="#{{ modal_id }}"
-            class="hh_value text-{{ measure.measure|goal_format }}" data-metric-id="{{ measure.measure.metric.id }}"
-            data-school-id="{{ measure.measure.school.id }}">
-            {{ measure.measure.value|stringformat:'d' }}%
+          {% with "modal_"|addstr:measure.metric.id|addstr:"_"|addstr:measure.school.id as modal_id %}
+          {% with "chart_"|addstr:measure.metric.id|addstr:"_"|addstr:measure.school.id as chart_id %}
+          <span data-toggle="modal" data-target="#{{ modal_id }}" class="hh_value text-{{ measure|goal_format }}"
+            data-metric-id="{{ measure.metric.id }}" data-school-id="{{ measure.school.id }}">
+            {{ measure.value|stringformat:'d' }}%
           </span>
-          {% include "_chart_modal.html" with title=measure.measure.metric  modal_id=modal_id chart_id=chart_id last_updated=measure.measure.date %}
+          {% include "_chart_modal.html" with title=measure.metric  modal_id=modal_id chart_id=chart_id last_updated=measure.date %}
           {% endwith %}
           {% endwith %}
         </td>
