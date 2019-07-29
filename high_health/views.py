@@ -7,7 +7,7 @@ from django.db.models import Avg
 from django.http import JsonResponse
 from django.shortcuts import render
 from accounts.models import Site, SchoolLevel
-from .models import EssentialQuestion, Metric, Measure
+from .models import EssentialQuestion, Metric, Measure, Goal
 
 
 def last_updated(metric_id):
@@ -15,7 +15,7 @@ def last_updated(metric_id):
 
 
 def metrics(school_level):
-    metrics = Metric.objects.filter(school_level=school_level)
+    metrics = Metric.objects.filter(goal__school__school_level=school_level).distinct()
     data = []
     for metric in metrics:
         metric_data = {
@@ -117,7 +117,8 @@ def chart_data(request, metric_id, school_id):
         "previous_year": py_values,
         "cy_label": chart_label(cy_measures),
         "current_year": cy_values,
-        "goal": goal(eoy_value, metric_id),
+        "goal": Goal.objects.get(metric=metric_id, school=school_id).target,
+        "metric": Metric.objects.get(pk=metric_id).name,
     }
     return JsonResponse({"success": True, "data": data})
 

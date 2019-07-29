@@ -19,6 +19,10 @@ $('.hh_value').click(function (event) {
                 }]
             }
             var options = {
+                title: {
+                    display: true,
+                    text: response['data']['metric']
+                },
                 scales: {
                     yAxes: [{
                         display: true,

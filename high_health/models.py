@@ -24,7 +24,6 @@ class Metric(models.Model):
         EssentialQuestion, on_delete=models.PROTECT, null=True, blank=True
     )
     report = models.ForeignKey(Report, on_delete=models.SET_NULL, null=True, blank=True)
-    goals = models.ManyToManyField(Site, through="Goal")
     date = models.DateField(default=datetime.date.today)
 
     @property
@@ -71,6 +70,10 @@ class Measure(models.Model):
     @property
     def month_name(self):
         return calendar.month_abbr[self.date.month]
+
+    @property
+    def goal(self):
+        return Goal.objects.get(school=self.school, metric=self.metric)
 
     def __str__(self):
         return f"{self.year}-{self.month} {self.school}: {self.metric}"

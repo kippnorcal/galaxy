@@ -70,9 +70,11 @@ def report(request, report_id):
     avg_feedback = Feedback.objects.filter(report=report_id).aggregate(Avg("score"))
     if feedback:
         context["feedback"] = feedback
-    if avg_feedback:
+    if avg_feedback and avg_feedback["score__avg"] is not None:
         context["avg_feedback"] = round(avg_feedback["score__avg"], 1)
-
+    page_views = PageView.objects.filter(page=request.build_absolute_uri())
+    if page_views:
+        context["viewed_by"] = len(page_views)
     return render(request, "report.html", context)
 
 

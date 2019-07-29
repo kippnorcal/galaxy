@@ -5,21 +5,13 @@ register = template.Library()
 
 @register.filter
 def goal_format(measure):
-    if measure.metric.goal_type == "ABOVE":
-        if measure.value < (
-            float(measure.metric.performance_goal) - (measure.metric.growth_goal / 2)
-        ):
+    if measure.goal.goal_type == "ABOVE":
+        if measure.value < measure.goal.target:
             return "danger"
-        elif measure.value < measure.metric.performance_goal:
-            return "secondary"
         else:
             return "success"
     else:
-        if measure.value <= (
-            float(measure.metric.performance_goal) - (measure.metric.growth_goal / 2)
-        ):
-            return "secondary"
-        elif measure.value <= measure.metric.performance_goal:
+        if measure.value <= measure.goal.target:
             return "success"
         else:
             return "danger"
