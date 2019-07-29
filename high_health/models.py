@@ -33,6 +33,7 @@ class Metric(models.Model):
     goal_type = models.CharField(
         max_length=5, choices=goal_type_choices, default=goal_type_choices[0][0]
     )
+    goals = models.ManyToManyField(Site, through="Goal")
     report = models.ForeignKey(Report, on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField(default=datetime.date.today)
 
@@ -91,3 +92,31 @@ class Measure(models.Model):
 class MeasureAdmin(admin.ModelAdmin):
     list_display = ("__str__", "value", "is_current")
     list_filter = ("metric", "school", "is_current", "date")
+
+
+class Goal(models.Model):
+    metric = models.ForeignKey(Metric, on_delete=models.CASCADE)
+    school = models.ForeignKey(
+        Site, on_delete=models.SET_NULL, null=True, limit_choices_to={"is_school": True}
+    )
+    goal_type_choices = [("ABOVE", "above"), ("BELOW", "below")]
+    goal_type = models.CharField(
+        max_length=5, choices=goal_type_choices, default=goal_type_choices[0][0]
+    )
+    frequency_choices = [("MoM", "month over month"), ("YoY", "year over year")]
+    frequency = models.CharField(
+        max_length=3, choices=frequency_choices, default=frequency_choices[0][0]
+    )
+    target = models.DecimalField(max_digits=5, decimal_places=2, default=100)
+
+    def __str__(self):
+        return f"{self.school} - {self.metric}"
+
+    class Meta:
+        ordering = ["metric", "school__school_level", "school"]
+
+
+class GoalAdmin(admin.ModelAdmin):
+    list_display = ("__str__", "target")
+    list_filter = ("school",)
+
