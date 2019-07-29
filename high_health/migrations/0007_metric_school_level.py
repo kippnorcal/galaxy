@@ -7,14 +7,14 @@ import high_health.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0007_auto_20190621_0255'),
-        ('high_health', '0006_auto_20190620_1901'),
+        ("accounts", "0007_auto_20190621_0255"),
+        ("high_health", "0006_auto_20190620_1901"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='metric',
-            name='school_level',
-            field=models.ManyToManyField(default=high_health.models.Metric.school_level_default, to='accounts.SchoolLevel'),
-        ),
+            model_name="metric",
+            name="school_level",
+            field=models.ManyToManyField(to="accounts.SchoolLevel"),
+        )
     ]

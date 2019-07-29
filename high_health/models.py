@@ -18,23 +18,13 @@ class EssentialQuestion(models.Model):
 
 
 class Metric(models.Model):
-    def school_level_default():
-        return SchoolLevel.objects.all()
-
-    goal_type_choices = [("ABOVE", "above"), ("BELOW", "below")]
     name = models.CharField(max_length=100)
     definition = models.TextField(blank=True)
     essential_question = models.ForeignKey(
         EssentialQuestion, on_delete=models.PROTECT, null=True, blank=True
     )
-    school_level = models.ManyToManyField(SchoolLevel, default=school_level_default)
-    performance_goal = models.DecimalField(max_digits=5, decimal_places=2, default=100)
-    growth_goal = models.IntegerField(default=0)
-    goal_type = models.CharField(
-        max_length=5, choices=goal_type_choices, default=goal_type_choices[0][0]
-    )
-    goals = models.ManyToManyField(Site, through="Goal")
     report = models.ForeignKey(Report, on_delete=models.SET_NULL, null=True, blank=True)
+    goals = models.ManyToManyField(Site, through="Goal")
     date = models.DateField(default=datetime.date.today)
 
     @property
@@ -50,7 +40,7 @@ class Metric(models.Model):
 
 class MetricAdmin(admin.ModelAdmin):
     list_display = ("__str__", "year")
-    list_filter = ("school_level", "date")
+    list_filter = ("essential_question", "date")
 
 
 class Measure(models.Model):
@@ -118,5 +108,5 @@ class Goal(models.Model):
 
 class GoalAdmin(admin.ModelAdmin):
     list_display = ("__str__", "target")
-    list_filter = ("school",)
+    list_filter = ("metric", "school__school_level", "school")
 
