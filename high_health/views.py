@@ -46,7 +46,7 @@ def school_year_range(today=datetime.today()):
     return start_date, end_date
 
 
-def month_order(month):
+def month_order(month=None):
     months = {
         "Jul": 0,
         "Aug": 1,
@@ -61,7 +61,10 @@ def month_order(month):
         "May": 10,
         "Jun": 11,
     }
-    return months[month]
+    if month:
+        return months[month]
+    else:
+        return list(months.keys())
 
 
 def goal(eoy_value, metric_id):
@@ -115,6 +118,37 @@ def chart_data(request, metric_id, school_id):
         "cy_label": chart_label(cy_measures),
         "current_year": cy_values,
         "goal": goal(eoy_value, metric_id),
+    }
+    return JsonResponse({"success": True, "data": data})
+
+
+# @login_required
+def chart_data_agg(request, metric_id, school_level_id):
+    metric = Metric.objects.get(pk=metric_id)
+    cy_measures = metric.measure_set.filter(
+        school__school_level=school_level_id, date__range=school_year_range()
+    )
+    cy_label = chart_label(cy_measures)
+    cy_agg = (
+        cy_measures.values("date").annotate(avg_value=Avg("value")).order_by("date")
+    )
+    cy_values = [value["avg_value"] for value in cy_agg]
+    a_year_ago = datetime.today() - relativedelta(years=1)
+    py_measures = metric.measure_set.filter(
+        school__school_level=school_level_id, date__range=school_year_range(a_year_ago)
+    )
+    py_label = chart_label(py_measures)
+    py_agg = (
+        py_measures.values("date").annotate(avg_value=Avg("value")).order_by("date")
+    )
+    py_values = [value["avg_value"] for value in py_agg]
+    data = {
+        "months": month_order()[1:],
+        "py_label": py_label,
+        "previous_year": py_values,
+        "cy_label": cy_label,
+        "current_year": cy_values,
+        "goal": metric.performance_goal,
     }
     return JsonResponse({"success": True, "data": data})
 

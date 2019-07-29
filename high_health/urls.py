@@ -10,4 +10,9 @@ urlpatterns = [
         views.chart_data,
         name="chart_data",
     ),
+    path(
+        "high_health/chart_data_overall/<int:metric_id>/<int:school_level_id>",
+        views.chart_data_agg,
+        name="chart_data_overall",
+    ),
 ]

@@ -11,6 +11,9 @@
         </div>
         {% include "_hh_dropdown_school_types.html" %}
     </div>
+    <div class="row">
+        {% include "_hh_legend.html" %}
+    </div>
 </div>
 
 <div class="container">
@@ -55,9 +58,16 @@
                 </td>
                 {% else %}
                 <td class="text-center">
-                    <span class="hh_value text-{{ measure.avg_value|perf_goal_format:metric.metric }}">
+                    {% with "modal_"|addstr:metric.metric.id|addstr:"_"|addstr:measure.school__school_level as modal_id %}
+                    {% with "chart_"|addstr:metric.metric.id|addstr:"_"|addstr:measure.school__school_level as chart_id %}
+                    <span data-toggle="modal" data-target="#{{ modal_id}}"
+                        class="hh_value text-{{ measure.avg_value|perf_goal_format:metric.metric }}"
+                        data-metric-id="{{ metric.metric.id }}" data-school-id="{{ measure.school__school_level }}">
                         {{ measure.avg_value|stringformat:'d' }}%
                     </span>
+                    {% include "_chart_modal.html" with title=metric.metric  modal_id=modal_id chart_id=chart_id last_updated=metric.last_updated %}
+                    {% endwith %}
+                    {% endwith %}
                 </td>
                 {% endif %}
                 {% endfor %}
@@ -74,4 +84,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.js">
 </script>
 <script src="{% static "js/hh_popover.js" %}"></script>
+<script src="{% static "js/hh_chart_modal_overall.js" %}"></script>
 {% endblock %}
