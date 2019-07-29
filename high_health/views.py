@@ -122,7 +122,7 @@ def chart_data(request, metric_id, school_id):
     return JsonResponse({"success": True, "data": data})
 
 
-# @login_required
+@login_required
 def chart_data_agg(request, metric_id, school_level_id):
     metric = Metric.objects.get(pk=metric_id)
     cy_measures = metric.measure_set.filter(
