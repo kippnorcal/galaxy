@@ -58,14 +58,15 @@
                 </td>
                 {% else %}
                 <td class="text-center">
-                    {% with "modal_"|addstr:metric.metric.id|addstr:"_"|addstr:measure.school__school_level as modal_id %}
-                    {% with "chart_"|addstr:metric.metric.id|addstr:"_"|addstr:measure.school__school_level as chart_id %}
+                    {% with "modal_"|addstr:metric.metric.id|addstr:"_"|addstr:measure.school_level as modal_id %}
+                    {% with "chart_"|addstr:metric.metric.id|addstr:"_"|addstr:measure.school_level as chart_id %}
                     <span data-toggle="modal" data-target="#{{ modal_id}}"
-                        class="hh_value text-{{ measure.avg_value|perf_goal_format:metric.metric }}"
-                        data-metric-id="{{ metric.metric.id }}" data-school-id="{{ measure.school__school_level }}">
-                        {{ measure.avg_value|stringformat:'d' }}%
+                        class="hh_value text-{{ measure|agg_goal_format }}" data-metric-id="{{ metric.metric.id }}"
+                        data-school-id="{{ measure.school_level }}">
+                        {{ measure.value|stringformat:'d' }}%
                     </span>
                     {% include "_chart_modal.html" with title=metric.metric  modal_id=modal_id chart_id=chart_id last_updated=metric.last_updated %}
+
                     {% endwith %}
                     {% endwith %}
                 </td>

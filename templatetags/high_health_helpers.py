@@ -24,14 +24,14 @@ def addstr(arg1, arg2):
 
 
 @register.filter
-def perf_goal_format(value, metric):
-    if metric.goal_type == "ABOVE":
-        if value < metric.performance_goal:
+def agg_goal_format(measure):
+    if measure["goal"]["goal_type"] == "ABOVE":
+        if measure["value"] < measure["goal"]["avg_goal"]:
             return "danger"
         else:
             return "success"
     else:
-        if value <= metric.performance_goal:
+        if measure["value"] <= measure["goal"]["avg_goal"]:
             return "success"
         else:
             return "danger"
@@ -39,5 +39,5 @@ def perf_goal_format(value, metric):
 
 register.filter("goal_format", goal_format)
 register.filter("addstr", addstr)
-register.filter("perf_goal_format", perf_goal_format)
+register.filter("agg_goal_format", agg_goal_format)
 

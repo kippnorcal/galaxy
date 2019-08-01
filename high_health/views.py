@@ -109,7 +109,6 @@ def chart_data(request, metric_id, school_id):
     cy_values = distinct_values(cy_measures)
     py_values = distinct_values(py_measures)
     months = distinct_months(py_measures, cy_measures)
-    eoy_value = last_value(py_values)
 
     data = {
         "months": months,
@@ -172,18 +171,31 @@ def high_health_agg(request):
     metrics = Metric.objects.all()
     data = []
     for metric in metrics:
+        measures_data = []
         measures = (
             metric.measure_set.filter(is_current=True)
             .values("school__school_level")
             .annotate(avg_value=Avg("value"))
             .order_by("school__school_level")
         )
+        for measure in measures:
+            measure_data = {
+                "school_level": measure["school__school_level"],
+                "value": measure["avg_value"],
+                "goal": Goal.objects.values("goal_type")
+                .annotate(avg_goal=Avg("target"))
+                .filter(
+                    metric=metric, school__school_level=measure["school__school_level"]
+                )
+                .order_by("goal_type")
+                .first(),
+            }
+            measures_data.append(measure_data)
         metric_data = {
             "metric": metric,
             "last_updated": last_updated(metric.id),
-            "measures": measures,
+            "measures": measures_data,
         }
         data.append(metric_data)
-
     context = {"school_levels": school_levels, "metrics": data}
     return render(request, "high_health_overall.html", context)
