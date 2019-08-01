@@ -63,7 +63,7 @@
             data-metric-id="{{ measure.metric.id }}" data-school-id="{{ measure.school.id }}">
             {{ measure.value|stringformat:'d' }}%
           </span>
-          {% include "_chart_modal.html" with title=measure.metric  modal_id=modal_id chart_id=chart_id last_updated=measure.date %}
+          {% include "_chart_modal.html" with title=measure.school  modal_id=modal_id chart_id=chart_id last_updated=measure.date %}
           {% endwith %}
           {% endwith %}
         </td>

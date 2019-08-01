@@ -148,7 +148,13 @@ def chart_data_agg(request, metric_id, school_level_id):
         "previous_year": py_values,
         "cy_label": cy_label,
         "current_year": cy_values,
-        "goal": metric.performance_goal,
+        "goal": round(
+            Goal.objects.filter(
+                metric=metric_id, school__school_level=school_level_id
+            ).aggregate(avg_goal=Avg("target"))["avg_goal"],
+            2,
+        ),
+        "metric": Metric.objects.get(pk=metric_id).name,
     }
     return JsonResponse({"success": True, "data": data})
 
@@ -180,7 +186,7 @@ def high_health_agg(request):
         )
         for measure in measures:
             measure_data = {
-                "school_level": measure["school__school_level"],
+                "school_level": school_levels.get(pk=measure["school__school_level"]),
                 "value": measure["avg_value"],
                 "goal": Goal.objects.values("goal_type")
                 .annotate(avg_goal=Avg("target"))

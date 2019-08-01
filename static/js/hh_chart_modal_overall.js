@@ -18,8 +18,11 @@ $('.hh_value').click(function (event) {
                     data: response['data']['current_year'],
                 }]
             }
-            console.log(data);
             var options = {
+                title: {
+                    display: true,
+                    text: response['data']['metric']
+                },
                 scales: {
                     yAxes: [{
                         display: true,
