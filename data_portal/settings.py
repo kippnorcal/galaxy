@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "accounts.apps.AccountsConfig",
     "high_health.apps.HighHealthConfig",
     "analytics.apps.AnalyticsConfig",
+    "rest_framework",
+    "rest_framework.authtoken",
 ]
 
 MIDDLEWARE = [
