@@ -59,7 +59,7 @@ ROOT_URLCONF = "data_portal.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [(os.path.join(BASE_DIR, "templates"))],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -68,7 +68,11 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "catalog.views.navbar",
-            ]
+            ],
+            "libraries": {
+                "feedback_helpers": "templatetags.feedback_helpers",
+                "high_health_helpers": "templatetags.high_health_helpers",
+            },
         },
     }
 ]

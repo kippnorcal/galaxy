@@ -2,7 +2,7 @@ $('.hh_value').click(function (event) {
     event.preventDefault();
     var metric_id = $(this).attr("data-metric-id");
     var school_id = $(this).attr("data-school-id");
-    $.get("/high_health/chart_data/" + metric_id + "/" + school_id, function (response) {
+    $.get("/high_health/chart_data_overall/" + metric_id + "/" + school_id, function (response) {
         if (response['success']) {
             var data = {
                 labels: response['data']['months'],

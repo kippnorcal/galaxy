@@ -3,34 +3,30 @@ from dateutil.relativedelta import relativedelta
 from itertools import chain, groupby
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.db.models import Avg
 from django.http import JsonResponse
 from django.shortcuts import render
 from accounts.models import Site, SchoolLevel
-from .models import EssentialQuestion, Metric, Measure
+from .models import EssentialQuestion, Metric, Measure, Goal
 
 
-def metrics(measures):
-    metrics_data = []
-    metrics = set([measure.metric for measure in measures])
-    schools = set([measure.school for measure in measures])
+def last_updated(metric_id):
+    return Measure.objects.filter(metric=metric_id).latest("date").date
+
+
+def metrics(school_level):
+    metrics = Metric.objects.filter(goal__school__school_level=school_level).distinct()
+    data = []
     for metric in metrics:
-        metric_data = {}
-        metric_data["metric"] = metric
-        measures_data = []
-        dates = []
-        for school in schools:
-            measure_data = {}
-            measure_data["school"] = school
-            measure_data["measure"] = None
-            for measure in measures:
-                if measure.metric == metric and measure.school == school:
-                    measure_data["measure"] = measure
-                    dates.append(measure.date)
-            measures_data.append(measure_data)
-        metric_data["last_updated"] = max(dates)
-        metric_data["measures"] = measures_data
-        metrics_data.append(metric_data)
-    return metrics_data
+        metric_data = {
+            "metric": metric,
+            "last_updated": last_updated(metric.id),
+            "measures": metric.measure_set.filter(
+                school__school_level=school_level, is_current=True
+            ).order_by("school"),
+        }
+        data.append(metric_data)
+    return data
 
 
 def last_value(values):
@@ -50,7 +46,7 @@ def school_year_range(today=datetime.today()):
     return start_date, end_date
 
 
-def month_order(month):
+def month_order(month=None):
     months = {
         "Jul": 0,
         "Aug": 1,
@@ -65,7 +61,10 @@ def month_order(month):
         "May": 10,
         "Jun": 11,
     }
-    return months[month]
+    if month:
+        return months[month]
+    else:
+        return list(months.keys())
 
 
 def goal(eoy_value, metric_id):
@@ -110,7 +109,6 @@ def chart_data(request, metric_id, school_id):
     cy_values = distinct_values(cy_measures)
     py_values = distinct_values(py_measures)
     months = distinct_months(py_measures, cy_measures)
-    eoy_value = last_value(py_values)
 
     data = {
         "months": months,
@@ -118,22 +116,92 @@ def chart_data(request, metric_id, school_id):
         "previous_year": py_values,
         "cy_label": chart_label(cy_measures),
         "current_year": cy_values,
-        "goal": goal(eoy_value, metric_id),
+        "goal": Goal.objects.get(metric=metric_id, school=school_id).target,
+        "metric": Metric.objects.get(pk=metric_id).name,
+    }
+    return JsonResponse({"success": True, "data": data})
+
+
+@login_required
+def chart_data_agg(request, metric_id, school_level_id):
+    metric = Metric.objects.get(pk=metric_id)
+    cy_measures = metric.measure_set.filter(
+        school__school_level=school_level_id, date__range=school_year_range()
+    )
+    cy_label = chart_label(cy_measures)
+    cy_agg = (
+        cy_measures.values("date").annotate(avg_value=Avg("value")).order_by("date")
+    )
+    cy_values = [value["avg_value"] for value in cy_agg]
+    a_year_ago = datetime.today() - relativedelta(years=1)
+    py_measures = metric.measure_set.filter(
+        school__school_level=school_level_id, date__range=school_year_range(a_year_ago)
+    )
+    py_label = chart_label(py_measures)
+    py_agg = (
+        py_measures.values("date").annotate(avg_value=Avg("value")).order_by("date")
+    )
+    py_values = [value["avg_value"] for value in py_agg]
+    data = {
+        "months": month_order()[1:],
+        "py_label": py_label,
+        "previous_year": py_values,
+        "cy_label": cy_label,
+        "current_year": cy_values,
+        "goal": round(
+            Goal.objects.filter(
+                metric=metric_id, school__school_level=school_level_id
+            ).aggregate(avg_goal=Avg("target"))["avg_goal"],
+            2,
+        ),
+        "metric": Metric.objects.get(pk=metric_id).name,
     }
     return JsonResponse({"success": True, "data": data})
 
 
 @login_required
 def high_health(request, school_level=None):
-    school_level = school_level or request.user.profile.site.school_level
-    measures = Measure.objects.filter(
-        school__school_level=school_level, is_current=True
-    ).order_by("metric__essential_question", "metric", "school")
-
+    school_level = school_level or request.user.profile.site.school_level.id
     context = {
+        "school_level": SchoolLevel.objects.get(pk=school_level),
         "schools": Site.objects.filter(school_level=school_level),
-        "metrics": metrics(measures),
+        "metrics": metrics(school_level),
         "school_levels": SchoolLevel.objects.all(),
     }
     return render(request, "high_health.html", context)
 
+
+@login_required
+def high_health_agg(request):
+    school_levels = SchoolLevel.objects.all()
+    metrics = Metric.objects.all()
+    data = []
+    for metric in metrics:
+        measures_data = []
+        measures = (
+            metric.measure_set.filter(is_current=True)
+            .values("school__school_level")
+            .annotate(avg_value=Avg("value"))
+            .order_by("school__school_level")
+        )
+        for measure in measures:
+            measure_data = {
+                "school_level": school_levels.get(pk=measure["school__school_level"]),
+                "value": measure["avg_value"],
+                "goal": Goal.objects.values("goal_type")
+                .annotate(avg_goal=Avg("target"))
+                .filter(
+                    metric=metric, school__school_level=measure["school__school_level"]
+                )
+                .order_by("goal_type")
+                .first(),
+            }
+            measures_data.append(measure_data)
+        metric_data = {
+            "metric": metric,
+            "last_updated": last_updated(metric.id),
+            "measures": measures_data,
+        }
+        data.append(metric_data)
+    context = {"school_levels": school_levels, "metrics": data}
+    return render(request, "high_health_overall.html", context)

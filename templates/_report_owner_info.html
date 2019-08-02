@@ -1,5 +1,12 @@
 <div class="col-sm-3 offset-sm-1">
+  {% if report.owner.avatar_url %}
   <img class="avatar_md" src="{{ report.owner.profile.avatar_url }}">
+  {% else %}
+  <span class="fa-stack fa-3x text-info">
+    <i class="far fa-circle fa-stack-2x"></i>
+    <i class="fas fa-user-astronaut fa-stack-1x"></i>
+  </span>
+  {% endif %}
 </div>
 <div class="col-sm-8">
   <h6 class="text-info">
@@ -9,4 +16,3 @@
     {{ report.owner.profile.job_title }}
   </span>
 </div>
-
