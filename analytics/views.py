@@ -44,13 +44,16 @@ def click_through(request, search_id):
 class PageViewViewSet(viewsets.ModelViewSet):
     queryset = PageView.objects.all()
     serializer_class = PageViewSerializer
+    http_method_names = ["get", "head", "options"]
 
 
 class LoginViewSet(viewsets.ModelViewSet):
     queryset = Login.objects.all()
     serializer_class = LoginSerializer
+    http_method_names = ["get", "head", "options"]
 
 
 class SearchViewSet(viewsets.ModelViewSet):
     queryset = Search.objects.all()
     serializer_class = SearchSerializer
+    http_method_names = ["get", "head", "options"]
