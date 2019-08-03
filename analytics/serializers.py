@@ -4,6 +4,8 @@ from rest_framework import serializers
 
 
 class LoginSerializer(serializers.HyperlinkedModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+
     class Meta:
         model = Login
         fields = ("id", "user", "referrer", "user_agent", "ip_address", "timestamp")
@@ -11,6 +13,8 @@ class LoginSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class SearchSerializer(serializers.HyperlinkedModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+
     class Meta:
         model = Search
         fields = (
@@ -31,6 +35,8 @@ class SearchSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class PageViewSerializer(serializers.HyperlinkedModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+
     class Meta:
         model = PageView
         fields = ("id", "user", "page", "timestamp")
