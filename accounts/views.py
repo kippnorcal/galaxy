@@ -191,6 +191,6 @@ class SiteLevelViewSet(viewsets.ModelViewSet):
     serializer_class = SiteSerializer
 
 
-class ProfileLevelViewSet(viewsets.ModelViewSet):
+class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer

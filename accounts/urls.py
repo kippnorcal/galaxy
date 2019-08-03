@@ -9,7 +9,7 @@ router.register(r"roles", views.RoleViewSet)
 router.register(r"jobs", views.JobViewSet)
 router.register(r"school_levels", views.SchoolLevelViewSet)
 router.register(r"sites", views.SiteLevelViewSet)
-router.register(r"profiles", views.ProfileLevelViewSet)
+router.register(r"profiles", views.ProfileViewSet)
 
 urlpatterns = [
     path("api/", include(router.urls)),
