@@ -9,6 +9,14 @@ from django.shortcuts import render
 from accounts.models import Site, SchoolLevel
 from .models import EssentialQuestion, Metric, Measure, Goal
 
+from rest_framework import viewsets
+from .serializers import (
+    EssentialQuestionSerializer,
+    MetricSerializer,
+    GoalSerializer,
+    MeasureSerializer,
+)
+
 
 def last_updated(metric_id):
     return Measure.objects.filter(metric=metric_id).latest("date").date
@@ -205,3 +213,24 @@ def high_health_agg(request):
         data.append(metric_data)
     context = {"school_levels": school_levels, "metrics": data}
     return render(request, "high_health_overall.html", context)
+
+
+class EssentialQuestionViewSet(viewsets.ModelViewSet):
+    queryset = EssentialQuestion.objects.all()
+    serializer_class = EssentialQuestionSerializer
+
+
+class MetricViewSet(viewsets.ModelViewSet):
+    queryset = Metric.objects.all()
+    serializer_class = MetricSerializer
+
+
+class GoalViewSet(viewsets.ModelViewSet):
+    queryset = Goal.objects.all()
+    serializer_class = GoalSerializer
+
+
+class MeasureViewSet(viewsets.ModelViewSet):
+    queryset = Measure.objects.all()
+    serializer_class = MeasureSerializer
+

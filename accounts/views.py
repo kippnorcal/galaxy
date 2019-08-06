@@ -10,8 +10,18 @@ from onelogin.saml2.auth import OneLogin_Saml2_Auth
 from onelogin.saml2.settings import OneLogin_Saml2_Settings
 from onelogin.saml2.utils import OneLogin_Saml2_Utils
 
-from .models import Profile
+from .models import Role, Job, SchoolLevel, Site, Profile
 from analytics.models import Login
+
+from rest_framework import viewsets
+from .serializers import (
+    UserSerializer,
+    RoleSerializer,
+    JobSerializer,
+    SchoolLevelSerializer,
+    SiteSerializer,
+    ProfileSerializer,
+)
 
 
 def prepare_django_request(request):
@@ -155,3 +165,32 @@ def acs(request):
         if auth.get_settings().is_debug_active():
             error_reason = auth.get_last_error_reason()
 
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class RoleViewSet(viewsets.ModelViewSet):
+    queryset = Role.objects.all()
+    serializer_class = RoleSerializer
+
+
+class JobViewSet(viewsets.ModelViewSet):
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer
+
+
+class SchoolLevelViewSet(viewsets.ModelViewSet):
+    queryset = SchoolLevel.objects.all()
+    serializer_class = SchoolLevelSerializer
+
+
+class SiteLevelViewSet(viewsets.ModelViewSet):
+    queryset = Site.objects.all()
+    serializer_class = SiteSerializer
+
+
+class ProfileViewSet(viewsets.ModelViewSet):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
