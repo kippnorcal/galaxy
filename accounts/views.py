@@ -1,3 +1,4 @@
+from os import getenv
 from django.conf import settings
 from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseServerError
@@ -26,7 +27,7 @@ from .serializers import (
 
 def prepare_django_request(request):
     result = {
-        "https": "on" if request.is_secure() else "off",
+        "https": "on" if int(getenv("SSL")) else "off",
         "http_host": request.META["HTTP_HOST"],
         "script_name": request.META["PATH_INFO"],
         "get_data": request.GET.copy(),
@@ -134,7 +135,6 @@ def saml_logout(request):
 def track_login(request, user):
     tracking = Login(
         user=user,
-        referrer=request.META.get("HTTP_REFERER"),
         user_agent=request.META.get("HTTP_USER_AGENT"),
         ip_address=request.META.get("REMOTE_ADDR"),
     )
