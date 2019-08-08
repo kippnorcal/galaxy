@@ -110,3 +110,4 @@ certs/
 saml/
 *.swp
 data/
+!data/nginx/app.conf
