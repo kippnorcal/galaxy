@@ -104,13 +104,10 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# allow
-!data/nginx/app.conf
-
 # project specific
 settings.json
 certs/
 saml/
 *.swp
-data/**/*
-
+data/
+!data/nginx/app.conf
