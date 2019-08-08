@@ -143,8 +143,8 @@ SAML_FOLDER = os.path.join(BASE_DIR, "saml")
 SESSION_ENGINE = "django.contrib.sessions.backends.file"
 TEST_RUNNER = "redgreenunittest.django.runner.RedGreenDiscoverRunner"
 LOGIN_URL = "/login/"
-
-SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_HTTPONLY = True
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTOCOL", "https")
+if int(os.getenv("SSL", default=0)):
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTOCOL", "https")
 

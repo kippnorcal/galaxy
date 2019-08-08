@@ -27,7 +27,7 @@ from .serializers import (
 
 def prepare_django_request(request):
     result = {
-        "https": "on" if int(getenv("SSL")) else "off",
+        "https": "on" if int(getenv("SSL", default=0)) else "off",
         "http_host": request.META["HTTP_HOST"],
         "script_name": request.META["PATH_INFO"],
         "get_data": request.GET.copy(),
