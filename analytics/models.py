@@ -43,7 +43,6 @@ class SearchAdmin(admin.ModelAdmin):
 
 class Login(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
-    referrer = models.CharField(max_length=255, null=True, blank=True)
     user_agent = models.CharField(max_length=255, null=True, blank=True)
     ip_address = models.CharField(max_length=255, null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
