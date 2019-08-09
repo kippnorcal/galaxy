@@ -16,6 +16,7 @@ services:
       - 8000
   nginx:
     image: nginx:1.15-alpine
+    hostname: ${DOMAIN}
     ports:
       - 80:80
       - 443:443
