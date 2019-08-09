@@ -20,7 +20,7 @@ class JobSerializer(serializers.HyperlinkedModelSerializer):
     role = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all())
 
     class Meta:
-        model = Role
+        model = Job
         fields = ("id", "name", "role")
 
 
