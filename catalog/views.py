@@ -23,8 +23,8 @@ from analytics.models import Search, PageView
 
 
 def navbar(request):
-    categories = Category.objects.all().order_by("id")
-    reports = Report.active.all()
+    categories = Category.objects.filter(report__isnull=False).distinct()
+    reports = Report.active.for_user(request.user)
     context = {"categories": categories, "reports": reports}
     return context
 
