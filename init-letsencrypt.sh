@@ -5,10 +5,18 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=(dev.kippgalaxy.org)
+domains=()
+while true; do
+  read -p "Domain name:" domain
+  domains+=( "${domain}" )
+  read -p "Do you want to add another domain? (y/n)" domain_decision
+  if [ "$domain_decision" != "Y" ] && [ "$domain_decision" != "y" ]; then
+    break
+  fi
+done
 rsa_key_size=4096
 data_path="./data/certbot"
-email="data@kippbayarea.org" # Adding a valid address is strongly recommended
+read -p "Email address for validating certs:" email # Adding a valid address is strongly recommended
 staging=0 # Set to 1 if you're testing your setup to avoid hitting request limits
 
 if [ -d "$data_path" ]; then
