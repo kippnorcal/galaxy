@@ -30,15 +30,15 @@ class SubCategory(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.category}: {self.name}"
 
     class Meta:
-        ordering = ("name",)
+        ordering = ("category", "name")
         verbose_name_plural = "subcategories"
 
 
 class SubCategoryAdmin(admin.ModelAdmin):
-    list_filter = ("is_active",)
+    list_filter = ("is_active", "category")
 
 
 class ReportManager(models.Manager):
@@ -46,9 +46,10 @@ class ReportManager(models.Manager):
         return super().get_queryset().filter(is_active=True)
 
     def for_user(self, user):
-        return self.get_queryset().filter(
-            roles=user.profile.job_title.role, sites=user.profile.site
-        )
+        if user.is_authenticated:
+            return self.get_queryset().filter(
+                roles=user.profile.job_title.role, sites=user.profile.site
+            )
 
 
 class Report(models.Model):
@@ -77,6 +78,13 @@ class Report(models.Model):
 
     objects = models.Manager()
     active = ReportManager()
+
+    def clean(self):
+        if self.subcategory is not None:
+            if self.subcategory.category != self.category:
+                raise ValidationError(
+                    "There is a mismatch between category and subcategory"
+                )
 
     def __str__(self):
         return self.name
