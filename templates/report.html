@@ -1,30 +1,30 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-  <div class="container">
-    <div class="row pt-3 pb-1 ml-auto mr-auto">
-      <div class="col-sm-9">
-        <h2 class="text-muted">{{ report.name }}</h2>
-      </div>
-      <div class="col-sm-3 text-right">
-        <button type="button" onclick="openNav()" class="btn btn-primary btn-circle">
-          <i class="fas fa-info"></i>
-        </button>
-      </div>
+<div class="container">
+  <div class="row pt-3 pb-1 ml-auto mr-auto">
+    <div class="col-sm-9">
+      <h2 class="text-muted">{{ report.name }}</h2>
+    </div>
+    <div class="col-sm-3 text-right">
+      <button type="button" onclick="openNav()" class="btn btn-warning btn-circle">
+        <i class="fas fa-info"></i>
+      </button>
     </div>
   </div>
+</div>
 
-  <div class="container pb-3">
-    {% include "_tableau_iframe.html" %}
-  </div>
+<div class="container pb-3">
+  {% include "_tableau_iframe.html" %}
+</div>
 
-  {% include "_sidepanel.html" %}
+{% include "_sidepanel.html" %}
 
 {% endblock %}
 
 {% block scripts %}
-  <script type='text/javascript' src='https://tableau.kipp.org/javascripts/api/viz_v1.js'></script>
-  <script src="{% static "js/sidepanel.js" %}"></script>
-  <script src="{% static "js/favorite.js" %}"></script>
-  <script src="{% static "js/feedback.js" %}"></script>
+<script type='text/javascript' src='https://tableau.kipp.org/javascripts/api/viz_v1.js'></script>
+<script src="{% static "js/sidepanel.js" %}"></script>
+<script src="{% static "js/favorite.js" %}"></script>
+<script src="{% static "js/feedback.js" %}"></script>
 {% endblock %}
