@@ -105,6 +105,10 @@ class Report(models.Model):
         site_root = self.path().split("site/")[1].split("/")[0]
         return f"/t/{site_root}"
 
+    def target_site(self):
+        site = self.path().split("site/")[1].split("/")[0]
+        return site
+
     class Meta:
         ordering = ("name",)
 
