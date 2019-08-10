@@ -8,7 +8,8 @@
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
       {% for report in reports %}
       {% if report.category == category %}
-      {% if report.subcategory %}
+      {% for subcategory in subcategories %}
+      {% if report.subcategory == subcategory %}
       <div class="dropdown-divider"></div>
       <h6 class="dropdown-header">{{ report.subcategory.name }}</h6>
       <a class="dropdown-item text-secondary" href="{% url "report" report.id %}"><span
@@ -16,6 +17,7 @@
       {% else %}
       <a class="dropdown-item text-secondary" href="{% url "report" report.id %}">{{ report.name }}</a>
       {% endif %}
+      {% endfor %}
 
       {% endif %}
       {% endfor %}
