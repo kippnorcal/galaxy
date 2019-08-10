@@ -18,20 +18,21 @@ from onelogin.saml2.auth import OneLogin_Saml2_Auth
 from onelogin.saml2.settings import OneLogin_Saml2_Settings
 from onelogin.saml2.utils import OneLogin_Saml2_Utils
 
-from .models import Favorite, Feedback, Report, Category
+from .models import Favorite, Feedback, Report, Category, PublicStat
 from analytics.models import Search, PageView
 
 
 def navbar(request):
-    categories = Category.objects.all().order_by("id")
-    reports = Report.active.all()
+    categories = Category.objects.filter(report__isnull=False).distinct()
+    reports = Report.active.for_user(request.user)
     context = {"categories": categories, "reports": reports}
     return context
 
 
 @csrf_exempt
 def index(request):
-    return render(request, "index.html")
+    stats = PublicStat.objects.all().order_by("id")
+    return render(request, "index.html", context={"stats": stats})
 
 
 @login_required(login_url="/login")

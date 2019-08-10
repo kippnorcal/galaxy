@@ -11,7 +11,7 @@ router.registry.extend(analytics_router.registry)
 router.registry.extend(high_health_router.registry)
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("mission_control/", admin.site.urls),
     path("api/", include(router.urls)),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("", include("catalog.urls")),
