@@ -24,13 +24,8 @@ from analytics.models import Search, PageView
 
 def navbar(request):
     categories = Category.objects.filter(report__isnull=False).distinct()
-    subcategories = SubCategory.objects.filter(report__isnull=False).distinct()
     reports = Report.active.for_user(request.user)
-    context = {
-        "categories": categories,
-        "reports": reports,
-        "subcategories": subcategories,
-    }
+    context = {"categories": categories, "reports": reports}
     return context
 
 
