@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load humanize %}
 {% block content %}
 <div class="jumbotron jumbotron-fluid galaxy-banner">
   <div class="container text-center">
@@ -12,7 +13,7 @@
   <div class="row">
     {% for stat in stats %}
     <div class="col-sm-2 {% if stat == stats|first %}offset-sm-2{% endif %} text-center">
-      <h1 class="text-warning">{{ stat.value }}</h1>
+      <h1 class="text-warning">{{ stat.value|intcomma }}</h1>
       <h5 class="text-secondary">{{ stat.metric }}</h5>
     </div>
     {% endfor %}
