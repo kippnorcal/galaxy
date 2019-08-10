@@ -34,6 +34,14 @@
         <li class="text-center"><i class="far fa-user-circle pr-3"></i>{{ profile.job_title.role }}</li>
         <li class="text-center"><i class="far fa-clock pr-3"></i>{{ user.last_login }}</li>
       </ul>
+      {% if request.user.is_staff %}
+      <div class="text-center">
+        <a href="{% url 'admin:index' %}" class="btn btn-warning">
+          <i class="fas fa-rocket"></i>
+          <strong>Mission Control</strong>
+        </a>
+      </div>
+      {% endif %}
     </div>
     <div class="col-sm-8 pt-5">
       <ul class="nav nav-tabs" id="myTab" role="tablist">
