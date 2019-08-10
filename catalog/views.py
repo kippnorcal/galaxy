@@ -69,7 +69,7 @@ def report(request, report_id):
         report=report_id, profile=request.user.profile
     ).exists()
     favorited_by = Favorite.objects.filter(report=report_id).count()
-    auth_ticket = get_iframe_auth_ticket(request.user, report.site_root)
+    auth_ticket = get_iframe_auth_ticket(request.user, report.target_site())
     context = {
         "report": report,
         "is_favorite": is_favorite,
