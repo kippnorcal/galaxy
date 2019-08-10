@@ -13,6 +13,7 @@ redgreenunittest = "*"
 gunicorn = "*"
 python-dateutil = "*"
 djangorestframework = "*"
+requests = "*"
 
 [requires]
 python_version = "3.7"
