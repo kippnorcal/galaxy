@@ -1,3 +1,4 @@
+from os import getenv
 from django.conf import settings
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.urls import reverse
@@ -20,6 +21,7 @@ from onelogin.saml2.utils import OneLogin_Saml2_Utils
 
 from .models import Favorite, Feedback, Report, Category, PublicStat, SubCategory
 from analytics.models import Search, PageView
+import requests
 
 
 def navbar(request):
@@ -27,6 +29,13 @@ def navbar(request):
     reports = Report.active.for_user(request.user)
     context = {"categories": categories, "reports": reports}
     return context
+
+
+def get_iframe_auth_ticket(user, site):
+    url = getenv("TABLEAU_TRUSTED_URL")
+    domain = getenv("USER_DOMAIN")
+    r = requests.post(url, data={"username": f"{domain}\{user}", "target_site": site})
+    return r.text
 
 
 @csrf_exempt
@@ -60,10 +69,12 @@ def report(request, report_id):
         report=report_id, profile=request.user.profile
     ).exists()
     favorited_by = Favorite.objects.filter(report=report_id).count()
+    auth_ticket = get_iframe_auth_ticket(request.user, report.site_root)
     context = {
         "report": report,
         "is_favorite": is_favorite,
         "favorited_by": favorited_by,
+        "auth_ticket": auth_ticket,
     }
     feedback = (
         Feedback.objects.filter(user=request.user).filter(report=report_id).last()
