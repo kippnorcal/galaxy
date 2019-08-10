@@ -6,19 +6,23 @@
       {{ category.name }}
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+      {% with category.subcategory_set.all as subcategories %}
+      {% for subcategory in subcategories %}
+      <h6 class="dropdown-header text-dark">{{ subcategory.name }}</h6>
       {% for report in reports %}
-      {% if report.category == category %}
-      {% if report.subcategory %}
-      <div class="dropdown-divider"></div>
-      <h6 class="dropdown-header">{{ report.subcategory.name }}</h6>
+      {% if report.subcategory == subcategory %}
       <a class="dropdown-item text-secondary" href="{% url "report" report.id %}"><span
           class="ml-3">{{ report.name }}</span></a>
-      {% else %}
-      <a class="dropdown-item text-secondary" href="{% url "report" report.id %}">{{ report.name }}</a>
-      {% endif %}
-
       {% endif %}
       {% endfor %}
+      <div class="dropdown-divider"></div>
+      {% endfor %}
+      {% for report in reports %}
+      {% if report.category == category and report.subcategory not in subcategories %}
+      <a class="dropdown-item text-secondary" href="{% url "report" report.id %}">{{ report.name }}</a>
+      {% endif %}
+      {% endfor %}
+      {% endwith %}
     </div>
   </li>
   {% endfor %}
