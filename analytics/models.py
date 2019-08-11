@@ -1,3 +1,4 @@
+from os import getenv
 from urllib.parse import urlparse
 from django.db import models
 from django.contrib import admin
@@ -24,15 +25,6 @@ class PageView(models.Model):
         url = urlparse(self.page)
         if url.path:
             return url.path.split("/")[-1]
-
-    @property
-    def display_name(self):
-        if "high_health" in self.page_object:
-            return "High Health"
-        elif "report" in self.page_object:
-            return Report.objects.get(pk=self.page_id).name
-        else:
-            return self.page
 
     class Meta:
         ordering = ("-timestamp",)
