@@ -7,7 +7,8 @@
       <h2 class="text-muted">{{ report.name }}</h2>
     </div>
     <div class="col-sm-3 text-right">
-      <button type="button" onclick="openNav()" class="btn btn-warning btn-circle">
+      <button type="button" onclick="openNav()" class="btn btn-warning btn-circle" data-toggle="tooltip"
+        data-placement="left" title="Click to see additional report info">
         <i class="fas fa-info"></i>
       </button>
     </div>
@@ -15,7 +16,11 @@
 </div>
 
 <div class="container pb-3">
+  {% if ssl %}
+  {% include "_tableau_iframe_ssl.html" %}
+  {% else %}
   {% include "_tableau_iframe.html" %}
+  {% endif %}
 </div>
 
 {% include "_sidepanel.html" %}
@@ -23,8 +28,9 @@
 {% endblock %}
 
 {% block scripts %}
-<script type='text/javascript' src='https://tableau.kipp.org/javascripts/api/viz_v1.js'></script>
 <script src="{% static "js/sidepanel.js" %}"></script>
 <script src="{% static "js/favorite.js" %}"></script>
 <script src="{% static "js/feedback.js" %}"></script>
+<script src="{% static "js/tooltip.js" %}"></script>
+<script type='text/javascript' src='https://tableau.kipp.org/javascripts/api/viz_v1.js'></script>
 {% endblock %}

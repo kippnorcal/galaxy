@@ -33,7 +33,7 @@ class SubCategory(models.Model):
         return f"{self.category}: {self.name}"
 
     class Meta:
-        ordering = ("category", "name")
+        ordering = ("category", "id")
         verbose_name_plural = "subcategories"
 
 
@@ -72,6 +72,7 @@ class Report(models.Model):
     sites = models.ManyToManyField(Site, default=sites_default)
     is_active = models.BooleanField(default=True)
     is_embedded = models.BooleanField(default=True)
+    height = models.IntegerField(default=850)
     owner = models.ForeignKey(
         User, on_delete=models.PROTECT, null=True, limit_choices_to={"is_staff": True}
     )
@@ -116,12 +117,13 @@ class Report(models.Model):
 class ReportAdmin(admin.ModelAdmin):
     list_display = ("name", "is_active", "is_embedded")
     list_filter = (
-        "is_active",
-        "is_embedded",
-        "roles",
-        "sites",
         "category",
         "subcategory",
+        "roles",
+        "sites",
+        "owner",
+        "is_active",
+        "is_embedded",
     )
 
     search_fields = ["name", "category__name"]

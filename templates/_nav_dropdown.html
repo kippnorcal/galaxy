@@ -11,7 +11,7 @@
       <h6 class="dropdown-header text-dark">{{ subcategory.name }}</h6>
       {% for report in reports %}
       {% if report.subcategory == subcategory %}
-      <a class="dropdown-item text-secondary" href="{% url "report" report.id %}"><span
+      <a class="dropdown-item text-secondary small" href="{% url "report" report.id %}"><span
           class="ml-3">{{ report.name }}</span></a>
       {% endif %}
       {% endfor %}
@@ -19,7 +19,7 @@
       {% endfor %}
       {% for report in reports %}
       {% if report.category == category and report.subcategory not in subcategories %}
-      <a class="dropdown-item text-secondary" href="{% url "report" report.id %}">{{ report.name }}</a>
+      <a class="dropdown-item text-secondary small" href="{% url "report" report.id %}">{{ report.name }}</a>
       {% endif %}
       {% endfor %}
       {% endwith %}

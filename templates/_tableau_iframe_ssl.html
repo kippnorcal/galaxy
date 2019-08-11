@@ -1,10 +1,7 @@
 <div class='tableauPlaceholder mr-auto ml-auto' style='width: 1100px; height: {{ report.height }}px;'>
   <object class='tableauViz' width='1100' height='{{ report.height }}' style='display:none;'>
-    <param name='host_url' value='{{ report.host_url }}' />
-    <param name='site_root' value='{{ report.site_root }}' />
-    <param name='name' value='{{ report.embed_name }}' />
+    <param name='path' value='trusted/{{auth_ticket}}{{ report.site_root }}/views/{{report.embed_name}}' />
     <param name='toolbar' value='top' />
-    <param name='embed_code_version' value='3' />
     <param name='alerts' value='no' />
     <param name='tabs' value='no' />
     <param name='subscriptions' value='no' />
