@@ -91,8 +91,9 @@ def report(request, report_id):
     else:
         page = request.build_absolute_uri()
     page_views = PageView.objects.filter(page=page)
+    page_views = page_views.aggregate(views=Count("user", distinct=True))
     if page_views:
-        context["viewed_by"] = len(page_views)
+        context["viewed_by"] = page_views["views"]
     return render(request, "report.html", context)
 
 
