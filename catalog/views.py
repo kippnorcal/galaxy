@@ -75,6 +75,7 @@ def report(request, report_id):
         "is_favorite": is_favorite,
         "favorited_by": favorited_by,
         "auth_ticket": auth_ticket,
+        "viewed_by": 0,
     }
     feedback = (
         Feedback.objects.filter(user=request.user).filter(report=report_id).last()
