@@ -30,7 +30,9 @@
     <!--Report stats -->
     <div class="row mt-5 pl-5">
       {% include "_report_stats.html" with icon_type="fa fa-heart" info_title="favorited by" badge_class="fav-badge" info_value=favorited_by %}
+      {% if viewed_by %}
       {% include "_report_stats.html" with icon_type="far fa-user" info_title="recently viewed by" badge_class="view-count-badge" info_value=viewed_by %}
+      {% endif %}
       {% if avg_feedback %}
       {% include "_report_stats.html" with icon_type="fas fa-chart-pie" info_title="average feedback score" badge_class="avg-feedback" info_value=avg_feedback %}
       {% include "_report_stats.html" with icon_type="fas {{ feedback.score|sentiment_icon }}" info_title="your feedback score" badge_class="score-badge" info_value=feedback.score %}
@@ -40,8 +42,5 @@
     <hr class="col-sm-10">
     <!--Report visibility-->
     {% include "_report_role_stats.html" with collapse_id="visible-to" icon_type="fas fa-user-tag" collapse_title="visible to roles" roles=report.roles.all %}
-    <!--Report popularity -->
-    {% include "_report_role_stats.html" with collapse_id="popular-with" icon_type="fas fa-fire" collapse_title="popular with roles" roles=report.roles.all|slice:"0:4" %}
-
   </div>
 </div>
