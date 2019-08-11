@@ -1,4 +1,5 @@
 from os import getenv
+from urllib.parse import urlparse
 from django.conf import settings
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.urls import reverse
@@ -57,8 +58,9 @@ def profile(request):
     )
     pages = []
     for page in recently_viewed:
+        page_url = urlparse(page["page"])
         if "report" in page["page"]:
-            page["display_name"] = Report.objects.get(pk=page["page"].split("/")[-1])
+            page["display_name"] = Report.objects.get(pk=page_url.path.split("/")[-1])
         else:
             page["display_name"] = page["page"]
         pages.append(page)
