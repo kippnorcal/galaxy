@@ -51,6 +51,12 @@ class Job(models.Model):
         ordering = ("name",)
 
 
+class JobAdmin(admin.ModelAdmin):
+    list_display = ("__str__",)
+    list_filter = ("role",)
+    search_fields = ["name"]
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.PROTECT, blank=True, null=True)
     employee_number = models.CharField(max_length=5, blank=True)

@@ -146,3 +146,52 @@ h1 {
 #comments, label[for="comments"] {
   display: none;
 }
+
+.kipp-prompt {
+  width: 6.563em;
+  height: 1.657em;
+}
+
+.btn-warning {
+  color: #212529;
+  background-color: #F7941E;
+  border-color: #F7941E;
+}
+
+.btn-warning:hover {
+  color: #212529;
+  background-color: #439539;
+  border-color: #439539;
+}
+
+.btn-warning:focus, .btn-warning.focus {
+  box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.5);
+}
+
+.btn-warning.disabled, .btn-warning:disabled {
+  color: #212529;
+  background-color: #F7941E;
+  border-color: #F7941E;
+}
+
+.btn-warning:not(:disabled):not(.disabled):active, .btn-warning:not(:disabled):not(.disabled).active,
+.show > .btn-warning.dropdown-toggle {
+  color: #212529;
+  background-color: #F7941E;
+  border-color: #F7941E;
+}
+
+.btn-warning:not(:disabled):not(.disabled):active:focus, .btn-warning:not(:disabled):not(.disabled).active:focus,
+.show > .btn-warning.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.5);
+}
+
+.text-dark-orange {
+  color: #E27425 !important;
+  font-weight: bold;
+}
+
+.text-dark-blue {
+  color: rgb(27, 61, 120) !important;
+
+}

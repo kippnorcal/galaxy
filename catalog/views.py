@@ -13,7 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
 from django.contrib.postgres.search import SearchVector
-from django.db.models import Max, Count
+from django.db.models import Max, Count, Q
 
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
 from onelogin.saml2.settings import OneLogin_Saml2_Settings
@@ -50,21 +50,26 @@ def profile(request):
     favorites = Favorite.objects.filter(profile=profile)
     recently_viewed = (
         PageView.objects.filter(user=request.user)
+        .filter(Q(page__contains="report"))
         .values("page")
         .annotate(views=Count("page"), timestamp=Max("timestamp"))
         .order_by("-timestamp")
     )
-    context = {
-        "profile": profile,
-        "favorites": favorites,
-        "recently_viewed": recently_viewed,
-    }
+    pages = []
+    for page in recently_viewed:
+        if "report" in page["page"]:
+            page["display_name"] = Report.objects.get(pk=page["page"].split("/")[-1])
+        else:
+            page["display_name"] = page["page"]
+        pages.append(page)
+    context = {"profile": profile, "favorites": favorites, "recently_viewed": pages}
     return render(request, "profile.html", context)
 
 
 @login_required(login_url="/login")
 def report(request, report_id):
-    report = get_object_or_404(Report, pk=report_id, is_embedded=True)
+    report_query = Report.active.for_user(request.user)
+    report = get_object_or_404(report_query, pk=report_id, is_embedded=True)
     is_favorite = Favorite.objects.filter(
         report=report_id, profile=request.user.profile
     ).exists()
@@ -76,6 +81,7 @@ def report(request, report_id):
         "favorited_by": favorited_by,
         "auth_ticket": auth_ticket,
         "viewed_by": 0,
+        "ssl": getenv("SSL", default=0),
     }
     feedback = (
         Feedback.objects.filter(user=request.user).filter(report=report_id).last()
@@ -151,11 +157,13 @@ def search(request):
         search_term = request.POST["search-term"]
         tracking = Search(user=request.user, search_term=search_term)
         tracking.save()
-        reports = Report.objects.annotate(
-            search=SearchVector("name", "category", "description")
-        ).filter(search=search_term)
+        reports = (
+            Report.active.for_user(request.user)
+            .annotate(search=SearchVector("name", "category", "description"))
+            .filter(search=search_term)
+        )
         context = {
-            "reports": reports,
+            "search_results": reports,
             "search_term": search_term,
             "search_id": tracking.id,
         }

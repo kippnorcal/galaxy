@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-
+{% load tz %}
 {% block content %}
 
 <div class="container">
@@ -28,20 +28,30 @@
       <h6 class="text-center text-muted">{{ profile.job_title }}</h6>
       <ul class="list-unstyled pt-3">
         <hr class="col-sm-3">
-        <li class="text-center"><i class="fas fa-map-marker-alt pr-3"></i>{{ profile.site }}</li>
-        <li class="text-center"><i class="far fa-envelope pr-3"></i><a
-            href="mailto:{{ profile.email }}">{{ profile.email}}</a></li>
-        <li class="text-center"><i class="far fa-user-circle pr-3"></i>{{ profile.job_title.role }}</li>
-        <li class="text-center"><i class="far fa-clock pr-3"></i>{{ user.last_login }}</li>
+        <li class="text-center"><i class="fas fa-map-marker-alt pr-3" data-toggle="tooltip" data-placement="left"
+            title="Work Location"></i>{{ profile.site }}</li>
+        <li class=" text-center"><i class="far fa-envelope pr-3" data-toggle="tooltip" data-placement="left"
+            title="Email"></i><a href="mailto:{{ profile.email }}">{{ profile.email}}</a></li>
+        <li class="text-center"><i class="far fa-user-circle pr-3" data-toggle="tooltip" data-placement="left"
+            title="Role"></i>{{ profile.job_title.role }}</li>
+        <li class="text-center"><i class="far fa-clock pr-3" data-toggle="tooltip" data-placement="left"
+            title="Last Login"></i>{{ user.last_login|localtime }}</li>
       </ul>
-      {% if request.user.is_staff %}
       <div class="text-center">
+        {% if request.user.is_staff %}
         <a href="{% url 'admin:index' %}" class="btn btn-warning">
           <i class="fas fa-rocket"></i>
           <strong>Mission Control</strong>
         </a>
+        {% else %}
+        <a href="https://docs.google.com/document/d/1j2LZKEQ_Tmy1mlZKRp5egECSsdjN3DWCg-65ZQvuNw4/edit?usp=drivesdk"
+          class="btn btn-info">
+          <i class="fas fa-question-circle"></i>
+          <strong>FAQs</strong>
+        </a>
+        {% endif %}
       </div>
-      {% endif %}
+
     </div>
     <div class="col-sm-8 pt-5">
       <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -60,9 +70,8 @@
             <table class="table table-hover">
               <thead>
                 <tr>
-                  <th scope="col">Report</th>
+                  <th scope="col">Data Tool</th>
                   <th scope="col">Category</th>
-                  <th scope="col">Timestamp</th>
                 </tr>
               </thead>
               <tbody>
@@ -70,7 +79,6 @@
                 <tr>
                   <td><a href="{% url "report" favorite.report.id %}">{{ favorite.report.name }}</a></td>
                   <td>{{ favorite.report.category }}</td>
-                  <td>{{ favorite.timestamp }}</td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -83,15 +91,15 @@
               <thead>
                 <tr>
                   <th scope="col">Page</th>
-                  <th scope="col">Timestamp</th>
+                  <th scope="col">Last Viewed</th>
                   <th scope="col"># Views</th>
                 </tr>
               </thead>
               <tbody>
                 {% for rc in recently_viewed %}
                 <tr>
-                  <td><a href="{{ rc.page }}">{{ rc.page }}</a></td>
-                  <td>{{ rc.timestamp }}</td>
+                  <td><a href="{{ rc.page }}">{{ rc.display_name }}</a></td>
+                  <td>{{ rc.timestamp|localtime }}</td>
                   <td>{{ rc.views }}</td>
                 </tr>
                 {% endfor %}
