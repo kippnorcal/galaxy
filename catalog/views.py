@@ -75,6 +75,7 @@ def report(request, report_id):
         "is_favorite": is_favorite,
         "favorited_by": favorited_by,
         "auth_ticket": auth_ticket,
+        "viewed_by": 0,
     }
     feedback = (
         Feedback.objects.filter(user=request.user).filter(report=report_id).last()
@@ -84,9 +85,15 @@ def report(request, report_id):
         context["feedback"] = feedback
     if avg_feedback and avg_feedback["score__avg"] is not None:
         context["avg_feedback"] = round(avg_feedback["score__avg"], 1)
-    page_views = PageView.objects.filter(page=request.build_absolute_uri())
+    if getenv("SSL", default=0):
+        page = request.build_absolute_uri()
+        page = page.replace("http", "https")
+    else:
+        page = request.build_absolute_uri()
+    page_views = PageView.objects.filter(page=page)
+    page_views = page_views.aggregate(views=Count("user", distinct=True))
     if page_views:
-        context["viewed_by"] = len(page_views)
+        context["viewed_by"] = page_views["views"]
     return render(request, "report.html", context)
 
 

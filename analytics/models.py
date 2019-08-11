@@ -12,6 +12,18 @@ class PageView(models.Model):
     def __str__(self):
         return f"{self.page}"
 
+    @property
+    def page_object(self):
+        url = urlparse(self.page)
+        if url.path:
+            return url.path.split("/")[1]
+
+    @property
+    def page_id(self):
+        url = urlparse(self.page)
+        if url.path:
+            return url.path.split("/")[-1]
+
     class Meta:
         ordering = ("-timestamp",)
 
