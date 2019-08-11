@@ -25,7 +25,7 @@ import requests
 
 
 def navbar(request):
-    categories = Category.objects.filter(report__isnull=False).distinct()
+    categories = Category.objects.filter(report__isnull=False).distinct().order_by("id")
     reports = Report.active.for_user(request.user)
     context = {"categories": categories, "reports": reports}
     return context
