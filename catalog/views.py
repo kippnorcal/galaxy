@@ -85,7 +85,12 @@ def report(request, report_id):
         context["feedback"] = feedback
     if avg_feedback and avg_feedback["score__avg"] is not None:
         context["avg_feedback"] = round(avg_feedback["score__avg"], 1)
-    page_views = PageView.objects.filter(page=request.build_absolute_uri())
+    if getenv("SSL"):
+        page = request.build_absolute_uri()
+        page = page.replace("http", "https")
+    else:
+        page = request.build_absolute_uri()
+    page_views = PageView.objects.filter(page=page)
     if page_views:
         context["viewed_by"] = len(page_views)
     return render(request, "report.html", context)
