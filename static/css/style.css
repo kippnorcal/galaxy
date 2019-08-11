@@ -146,3 +146,8 @@ h1 {
 #comments, label[for="comments"] {
   display: none;
 }
+
+.kipp-prompt {
+  width: 6.563em;
+  height: 1.657em;
+}
