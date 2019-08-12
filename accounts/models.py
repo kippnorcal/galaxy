@@ -80,6 +80,6 @@ class ProfileAdmin(admin.ModelAdmin):
         "user__first_name",
         "user__last_name",
         "email",
-        "job_title",
+        "job_title__name",
         "employee_number",
     ]
