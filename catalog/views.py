@@ -57,11 +57,16 @@ def profile(request):
     )
     pages = []
     for page in recently_viewed:
-        if "report" in page["page"]:
-            page["display_name"] = Report.objects.get(pk=page["page"].split("/")[-1])
-        else:
-            page["display_name"] = page["page"]
-        pages.append(page)
+        try:
+            if "report" in page["page"]:
+                page["display_name"] = Report.objects.get(
+                    pk=page["page"].split("/")[-1]
+                )
+            else:
+                page["display_name"] = page["page"]
+            pages.append(page)
+        except Report.DoesNotExist:
+            pass
     context = {"profile": profile, "favorites": favorites, "recently_viewed": pages}
     return render(request, "profile.html", context)
 
