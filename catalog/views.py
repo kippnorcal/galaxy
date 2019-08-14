@@ -34,10 +34,17 @@ from .serializers import (
 
 def navbar(request):
     reports = Report.active.for_user(request.user)
-    category_list = reports.values_list("category").distinct()
-    categories = Category.objects.filter(id__in=category_list).order_by("id")
-    subcategory_list = reports.values_list("subcategory").distinct()
-    subcategories = SubCategory.objects.filter(id__in=subcategory_list).order_by("id")
+    if request.user.is_authenticated and reports:
+        category_list = reports.values_list("category").distinct()
+        categories = Category.objects.filter(id__in=category_list).order_by("id")
+        subcategory_list = reports.values_list("subcategory").distinct()
+        subcategories = SubCategory.objects.filter(id__in=subcategory_list).order_by(
+            "id"
+        )
+    else:
+        categories = None
+        reports = None
+        subcategories = None
     context = {
         "categories": categories,
         "reports": reports,
