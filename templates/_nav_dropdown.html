@@ -7,6 +7,7 @@
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
       {% for subcategory in subcategories %}
+      {% if subcategory.category == category %}
       <h6 class="dropdown-header text-dark">{{ subcategory.name }}</h6>
       {% for report in reports %}
       {% if report.subcategory == subcategory %}
@@ -15,6 +16,7 @@
       {% endif %}
       {% endfor %}
       <div class="dropdown-divider"></div>
+      {% endif %}
       {% endfor %}
       {% for report in reports %}
       {% if report.category == category and report.subcategory not in subcategories %}
