@@ -36,7 +36,13 @@ def navbar(request):
     reports = Report.active.for_user(request.user)
     category_list = reports.values_list("category").distinct()
     categories = Category.objects.filter(id__in=category_list).order_by("id")
-    context = {"categories": categories, "reports": reports}
+    subcategory_list = reports.values_list("subcategory").distinct()
+    subcategories = SubCategory.objects.filter(id__in=subcategory_list).order_by("id")
+    context = {
+        "categories": categories,
+        "reports": reports,
+        "subcategories": subcategories,
+    }
     return context
 
 
