@@ -8,8 +8,8 @@ class LoginSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Login
-        fields = ("id", "user", "referrer", "user_agent", "ip_address", "timestamp")
-        read_only_fields = ("user", "referrer", "user_agent", "ip_address", "timestamp")
+        fields = ("id", "user", "user_agent", "ip_address", "timestamp")
+        read_only_fields = ("user", "user_agent", "ip_address", "timestamp")
 
 
 class SearchSerializer(serializers.HyperlinkedModelSerializer):

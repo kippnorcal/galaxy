@@ -22,11 +22,20 @@ from onelogin.saml2.utils import OneLogin_Saml2_Utils
 from .models import Favorite, Feedback, Report, Category, PublicStat, SubCategory
 from analytics.models import Search, PageView
 import requests
+from rest_framework import viewsets
+from .serializers import (
+    CategorySerializer,
+    SubCategorySerializer,
+    ReportSerializer,
+    FavoriteSerializer,
+    FeedbackSerializer,
+)
 
 
 def navbar(request):
-    categories = Category.objects.filter(report__isnull=False).distinct().order_by("id")
     reports = Report.active.for_user(request.user)
+    category_list = reports.values_list("category").distinct()
+    categories = Category.objects.filter(id__in=category_list).order_by("id")
     context = {"categories": categories, "reports": reports}
     return context
 
@@ -173,3 +182,28 @@ def search(request):
             "search_id": tracking.id,
         }
         return render(request, "search.html", context)
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class SubCategoryViewSet(viewsets.ModelViewSet):
+    queryset = SubCategory.objects.all()
+    serializer_class = SubCategorySerializer
+
+
+class ReportViewSet(viewsets.ModelViewSet):
+    queryset = Report.objects.all()
+    serializer_class = ReportSerializer
+
+
+class FavoriteViewSet(viewsets.ModelViewSet):
+    queryset = Favorite.objects.all()
+    serializer_class = FavoriteSerializer
+
+
+class FeedbackViewSet(viewsets.ModelViewSet):
+    queryset = Feedback.objects.all()
+    serializer_class = FeedbackSerializer
