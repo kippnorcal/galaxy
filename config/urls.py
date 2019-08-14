@@ -4,11 +4,14 @@ from rest_framework import routers
 from accounts.urls import router as account_router
 from analytics.urls import router as analytics_router
 from high_health.urls import router as high_health_router
+from catalog.urls import router as catalog_router
 
 router = routers.DefaultRouter()
 router.registry.extend(account_router.registry)
 router.registry.extend(analytics_router.registry)
 router.registry.extend(high_health_router.registry)
+router.registry.extend(high_health_router.registry)
+router.registry.extend(catalog_router.registry)
 
 urlpatterns = [
     path("mission_control/", admin.site.urls),
