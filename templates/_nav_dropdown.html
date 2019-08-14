@@ -6,7 +6,6 @@
       {{ category.name }}
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-      {% with category.subcategory_set.all as subcategories %}
       {% for subcategory in subcategories %}
       <h6 class="dropdown-header text-dark">{{ subcategory.name }}</h6>
       {% for report in reports %}
@@ -22,7 +21,6 @@
       <a class="dropdown-item text-secondary small" href="{% url "report" report.id %}">{{ report.name }}</a>
       {% endif %}
       {% endfor %}
-      {% endwith %}
     </div>
   </li>
   {% endfor %}
