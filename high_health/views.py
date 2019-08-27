@@ -6,10 +6,11 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Avg
 from django.http import JsonResponse
 from django.shortcuts import render
+from django_filters.rest_framework import DjangoFilterBackend
 from accounts.models import Site, SchoolLevel
 from .models import EssentialQuestion, Metric, Measure, Goal
 
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from .serializers import (
     EssentialQuestionSerializer,
     MetricSerializer,
@@ -233,4 +234,6 @@ class GoalViewSet(viewsets.ModelViewSet):
 class MeasureViewSet(viewsets.ModelViewSet):
     queryset = Measure.objects.all()
     serializer_class = MeasureSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ("is_current",)
 
