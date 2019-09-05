@@ -20,21 +20,26 @@ from .serializers import (
 
 
 def last_updated(metric_id):
-    return Measure.objects.filter(metric=metric_id).latest("date").date
+    try:
+        return Measure.objects.filter(metric=metric_id).latest("date").date
+    except Measure.DoesNotExist:
+        return None
 
 
 def metrics(school_level):
     metrics = Metric.objects.filter(goal__school__school_level=school_level).distinct()
     data = []
     for metric in metrics:
-        metric_data = {
-            "metric": metric,
-            "last_updated": last_updated(metric.id),
-            "measures": metric.measure_set.filter(
-                school__school_level=school_level, is_current=True
-            ).order_by("school"),
-        }
-        data.append(metric_data)
+        measures = metric.measure_set.filter(
+            school__school_level=school_level, is_current=True
+        ).order_by("school")
+        if measures:
+            metric_data = {
+                "metric": metric,
+                "last_updated": last_updated(metric.id),
+                "measures": measures,
+            }
+            data.append(metric_data)
     return data
 
 
@@ -50,8 +55,8 @@ def chart_label(measures):
 
 def school_year_range(today=datetime.today()):
     year = int(today.strftime("%Y"))
-    start_date = f"{year-1}-07-01"
-    end_date = f"{year}-06-30"
+    start_date = f"{year}-07-01"
+    end_date = f"{year+1}-06-30"
     return start_date, end_date
 
 
@@ -168,9 +173,17 @@ def chart_data_agg(request, metric_id, school_level_id):
     return JsonResponse({"success": True, "data": data})
 
 
+def get_school_level(user):
+    if user.profile.site.name == "RSO":
+        return 1
+    else:
+        return user.profile.site.school_level.id
+
+
 @login_required
 def high_health(request, school_level=None):
-    school_level = school_level or request.user.profile.site.school_level.id
+    # TODO: Convert to query school level by name instead of id
+    school_level = school_level or get_school_level(request.user)
     context = {
         "school_level": SchoolLevel.objects.get(pk=school_level),
         "schools": Site.objects.filter(school_level=school_level),
