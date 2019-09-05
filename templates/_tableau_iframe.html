@@ -6,7 +6,7 @@
     <param name='toolbar' value='top' />
     <param name='embed_code_version' value='3' />
     <param name='alerts' value='no' />
-    <param name='tabs' value='no' />
+    <param name='tabs' value='{{ report.is_tabbed|yesno }}' />
     <param name='subscriptions' value='no' />
     <param name='customViews' value='no' />
   </object>
