@@ -101,6 +101,10 @@ def distinct_months(prior_year_measures, current_year_measures):
     return months
 
 
+def distinct_years(measures):
+    return [measure.year for measure in measures]
+
+
 def year_bound_measures(metric_id, school_id, previous_year=False):
     if previous_year:
         a_year_ago = datetime.today() - relativedelta(years=1)
@@ -116,23 +120,71 @@ def distinct_values(measures):
     return [measure.value for measure in measures]
 
 
-@login_required
-def chart_data(request, metric_id, school_id):
+def monthly_data(metric_id, school_id):
     cy_measures = year_bound_measures(metric_id, school_id)
     py_measures = year_bound_measures(metric_id, school_id, previous_year=True)
     cy_values = distinct_values(cy_measures)
     py_values = distinct_values(py_measures)
     months = distinct_months(py_measures, cy_measures)
+    values = cy_values + py_values
+    goal = Goal.objects.get(metric=metric_id, school=school_id).target
+    axis_min = round(min(values) - 3)
+    if goal + 3 >= 100:
+        axis_max = 100
+    elif goal + 3 > max(values):
+        axis_max = round(goal + 3)
+    else:
+        axis_max = round(max(values) + 1)
 
-    data = {
+    return {
+        "frequency": "monthly",
         "months": months,
         "py_label": chart_label(py_measures),
         "previous_year": py_values,
         "cy_label": chart_label(cy_measures),
         "current_year": cy_values,
-        "goal": Goal.objects.get(metric=metric_id, school=school_id).target,
+        "goal": goal,
         "metric": Metric.objects.get(pk=metric_id).name,
+        "axis_min": axis_min,
+        "axis_max": axis_max,
     }
+
+
+def yearly_data(metric_id, school_id):
+    metric = Metric.objects.get(pk=metric_id).name
+    measures = Measure.objects.filter(metric=metric_id, school=school_id).order_by(
+        "date"
+    )
+    goal = Goal.objects.get(metric=metric_id, school=school_id).target
+    values = distinct_values(measures)
+    axis_min = round(min(values) - 3)
+    if goal + 3 >= 100:
+        axis_max = 100
+    elif goal + 3 > max(values):
+        axis_max = round(goal + 3)
+    else:
+        axis_max = round(max(values) + 1)
+
+    return {
+        "frequency": "yearly",
+        "years": distinct_years(measures),
+        "label": None,
+        "values": values,
+        "goal": goal,
+        "metric": metric,
+        "axis_min": axis_min,
+        "axis_max": axis_max,
+    }
+
+
+@login_required
+def chart_data(request, metric_id, school_id):
+    frequency = Metric.objects.get(pk=metric_id).frequency
+    if frequency == "MoM":
+        data = monthly_data(metric_id, school_id)
+    elif frequency == "YoY":
+        data = yearly_data(metric_id, school_id)
+
     return JsonResponse({"success": True, "data": data})
 
 
