@@ -23,6 +23,10 @@ class Metric(models.Model):
     essential_question = models.ForeignKey(
         EssentialQuestion, on_delete=models.PROTECT, null=True, blank=True
     )
+    frequency_choices = [("MoM", "month over month"), ("YoY", "year over year")]
+    frequency = models.CharField(
+        max_length=3, choices=frequency_choices, default=frequency_choices[0][0]
+    )
     report = models.ForeignKey(Report, on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField(default=datetime.date.today)
 
@@ -95,10 +99,6 @@ class Goal(models.Model):
     goal_type_choices = [("ABOVE", "above"), ("BELOW", "below")]
     goal_type = models.CharField(
         max_length=5, choices=goal_type_choices, default=goal_type_choices[0][0]
-    )
-    frequency_choices = [("MoM", "month over month"), ("YoY", "year over year")]
-    frequency = models.CharField(
-        max_length=3, choices=frequency_choices, default=frequency_choices[0][0]
     )
     target = models.DecimalField(max_digits=5, decimal_places=2, default=100)
 
