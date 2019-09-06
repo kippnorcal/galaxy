@@ -42,6 +42,7 @@ $('.hh_value').click(function (event) {
                     yAxes: [{
                         display: true,
                         ticks: {
+                            // beginAtZero: false,
                             min: response['data']['axis_min'],
                             max: response['data']['axis_max'],
                         }
@@ -53,11 +54,11 @@ $('.hh_value').click(function (event) {
                         mode: 'horizontal',
                         scaleID: 'y-axis-0',
                         value: response['data']['goal'],
-                        borderColor: '#6CC04A',
+                        borderColor: response['data']['goal_color'],
                         borderWidth: 2,
                         label: {
-                            backgroundColor: '#6CC04A',
-                            content: 'Goal: ' + response['data']['goal'],
+                            backgroundColor: response['data']['goal_color'],
+                            content: 'Goal: ' + response['data']['goal_type'].toLowerCase() + ' ' + response['data']['goal'],
                             enabled: true
                         }
                     }]

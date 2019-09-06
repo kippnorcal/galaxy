@@ -120,6 +120,39 @@ def distinct_values(measures):
     return [measure.value for measure in measures]
 
 
+def find_axis_max(values, goal):
+    max_value = max(values)
+    if goal + 3 >= 100 or max_value + 1 >= 100:
+        axis_max = 100
+    elif goal + 3 > max_value:
+        axis_max = round(goal + 3)
+    else:
+        axis_max = round(max_value + 1)
+    return axis_max
+
+
+def find_axis_min(values, goal):
+    min_value = min(values)
+    if goal - 1 <= min_value - 3:
+        axis_min = round(goal - 1)
+    else:
+        axis_min = round(min_value - 3)
+    return axis_min
+
+
+def get_goal_color(goal, value):
+    if goal.goal_type == "ABOVE":
+        if value >= goal.target:
+            return "#6CC04A"  # kipp green
+        elif value < goal.target:
+            return "#dc3545"  # crimson
+    elif goal.goal_type == "BELOW":
+        if value <= goal.target:
+            return "#6CC04A"  # kipp green
+        elif value > goal.target:
+            return "#dc3545"  # crimson
+
+
 def monthly_data(metric_id, school_id):
     cy_measures = year_bound_measures(metric_id, school_id)
     py_measures = year_bound_measures(metric_id, school_id, previous_year=True)
@@ -127,14 +160,12 @@ def monthly_data(metric_id, school_id):
     py_values = distinct_values(py_measures)
     months = distinct_months(py_measures, cy_measures)
     values = cy_values + py_values
-    goal = Goal.objects.get(metric=metric_id, school=school_id).target
-    axis_min = round(min(values) - 3)
-    if goal + 3 >= 100:
-        axis_max = 100
-    elif goal + 3 > max(values):
-        axis_max = round(goal + 3)
-    else:
-        axis_max = round(max(values) + 1)
+    goal = Goal.objects.get(metric=metric_id, school=school_id)
+    target = round(goal.target)
+    goal_type = goal.goal_type
+    axis_min = find_axis_min(values, target)
+    axis_max = find_axis_max(values, target)
+    goal_color = get_goal_color(goal, cy_values[-1])
 
     return {
         "frequency": "monthly",
@@ -143,7 +174,9 @@ def monthly_data(metric_id, school_id):
         "previous_year": py_values,
         "cy_label": chart_label(cy_measures),
         "current_year": cy_values,
-        "goal": goal,
+        "goal": target,
+        "goal_type": goal_type,
+        "goal_color": goal_color,
         "metric": Metric.objects.get(pk=metric_id).name,
         "axis_min": axis_min,
         "axis_max": axis_max,
@@ -155,22 +188,22 @@ def yearly_data(metric_id, school_id):
     measures = Measure.objects.filter(metric=metric_id, school=school_id).order_by(
         "date"
     )
-    goal = Goal.objects.get(metric=metric_id, school=school_id).target
     values = distinct_values(measures)
-    axis_min = round(min(values) - 3)
-    if goal + 3 >= 100:
-        axis_max = 100
-    elif goal + 3 > max(values):
-        axis_max = round(goal + 3)
-    else:
-        axis_max = round(max(values) + 1)
+    goal = Goal.objects.get(metric=metric_id, school=school_id)
+    target = round(goal.target)
+    goal_type = goal.goal_type
+    axis_min = find_axis_min(values, target)
+    axis_max = find_axis_max(values, target)
+    goal_color = get_goal_color(goal, values[-1])
 
     return {
         "frequency": "yearly",
         "years": distinct_years(measures),
         "label": None,
         "values": values,
-        "goal": goal,
+        "goal": target,
+        "goal_type": goal_type,
+        "goal_color": goal_color,
         "metric": metric,
         "axis_min": axis_min,
         "axis_max": axis_max,
