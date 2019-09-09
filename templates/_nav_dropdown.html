@@ -1,4 +1,19 @@
 <ul class="navbar-nav pl-5">
+  <li class="nav-item dropdown">
+    <a class="text-white nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false">
+      High Health
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+      {% for school_level in school_levels %}
+      <a class="dropdown-item text-secondary small" href="{% url "high_health" school_level.id %}">
+        <span class="ml-3">{{ school_level.display_name }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </li>
+
+
   {% for category in categories %}
   <li class="nav-item dropdown">
     <a class="text-white nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
