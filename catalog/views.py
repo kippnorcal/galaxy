@@ -20,6 +20,7 @@ from onelogin.saml2.settings import OneLogin_Saml2_Settings
 from onelogin.saml2.utils import OneLogin_Saml2_Utils
 
 from .models import Favorite, Feedback, Report, Category, PublicStat, SubCategory
+from accounts.models import SchoolLevel
 from analytics.models import Search, PageView
 import requests
 from rest_framework import viewsets
@@ -41,14 +42,17 @@ def navbar(request):
         subcategories = SubCategory.objects.filter(id__in=subcategory_list).order_by(
             "id"
         )
+        school_levels = SchoolLevel.objects.all().order_by("id")
     else:
         categories = None
         reports = None
         subcategories = None
+        school_levels = None
     context = {
         "categories": categories,
         "reports": reports,
         "subcategories": subcategories,
+        "school_levels": school_levels,
     }
     return context
 
