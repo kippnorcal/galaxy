@@ -9,11 +9,15 @@
     <div class="col-sm">
       <h1>High Health ({{ school_level.display_name }})</h1>
     </div>
-    {% include "_hh_dropdown_school_types.html" %}
+    <div class="col-sm-3 text-right">
+      <button type="button" onclick="openNav()" class="btn btn-warning btn-circle hh-info" data-toggle="popover"
+        data-placement="bottom" title="High Health Goals" data-trigger="hover"
+        data-content='{% include "_hh_legend.html" %}'>
+        <i class="fas fa-info"></i>
+      </button>
+    </div>
   </div>
-  <div class="row mt-3">
-    {% include "_hh_legend.html" %}
-  </div>
+
 </div>
 
 <div class="container">
@@ -49,10 +53,10 @@
           </span>
         </td>
         {% for measure in metric.measures %}
-        {% if measure is None %}
+        {% if measure.value is None %}
         <td class="text-center">
           <span class="text-muted">
-            NA
+            N/A
           </span>
         </td>
         {% else %}
@@ -78,9 +82,10 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.js">
 </script>
 <script src="{% static "js/hh_popover.js" %}"></script>
 <script src="{% static "js/hh_chart_modal.js" %}"></script>
+
 {% endblock %}
