@@ -42,7 +42,6 @@ $('.hh_value').click(function (event) {
                     yAxes: [{
                         display: true,
                         ticks: {
-                            // beginAtZero: false,
                             min: response['data']['axis_min'],
                             max: response['data']['axis_max'],
                         }
