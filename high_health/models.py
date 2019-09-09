@@ -51,7 +51,7 @@ class Measure(models.Model):
     school = models.ForeignKey(
         Site, on_delete=models.PROTECT, limit_choices_to={"is_school": True}
     )
-    value = models.DecimalField(max_digits=5, decimal_places=2)
+    value = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     date = models.DateField(default=datetime.date.today)
     is_current = models.BooleanField(default=True)
 
