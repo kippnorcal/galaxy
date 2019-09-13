@@ -5,6 +5,10 @@ from django.contrib.auth.models import User
 
 class Role(models.Model):
     name = models.CharField(max_length=100)
+    role_type_choices = [("S", "staff"), ("L", "leadership")]
+    role_type = models.CharField(
+        max_length=5, choices=role_type_choices, default=role_type_choices[0][0]
+    )
 
     def __str__(self):
         return self.name
