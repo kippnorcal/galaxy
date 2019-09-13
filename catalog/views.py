@@ -1,4 +1,5 @@
 from os import getenv
+import re
 from django.conf import settings
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.urls import reverse
@@ -20,7 +21,7 @@ from onelogin.saml2.settings import OneLogin_Saml2_Settings
 from onelogin.saml2.utils import OneLogin_Saml2_Utils
 
 from .models import Favorite, Feedback, Report, Category, PublicStat, SubCategory
-from accounts.models import SchoolLevel
+from accounts.models import SchoolLevel, Profile
 from analytics.models import Search, PageView
 import requests
 from rest_framework import viewsets
@@ -70,13 +71,22 @@ def index(request):
     return render(request, "index.html", context={"stats": stats})
 
 
+@login_required
+def missing_profile(request):
+    profile = None
+    return render(request, "missing_profile.html", profile)
+
+
 @login_required(login_url="/login")
 def profile(request):
-    profile = request.user.profile
+    try:
+        profile = Profile.objects.get(user=request.user)
+    except Profile.DoesNotExist:
+        return redirect("/missing_profile/")
     favorites = Favorite.objects.filter(profile=profile)
     recently_viewed = (
         PageView.objects.filter(user=request.user)
-        .filter(Q(page__contains="report"))
+        .filter(Q(page__contains="report") | Q(page__contains="high_health"))
         .values("page")
         .annotate(views=Count("page"), timestamp=Max("timestamp"))
         .order_by("-timestamp")
@@ -84,15 +94,22 @@ def profile(request):
     pages = []
     for page in recently_viewed:
         try:
+            page_id = re.findall("\\d+", page["page"])
+            page_id = page_id[0] if page_id else None
             if "report" in page["page"]:
-                page["display_name"] = Report.objects.get(
-                    pk=page["page"].split("/")[-1]
-                )
+                page["display_name"] = Report.objects.get(pk=page_id)
+            elif "high_health" in page["page"]:
+                if page_id is not None:
+                    school_level = SchoolLevel.objects.get(pk=page_id)
+                    page["display_name"] = f"High Health ({school_level.display_name})"
             else:
-                page["display_name"] = page["page"]
+                page["display_name"] = "High Health"
             pages.append(page)
         except Report.DoesNotExist:
             pass
+        except ValueError:
+            pass
+
     context = {"profile": profile, "favorites": favorites, "recently_viewed": pages}
     return render(request, "profile.html", context)
 
