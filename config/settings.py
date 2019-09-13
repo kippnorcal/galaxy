@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import rollbar
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "rollbar.contrib.django.middleware.RollbarNotifierMiddleware",
 ]
 
 LOGGING = {
@@ -165,3 +167,9 @@ if int(os.getenv("SSL", default=0)):
     SESSION_COOKIE_HTTPONLY = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTOCOL", "https")
 
+ROLLBAR = {
+    "access_token": os.getenv("ROLLBAR_TOKEN"),
+    "environment": "development" if DEBUG else "production",
+    "root": BASE_DIR,
+}
+rollbar.init(**ROLLBAR)
