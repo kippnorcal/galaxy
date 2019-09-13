@@ -64,14 +64,18 @@ LOGGING = {
     "disable_existing_loggers": False,
     "handlers": {
         "file": {
-            "level": "DEBUG",
+            "level": "INFO",
             "class": "logging.handlers.RotatingFileHandler",
             "filename": os.path.join(BASE_DIR, "debug.log"),
             "maxBytes": 1024 * 1024 * 15,  # 15MB
             "backupCount": 10,
         }
     },
-    "loggers": {"django": {"handlers": ["file"], "level": "DEBUG", "propagate": True}},
+    "loggers": {
+        "django": {"handlers": ["file"], "level": "DEBUG", "propagate": True},
+        "django.utils.autoreload": {"level": "INFO"},
+        "django.db.backends": {"level": "INFO"},
+    },
 }
 
 ROOT_URLCONF = "config.urls"
