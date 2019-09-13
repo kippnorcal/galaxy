@@ -54,6 +54,8 @@ class ReportManager(models.Manager):
             return self.get_queryset().filter(
                 roles=user.profile.job_title.role, sites=user.profile.site
             )
+        else:
+            return None
 
 
 class Report(models.Model):

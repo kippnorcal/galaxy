@@ -32,23 +32,30 @@ from .serializers import (
     FavoriteSerializer,
     FeedbackSerializer,
 )
+import rollbar
 
 
 def navbar(request):
-    reports = Report.active.for_user(request.user)
-    if request.user.is_authenticated and reports:
-        category_list = reports.values_list("category").distinct()
-        categories = Category.objects.filter(id__in=category_list).order_by("id")
-        subcategory_list = reports.values_list("subcategory").distinct()
-        subcategories = SubCategory.objects.filter(id__in=subcategory_list).order_by(
-            "id"
-        )
-        school_levels = SchoolLevel.objects.all().order_by("id")
-    else:
+    if request.user.is_anonymous:
         categories = None
         reports = None
         subcategories = None
         school_levels = None
+    if request.user.is_authenticated:
+        reports = Report.active.for_user(request.user)
+        if reports:
+            category_list = reports.values_list("category").distinct()
+            categories = Category.objects.filter(id__in=category_list).order_by("id")
+            subcategory_list = reports.values_list("subcategory").distinct()
+            subcategories = SubCategory.objects.filter(
+                id__in=subcategory_list
+            ).order_by("id")
+            school_levels = SchoolLevel.objects.all().order_by("id")
+        else:
+            categories = None
+            reports = None
+            subcategories = None
+            school_levels = None
     context = {
         "categories": categories,
         "reports": reports,
@@ -74,6 +81,7 @@ def index(request):
 @login_required
 def missing_profile(request):
     profile = None
+    rollbar.report_message(f"{request.user} does not have a profile set up.")
     return render(request, "missing_profile.html", profile)
 
 
