@@ -167,30 +167,30 @@ def acs(request):
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    queryset = User.objects.all().order_by("id")
     serializer_class = UserSerializer
 
 
 class RoleViewSet(viewsets.ModelViewSet):
-    queryset = Role.objects.all()
+    queryset = Role.objects.all().order_by("id")
     serializer_class = RoleSerializer
 
 
 class JobViewSet(viewsets.ModelViewSet):
-    queryset = Job.objects.all()
+    queryset = Job.objects.all().order_by("id")
     serializer_class = JobSerializer
 
 
 class SchoolLevelViewSet(viewsets.ModelViewSet):
-    queryset = SchoolLevel.objects.all()
+    queryset = SchoolLevel.objects.all().order_by("id")
     serializer_class = SchoolLevelSerializer
 
 
 class SiteLevelViewSet(viewsets.ModelViewSet):
-    queryset = Site.objects.all()
+    queryset = Site.objects.all().order_by("id")
     serializer_class = SiteSerializer
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
-    queryset = Profile.objects.all()
+    queryset = Profile.objects.all().order_by("id")
     serializer_class = ProfileSerializer
