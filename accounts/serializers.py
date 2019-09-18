@@ -32,7 +32,7 @@ class SchoolLevelSerializer(serializers.HyperlinkedModelSerializer):
 
 class SiteSerializer(serializers.HyperlinkedModelSerializer):
     school_level = serializers.PrimaryKeyRelatedField(
-        queryset=SchoolLevel.objects.all()
+        queryset=SchoolLevel.objects.all(), required=False, allow_null=True
     )
 
     class Meta:
