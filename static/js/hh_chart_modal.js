@@ -11,12 +11,14 @@ $('.hh_value').click(function (event) {
                         label: response['data']['py_label'],
                         fill: false,
                         data: response['data']['previous_year'],
+                        lineTension: 0,
                     }, {
                         label: response['data']['cy_label'],
                         fill: false,
                         borderColor: '#0071CE',
                         backgroundColor: '#0071CE',
                         data: response['data']['current_year'],
+                        lineTension: 0,
                     }]
                 }
             } else {
@@ -27,6 +29,7 @@ $('.hh_value').click(function (event) {
                         borderColor: '#0071CE',
                         backgroundColor: '#0071CE',
                         data: response['data']['values'],
+                        lineTension: 0,
                     }]
                 }
             }
