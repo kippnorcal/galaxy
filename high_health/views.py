@@ -27,7 +27,11 @@ def last_updated(metric_id):
 
 
 def metrics(school_level):
-    metrics = Metric.objects.filter(goal__school__school_level=school_level).distinct()
+    metrics = (
+        Metric.objects.filter(goal__school__school_level=school_level)
+        .distinct()
+        .order_by("id")
+    )
     data = []
     for metric in metrics:
         measures = metric.measure_set.filter(
