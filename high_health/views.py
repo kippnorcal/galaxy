@@ -1,7 +1,8 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from itertools import chain, groupby
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import PermissionDenied
 from django.db.models import Avg
 from django.http import JsonResponse
@@ -214,7 +215,24 @@ def yearly_data(metric_id, school_id):
     }
 
 
+def check_permissions(user):
+    allowed_groups = ["High Health", "Site Admin"]
+    return (
+        user.groups.filter(name__in=allowed_groups).exists()
+        or user.profile.job_title.role.permission_group.filter(
+            name__in=allowed_groups
+        ).exists()
+    )
+
+
+def unauthorized(request):
+    return render(request, "403.html")
+
+
 @login_required
+@user_passes_test(
+    check_permissions, login_url="/unauthorized", redirect_field_name=None
+)
 def chart_data(request, metric_id, school_id):
     frequency = Metric.objects.get(pk=metric_id).frequency
     if frequency == "MoM":
@@ -226,53 +244,11 @@ def chart_data(request, metric_id, school_id):
 
 
 @login_required
-def chart_data_agg(request, metric_id, school_level_id):
-    metric = Metric.objects.get(pk=metric_id)
-    cy_measures = metric.measure_set.filter(
-        school__school_level=school_level_id, date__range=school_year_range()
-    )
-    cy_label = chart_label(cy_measures)
-    cy_agg = (
-        cy_measures.values("date").annotate(avg_value=Avg("value")).order_by("date")
-    )
-    cy_values = [value["avg_value"] for value in cy_agg]
-    a_year_ago = datetime.today() - relativedelta(years=1)
-    py_measures = metric.measure_set.filter(
-        school__school_level=school_level_id, date__range=school_year_range(a_year_ago)
-    )
-    py_label = chart_label(py_measures)
-    py_agg = (
-        py_measures.values("date").annotate(avg_value=Avg("value")).order_by("date")
-    )
-    py_values = [value["avg_value"] for value in py_agg]
-    data = {
-        "months": month_order()[1:],
-        "py_label": py_label,
-        "previous_year": py_values,
-        "cy_label": cy_label,
-        "current_year": cy_values,
-        "goal": round(
-            Goal.objects.filter(
-                metric=metric_id, school__school_level=school_level_id
-            ).aggregate(avg_goal=Avg("target"))["avg_goal"],
-            2,
-        ),
-        "metric": Metric.objects.get(pk=metric_id).name,
-    }
-    return JsonResponse({"success": True, "data": data})
-
-
-def get_school_level(user):
-    if user.profile.site.name == "RSO":
-        return 1
-    else:
-        return user.profile.site.school_level.id
-
-
-@login_required
+@user_passes_test(
+    check_permissions, login_url="/unauthorized", redirect_field_name=None
+)
 def high_health(request, school_level=None):
     # TODO: Convert to query school level by name instead of id
-    school_level = school_level or get_school_level(request.user)
     context = {
         "school_level": SchoolLevel.objects.get(pk=school_level),
         "schools": Site.objects.filter(school_level=school_level),
@@ -280,42 +256,6 @@ def high_health(request, school_level=None):
         "school_levels": SchoolLevel.objects.all(),
     }
     return render(request, "high_health.html", context)
-
-
-@login_required
-def high_health_agg(request):
-    school_levels = SchoolLevel.objects.all()
-    metrics = Metric.objects.all()
-    data = []
-    for metric in metrics:
-        measures_data = []
-        measures = (
-            metric.measure_set.filter(is_current=True)
-            .values("school__school_level")
-            .annotate(avg_value=Avg("value"))
-            .order_by("school__school_level")
-        )
-        for measure in measures:
-            measure_data = {
-                "school_level": school_levels.get(pk=measure["school__school_level"]),
-                "value": measure["avg_value"],
-                "goal": Goal.objects.values("goal_type")
-                .annotate(avg_goal=Avg("target"))
-                .filter(
-                    metric=metric, school__school_level=measure["school__school_level"]
-                )
-                .order_by("goal_type")
-                .first(),
-            }
-            measures_data.append(measure_data)
-        metric_data = {
-            "metric": metric,
-            "last_updated": last_updated(metric.id),
-            "measures": measures_data,
-        }
-        data.append(metric_data)
-    context = {"school_levels": school_levels, "metrics": data}
-    return render(request, "high_health_overall.html", context)
 
 
 class EssentialQuestionViewSet(viewsets.ModelViewSet):

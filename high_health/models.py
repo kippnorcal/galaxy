@@ -100,6 +100,7 @@ class Goal(models.Model):
     goal_type = models.CharField(
         max_length=5, choices=goal_type_choices, default=goal_type_choices[0][0]
     )
+    previous_outcome = models.DecimalField(max_digits=5, decimal_places=2, default=100)
     target = models.DecimalField(max_digits=5, decimal_places=2, default=100)
 
     def __str__(self):

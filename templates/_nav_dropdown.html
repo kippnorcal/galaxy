@@ -1,5 +1,6 @@
+{% load nav_helpers %}
 <ul class="navbar-nav pl-5">
-  {% if request.user.profile.job_title.role.role_type == 'L' %}
+  {% if request.user|check_high_health_permissions %}
   <li class="nav-item dropdown">
     <a class="text-white nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
       aria-haspopup="true" aria-expanded="false">

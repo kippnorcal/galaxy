@@ -96,6 +96,7 @@ TEMPLATES = [
             "libraries": {
                 "feedback_helpers": "templatetags.feedback_helpers",
                 "high_health_helpers": "templatetags.high_health_helpers",
+                "nav_helpers": "templatetags.nav_helpers",
             },
         },
     }
