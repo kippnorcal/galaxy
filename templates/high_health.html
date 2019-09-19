@@ -5,81 +5,85 @@
 
 {% block content %}
 
-<div class="row pt-3">
-  <div class="col-sm-7 offset-sm-1">
-    <h1>High Health ({{ school_level.display_name }})</h1>
-  </div>
-  <div class="col-sm-3 text-right">
-    <button type="button" onclick="openNav()" class="btn btn-warning btn-circle hh-info" data-toggle="popover"
-      data-placement="left" title="High Health Goals" data-trigger="hover"
-      data-content='{% include "_hh_legend.html" %}'>
-      <i class="fas fa-info"></i>
-    </button>
+<div class="container-fluid">
+  <div class="row pt-3">
+    <div class="col-sm-7 offset-sm-1">
+      <h1>High Health ({{ school_level.display_name }})</h1>
+    </div>
+    <div class="col-sm-3 text-right">
+      <button type="button" onclick="openNav()" class="btn btn-warning btn-circle hh-info" data-toggle="popover"
+        data-placement="left" title="High Health Goals" data-trigger="hover"
+        data-content='{% include "_hh_legend.html" %}'>
+        <i class="fas fa-info"></i>
+      </button>
+    </div>
   </div>
 </div>
 
 
-
-<div class="col-sm-10 offset-sm-1">
-  <table class="table table-hover mt-3">
-    <thead>
-      <tr class="small text-center">
-        <th>EQ</th>
-        <th>Metric</th>
-        <th>Updated</th>
-        {% for school in schools %}
-        <th>{{ school }}</th>
-        {% endfor %}
-      </tr>
-    </thead>
-    <tbody>
-      {% for metric in metrics %}
-      <tr>
-        <td class="text-center eq" data-toggle="popover" data-trigger="hover"
-          title="{{ metric.metric.essential_question }}"
-          data-content="{{ metric.metric.essential_question.description }}">
-          {{ metric.metric.essential_question }}
-        </td>
-        <td style="min-width:240px">
-          <i class="fas fa-info-circle text-primary pl-1 metric-def" data-toggle="popover" data-trigger="hover"
-            title="{{ metric.metric }}" data-content="{{ metric.metric.definition }}"></i>
-          <a href="{% if metric.metric.report %}{% url "report" metric.metric.report.id %}{% endif %}">
-            {{ metric.metric }}
-          </a>
-        </td>
-        <td class="text-center" style="min-width:110px">
-          <span class="small text-muted">
-            {{ metric.last_updated|naturalday }}
-          </span>
-        </td>
-        {% for measure in metric.measures %}
-        {% if measure.value is None %}
-        <td class="text-center">
-          <span class="text-muted">
-            N/A
-          </span>
-        </td>
-        {% else %}
-        <td class="text-center">
-          {% with "modal_"|addstr:measure.metric.id|addstr:"_"|addstr:measure.school.id as modal_id %}
-          {% with "chart_"|addstr:measure.metric.id|addstr:"_"|addstr:measure.school.id as chart_id %}
-          <span data-toggle="modal" data-target="#{{ modal_id }}" class="hh_value text-{{ measure|goal_format }}"
-            data-metric-id="{{ measure.metric.id }}" data-school-id="{{ measure.school.id }}">
-            <span data-toggle="tooltip" data-placement="right" title="{{ measure|goal_distance }}">
-              {{ measure.value|stringformat:'d' }}%
+<div class="container-fluid">
+  <div class="col-sm-10 offset-sm-1">
+    <table class="table table-hover mt-3">
+      <thead>
+        <tr class="small text-center">
+          <th>EQ</th>
+          <th>Metric</th>
+          <th>Updated</th>
+          {% for school in schools %}
+          <th>{{ school }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for metric in metrics %}
+        <tr>
+          <td class="text-center eq" data-toggle="popover" data-trigger="hover"
+            title="{{ metric.metric.essential_question }}"
+            data-content="{{ metric.metric.essential_question.description }}">
+            {{ metric.metric.essential_question }}
+          </td>
+          <td style="min-width:240px">
+            <i class="fas fa-info-circle text-primary pl-1 metric-def" data-toggle="popover" data-trigger="hover"
+              title="{{ metric.metric }}" data-content="{{ metric.metric.definition }}"></i>
+            <a href="{% if metric.metric.report %}{% url "report" metric.metric.report.id %}{% endif %}">
+              {{ metric.metric }}
+            </a>
+          </td>
+          <td class="text-center" style="min-width:110px">
+            <span class="small text-muted">
+              {{ metric.last_updated|naturalday }}
             </span>
-          </span>
-          {% include "_chart_modal.html" with title=measure.school  modal_id=modal_id chart_id=chart_id last_updated=measure.date %}
-          {% endwith %}
-          {% endwith %}
-        </td>
-        {% endif %}
+          </td>
+          {% for measure in metric.measures %}
+          {% if measure.value is None %}
+          <td class="text-center">
+            <span class="text-muted">
+              N/A
+            </span>
+          </td>
+          {% else %}
+          <td class="text-center">
+            {% with "modal_"|addstr:measure.metric.id|addstr:"_"|addstr:measure.school.id as modal_id %}
+            {% with "chart_"|addstr:measure.metric.id|addstr:"_"|addstr:measure.school.id as chart_id %}
+            <span data-toggle="modal" data-target="#{{ modal_id }}" class="hh_value text-{{ measure|goal_format }}"
+              data-metric-id="{{ measure.metric.id }}" data-school-id="{{ measure.school.id }}">
+              <span data-toggle="tooltip" data-placement="right" title="{{ measure|goal_distance }}">
+                {{ measure.value|stringformat:'d' }}%
+              </span>
+            </span>
+            {% include "_chart_modal.html" with title=measure.school  modal_id=modal_id chart_id=chart_id last_updated=measure.date %}
+            {% endwith %}
+            {% endwith %}
+          </td>
+          {% endif %}
+          {% endfor %}
+        </tr>
         {% endfor %}
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
 </div>
+
 
 {% endblock %}
 
