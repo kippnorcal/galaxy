@@ -1,3 +1,4 @@
+import math
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from itertools import chain, groupby
@@ -127,35 +128,40 @@ def distinct_values(measures):
 
 def find_axis_max(values, goal):
     max_value = max(values)
-    if goal + 3 >= 100 or max_value + 1 >= 100:
-        axis_max = 100
-    elif goal + 3 > max_value:
-        axis_max = round(goal + 3)
+
+    # if goal + 3 >= 100 or max_value + 1 >= 100:
+    #     axis_max = 100
+    if math.ceil(goal + 2) > math.ceil(max_value):
+        axis_max = math.ceil(goal + 2)
     else:
-        axis_max = round(max_value + 1)
+        axis_max = math.ceil(max_value + 2)
     return axis_max
 
 
 def find_axis_min(values, goal):
     min_value = min(values)
-    if goal - 1 <= min_value - 3:
-        axis_min = round(goal - 1)
+    if math.floor(goal - 2) <= math.floor(min_value - 2):
+        axis_min = math.floor(goal - 2)
     else:
-        axis_min = round(min_value - 3)
+        axis_min = math.floor(min_value - 2)
     return axis_min
 
 
 def get_goal_color(goal, value):
     if goal.goal_type == "ABOVE":
-        if value >= goal.target:
-            return "#6CC04A"  # kipp green
+        if value < goal.previous_outcome:
+            return "#dc3545"  # danger
         elif value < goal.target:
-            return "#dc3545"  # crimson
-    elif goal.goal_type == "BELOW":
-        if value <= goal.target:
-            return "#6CC04A"  # kipp green
+            return "#6c757d"  # secondary
+        else:
+            return "#29a745"  # success
+    else:
+        if value >= goal.previous_outcome:
+            return "#dc3545"  # danger
         elif value > goal.target:
-            return "#dc3545"  # crimson
+            return "#6c757d"  # secondary
+        else:
+            return "#29a745"  # success
 
 
 def monthly_data(metric_id, school_id):
@@ -219,7 +225,7 @@ def check_permissions(user):
     allowed_groups = ["High Health", "Site Admin"]
     return (
         user.groups.filter(name__in=allowed_groups).exists()
-        or user.profile.job_title.role.permission_group.filter(
+        or user.profile.job_title.role.permission_groups.filter(
             name__in=allowed_groups
         ).exists()
     )

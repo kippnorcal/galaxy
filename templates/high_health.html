@@ -30,7 +30,8 @@
           <th>Metric</th>
           <th>Updated</th>
           {% for school in schools %}
-          <th>{{ school }}</th>
+          <th class="table-{% if request.user.profile.site == school %}active{% else %}default{% endif %}">
+            {{ school }}</th>
           {% endfor %}
         </tr>
       </thead>
@@ -62,7 +63,8 @@
             </span>
           </td>
           {% else %}
-          <td class="text-center">
+          <td
+            class="text-center table-{% if request.user.profile.site == measure.school %}active{% else %}default{% endif %}">
             {% with "modal_"|addstr:measure.metric.id|addstr:"_"|addstr:measure.school.id as modal_id %}
             {% with "chart_"|addstr:measure.metric.id|addstr:"_"|addstr:measure.school.id as chart_id %}
             <span data-toggle="modal" data-target="#{{ modal_id }}" class="hh_value text-{{ measure|goal_format }}"
