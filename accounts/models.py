@@ -5,10 +5,6 @@ from django.contrib.auth.models import User, Group
 
 class Role(models.Model):
     name = models.CharField(max_length=100)
-    role_type_choices = [("S", "staff"), ("L", "leadership")]
-    role_type = models.CharField(
-        max_length=5, choices=role_type_choices, default=role_type_choices[0][0]
-    )
     permission_groups = models.ManyToManyField(Group)
 
     def __str__(self):
