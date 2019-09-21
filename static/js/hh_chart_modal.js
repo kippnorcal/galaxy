@@ -4,30 +4,49 @@ $('.hh_value').click(function (event) {
     var school_id = $(this).attr("data-school-id");
     $.get("/high_health/chart_data/" + metric_id + "/" + school_id, function (response) {
         if (response['success']) {
-            var data = {
-                labels: response['data']['months'],
-                datasets: [{
-                    label: response['data']['py_label'],
-                    fill: false,
-                    data: response['data']['previous_year'],
-                }, {
-                    label: response['data']['cy_label'],
-                    fill: false,
-                    borderColor: '#0071CE',
-                    backgroundColor: '#0071CE',
-                    data: response['data']['current_year'],
-                }]
+            if (response['data']['frequency'] == 'monthly') {
+                var data = {
+                    labels: response['data']['months'],
+                    datasets: [{
+                        label: response['data']['py_label'],
+                        fill: false,
+                        data: response['data']['previous_year'],
+                        lineTension: 0,
+                    }, {
+                        label: response['data']['cy_label'],
+                        fill: false,
+                        borderColor: '#0071CE',
+                        backgroundColor: '#0071CE',
+                        data: response['data']['current_year'],
+                        lineTension: 0,
+                    }]
+                }
+            } else {
+                var data = {
+                    labels: response['data']['years'],
+                    datasets: [{
+                        fill: false,
+                        borderColor: '#0071CE',
+                        backgroundColor: '#0071CE',
+                        data: response['data']['values'],
+                        lineTension: 0,
+                    }]
+                }
             }
             var options = {
                 title: {
                     display: true,
                     text: response['data']['metric']
                 },
+                legend: {
+                    display: response['data']['frequency'] == 'monthly' ? true : false
+                },
                 scales: {
                     yAxes: [{
                         display: true,
                         ticks: {
-                            beginAtZero: false
+                            min: response['data']['axis_min'],
+                            max: response['data']['axis_max'],
                         }
                     }]
                 },
@@ -37,11 +56,11 @@ $('.hh_value').click(function (event) {
                         mode: 'horizontal',
                         scaleID: 'y-axis-0',
                         value: response['data']['goal'],
-                        borderColor: '#6CC04A',
+                        borderColor: response['data']['goal_color'],
                         borderWidth: 2,
                         label: {
-                            backgroundColor: '#6CC04A',
-                            content: 'Goal: ' + response['data']['goal'],
+                            backgroundColor: response['data']['goal_color'],
+                            content: 'Goal: ' + response['data']['goal_type'].toLowerCase() + ' ' + response['data']['goal'],
                             enabled: true
                         }
                     }]

@@ -32,7 +32,7 @@ class SchoolLevelSerializer(serializers.HyperlinkedModelSerializer):
 
 class SiteSerializer(serializers.HyperlinkedModelSerializer):
     school_level = serializers.PrimaryKeyRelatedField(
-        queryset=SchoolLevel.objects.all()
+        queryset=SchoolLevel.objects.all(), required=False, allow_null=True
     )
 
     class Meta:
@@ -43,7 +43,9 @@ class SiteSerializer(serializers.HyperlinkedModelSerializer):
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     job_title = serializers.PrimaryKeyRelatedField(queryset=Job.objects.all())
     site = serializers.PrimaryKeyRelatedField(queryset=Site.objects.all())
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    user = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), required=False, allow_null=True
+    )
 
     class Meta:
         model = Profile

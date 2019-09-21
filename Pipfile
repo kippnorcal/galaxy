@@ -15,6 +15,7 @@ python-dateutil = "*"
 djangorestframework = "*"
 requests = "*"
 django-filter = "*"
+rollbar = "*"
 
 [requires]
 python_version = "3.7"

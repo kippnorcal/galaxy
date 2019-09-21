@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib import admin
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 
 class Role(models.Model):
     name = models.CharField(max_length=100)
+    permission_groups = models.ManyToManyField(Group)
 
     def __str__(self):
         return self.name

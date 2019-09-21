@@ -46,10 +46,16 @@ class ReportManager(models.Manager):
         return super().get_queryset().filter(is_active=True)
 
     def for_user(self, user):
-        if user.is_authenticated:
+        try:
+            profile = Profile.objects.get(user=user)
+        except Profile.DoesNotExist:
+            profile = None
+        if user.is_authenticated and profile:
             return self.get_queryset().filter(
                 roles=user.profile.job_title.role, sites=user.profile.site
             )
+        else:
+            return None
 
 
 class Report(models.Model):
