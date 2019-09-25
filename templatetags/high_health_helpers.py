@@ -6,19 +6,19 @@ register = template.Library()
 @register.filter
 def goal_format(measure):
     if measure.goal.goal_type == "ABOVE":
-        if measure.value <= measure.goal.previous_outcome:
-            return "danger"
-        elif measure.value < measure.goal.target:
+        if measure.value >= measure.goal.target:
+            return "success"
+        elif measure.value >= measure.goal.previous_outcome:
             return "secondary"
         else:
-            return "success"
+            return "danger"
     else:
-        if measure.value >= measure.goal.previous_outcome:
-            return "danger"
-        elif measure.value > measure.goal.target:
+        if measure.value <= measure.goal.target:
+            return "success"
+        elif measure.value <= measure.goal.previous_outcome:
             return "secondary"
         else:
-            return "success"
+            return "danger"
 
 
 @register.filter
