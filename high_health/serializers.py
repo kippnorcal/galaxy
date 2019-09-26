@@ -19,7 +19,15 @@ class MetricSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Metric
-        fields = ("id", "name", "definition", "essential_question", "report", "date")
+        fields = (
+            "id",
+            "name",
+            "definition",
+            "essential_question",
+            "frequency",
+            "report",
+            "date",
+        )
 
 
 class GoalSerializer(serializers.HyperlinkedModelSerializer):
@@ -30,7 +38,7 @@ class GoalSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Goal
-        fields = ("id", "metric", "school", "goal_type", "frequency", "target")
+        fields = ("id", "metric", "school", "goal_type", "previous_outcome", "target")
 
 
 class MeasureSerializer(serializers.HyperlinkedModelSerializer):
