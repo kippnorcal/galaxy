@@ -88,10 +88,24 @@ $ docker-compose -f docker-compose.prod.yml up -d
 $ docker-compose run web python manage.py migrate
 ```
 
-### Create a superuser
+### Create a superuser (if starting fresh)
 
 ```
 $ docker-compose run web python manage.py createsuperuser
+```
+
+### Export data from another instance
+**Note**: `docker-compose` must be up to run the following command(s)
+```
+$ docker-compose exec web python manage.py dumpdata --indent 2 --exclude=contentypes >> db.json
+```
+
+Copy the `db.json` file to your new repo
+
+### Import data from another instance
+
+```
+$ docker-compose exec web python manage.py loaddata db.json
 ```
 
 ### Taking the server down
