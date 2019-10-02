@@ -58,7 +58,8 @@ ALLOWED_HOSTS=[]
 Generating a unique secret key can be done via Django:
 
 ```python
-from django.core.management.utils import get_random_secret_key get_random_secret_key()
+from django.core.management.utils import get_random_secret_key 
+get_random_secret_key()
 ```
 
 5. Build Docker Image
