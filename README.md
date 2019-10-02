@@ -31,14 +31,34 @@ $ pip install pipenv
 * **Windows**: [https://docs.docker.com/docker-for-windows/install/](https://docs.docker.com/docker-for-windows/install/)
 
 4. Create .env file with project secrets
+
+**dev environment**
 ```
-SECRET_KEY=''
+SECRET_KEY=
 POSTGRES_USER=
-POSTGRES_DB=
 POSTGRES_PASSWORD=
-SAML_ENTITY_ID''
-SAML_URL=''
-SAML_CERT=''
+POSTGRES_DB=
+TABLEAU_TRUSTED_URL=
+USER_DOMAIN=
+SAML_ENTITY_ID=
+SAML_URL=
+SAML_SLO=
+SAML_CERT=
+ROLLBAR_TOKEN=
+APP_DOMAIN=
+```
+
+**prod environment**
+same as dev but also add:
+```
+SSL=1
+ALLOWED_HOSTS=[]
+```
+
+Generating a unique secret key can be done via Django:
+
+```python
+from django.core.management.utils import get_random_secret_key get_random_secret_key()
 ```
 
 5. Build Docker Image
@@ -49,19 +69,17 @@ $ docker-compose build
 
 ### Running the Server
 
+**dev environment**
 ```
-$ docker-compose up
+$ docker-compose up -d
+```
+
+**prod environment**
+```
+$ docker-compose -f docker-compose.prod.yml up -d
 ```
 **Note**: The first time running docker-compose you may get an error about the database not being available. Just run `docker-compose down` and then rerun `docker-compose up`.
 
-### Initial Database Setup
-
-```
-$ docker-compose exec db psql -h db -U postgres -d postgres
-postgres=# CREATE USER <username> WITH PASSWORD '<password>';
-postgres=# ALTER USER <username> CREATEDB;
-postgres=# CREATE DATABASE galaxy;
-```
 
 ### Running Database Migrations
 
@@ -73,6 +91,12 @@ $ docker-compose run web python manage.py migrate
 
 ```
 $ docker-compose run web python manage.py createsuperuser
+```
+
+### Taking the server down
+
+```
+$ docker-compose down
 ```
 
 ### Running Tests
