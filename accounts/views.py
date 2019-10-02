@@ -39,7 +39,6 @@ def prepare_django_request(request):
 
 def init_saml_auth(request):
     req = prepare_django_request(request)
-    # auth = OneLogin_Saml2_Auth(req, custom_base_path=settings.SAML_FOLDER)
     auth = OneLogin_Saml2_Auth(req, old_settings=SAML_SETTINGS)
     return auth
 
@@ -101,9 +100,6 @@ def save_avatar(request, user):
 
 
 def metadata(request):
-    # saml_settings = OneLogin_Saml2_Settings(
-    #     settings=None, custom_base_path=settings.SAML_FOLDER, sp_validation_only=True
-    # )
     saml_settings = SAML_SETTINGS
     metadata = saml_settings.get_sp_metadata()
     errors = saml_settings.validate_metadata(metadata)
