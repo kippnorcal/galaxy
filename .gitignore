@@ -107,7 +107,6 @@ venv.bak/
 # project specific
 settings.json
 certs/
-saml/
 *.swp
 data/
 !data/nginx/app.conf

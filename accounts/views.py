@@ -23,6 +23,7 @@ from .serializers import (
     SiteSerializer,
     ProfileSerializer,
 )
+from saml.saml_settings import SAML_SETTINGS
 
 
 def prepare_django_request(request):
@@ -38,7 +39,7 @@ def prepare_django_request(request):
 
 def init_saml_auth(request):
     req = prepare_django_request(request)
-    auth = OneLogin_Saml2_Auth(req, custom_base_path=settings.SAML_FOLDER)
+    auth = OneLogin_Saml2_Auth(req, old_settings=SAML_SETTINGS)
     return auth
 
 
@@ -99,9 +100,7 @@ def save_avatar(request, user):
 
 
 def metadata(request):
-    saml_settings = OneLogin_Saml2_Settings(
-        settings=None, custom_base_path=settings.SAML_FOLDER, sp_validation_only=True
-    )
+    saml_settings = SAML_SETTINGS
     metadata = saml_settings.get_sp_metadata()
     errors = saml_settings.validate_metadata(metadata)
 
@@ -148,6 +147,7 @@ def acs(request):
     auth = init_saml_auth(request)
     auth.process_response()
     errors = auth.get_errors()
+    print(errors)
     not_auth_warn = not auth.is_authenticated()
 
     if not errors:
@@ -164,6 +164,7 @@ def acs(request):
     else:
         if auth.get_settings().is_debug_active():
             error_reason = auth.get_last_error_reason()
+            print(error_reason)
 
 
 class UserViewSet(viewsets.ModelViewSet):
