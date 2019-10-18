@@ -70,7 +70,7 @@
             <span data-toggle="modal" data-target="#{{ modal_id }}" class="hh_value text-{{ measure|goal_format }}"
               data-metric-id="{{ measure.metric.id }}" data-school-id="{{ measure.school.id }}">
               <span data-toggle="tooltip" data-placement="right" title="{{ measure|goal_distance }}">
-                {{ measure.value|stringformat:'d' }}%
+                {{ measure.value|floatformat:"0" }}%
               </span>
             </span>
             {% include "_chart_modal.html" with title=measure.school  modal_id=modal_id chart_id=chart_id last_updated=measure.date %}
