@@ -16,6 +16,8 @@ djangorestframework = "*"
 requests = "*"
 django-filter = "*"
 rollbar = "*"
+pytest = "*"
+pytest-django = "*"
 
 [requires]
 python_version = "3.7"
