@@ -39,7 +39,7 @@ class TestSearchModel:
         self.search = Search.objects.get(pk=1)
 
     def test_string_representation(self):
-        str(self.search) == self.search.search_term
+        assert str(self.search) == self.search.search_term
 
     def test_user_can_be_null(self):
         self.search.user = None
@@ -56,7 +56,7 @@ class TestSearchModel:
     def test_timestamp_auto_set(self):
         search = Search(user=self.user, search_term="test2")
         search.save()
-        search.search_timestamp != None
+        assert search.search_timestamp != None
 
     def test_destination_max_length_255(self):
         with pytest.raises(ValidationError):
@@ -87,7 +87,7 @@ class TestLoginModel:
         self.login = Login.objects.get(pk=1)
 
     def test_string_representation(self):
-        str(self.login) == "some_user - 2019-07-01 00:00:00+00:00"
+        assert str(self.login) == "some_user - 2019-07-01 00:00:00+00:00"
 
     def test_user_can_be_null(self):
         self.login.user = None
@@ -115,4 +115,4 @@ class TestLoginModel:
     def test_timestamp_auto_set(self):
         login = Login(user=self.user)
         login.save()
-        login.timestamp != None
+        assert login.timestamp != None
