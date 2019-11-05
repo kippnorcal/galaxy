@@ -54,7 +54,7 @@ class TestReportModel:
         assert actual.count() == expected.count()
         assert list(actual) == list(expected)
 
-    def test_model_manager_queryset_returns_expected_results(self):
+    def test_model_manager_queryset_for_user_returns_expected_results(self):
         user = User.objects.get(pk=1)
         role = user.profile.job_title.role
         expected = Report.objects.filter(is_active=True, roles=role)
