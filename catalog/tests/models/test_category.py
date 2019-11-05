@@ -30,7 +30,10 @@ class TestSubCategoryModel:
         self.sub_category = SubCategory.objects.get(pk=1)
 
     def test_string_representation(self):
-        assert str(self.sub_category) == self.sub_category.name
+        assert (
+            str(self.sub_category)
+            == f"{self.sub_category.category}: {self.sub_category.name}"
+        )
 
     def test_name_max_length_100(self):
         with pytest.raises(ValidationError):
