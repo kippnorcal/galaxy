@@ -114,12 +114,6 @@ $ docker-compose exec web python manage.py loaddata db.json
 $ docker-compose down
 ```
 
-### Running unittest (server must be running)
-
-```
-$ docker-compose run web python manage.py test
-```
-
 ### Running pytest (server must be running)
 
 ```
