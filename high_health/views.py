@@ -128,9 +128,6 @@ def distinct_values(measures):
 
 def find_axis_max(values, goal):
     max_value = max(values)
-
-    # if goal + 3 >= 100 or max_value + 1 >= 100:
-    #     axis_max = 100
     if math.ceil(goal + 2) > math.ceil(max_value):
         axis_max = math.ceil(goal + 2)
     else:
@@ -255,9 +252,16 @@ def chart_data(request, metric_id, school_id):
 )
 def high_health(request, school_level=None):
     # TODO: Convert to query school level by name instead of id
+    school_level = SchoolLevel.objects.get(pk=school_level)
+    print(school_level)
+    if school_level.name == "RS":
+        schools = Site.objects.filter(school_level=school_level).order_by("id")
+        print(schools)
+    else:
+        schools = Site.objects.filter(school_level=school_level)
     context = {
-        "school_level": SchoolLevel.objects.get(pk=school_level),
-        "schools": Site.objects.filter(school_level=school_level),
+        "school_level": school_level,
+        "schools": schools,
         "metrics": metrics(school_level),
         "school_levels": SchoolLevel.objects.all(),
     }
