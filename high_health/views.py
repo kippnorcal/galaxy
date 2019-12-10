@@ -253,10 +253,8 @@ def chart_data(request, metric_id, school_id):
 def high_health(request, school_level=None):
     # TODO: Convert to query school level by name instead of id
     school_level = SchoolLevel.objects.get(pk=school_level)
-    print(school_level)
     if school_level.name == "RS":
         schools = Site.objects.filter(school_level=school_level).order_by("id")
-        print(schools)
     else:
         schools = Site.objects.filter(school_level=school_level)
     context = {
