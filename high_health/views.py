@@ -30,9 +30,9 @@ def last_updated(metric_id):
 
 def metrics(school_level):
     if school_level.name == "RS":
-        order_by = "id"
+        order_by = "school__id"
     else:
-        order_by = "school"
+        order_by = "school__name"
     metrics = (
         Metric.objects.filter(goal__school__school_level=school_level)
         .distinct()
