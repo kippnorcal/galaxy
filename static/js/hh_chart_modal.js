@@ -2,7 +2,8 @@ $('.hh_value').click(function (event) {
     event.preventDefault();
     var metric_id = $(this).attr("data-metric-id");
     var school_id = $(this).attr("data-school-id");
-    $.get("/high_health/chart_data/" + metric_id + "/" + school_id, function (response) {
+    var page = "/high_health/chart_data/" + metric_id + "/" + school_id
+    $.get(page, function (response) {
         if (response['success']) {
             if (response['data']['frequency'] == 'monthly') {
                 var data = {
@@ -75,5 +76,10 @@ $('.hh_value').click(function (event) {
             var ctx = document.getElementById(chart_id).getContext('2d');
             var myChart = new Chart(ctx, config);
         }
+    });
+    $.ajax({
+        data: { 'page': window.location.origin + page },
+        type: 'POST',
+        url: '/pageview/',
     });
 });
