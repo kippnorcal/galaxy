@@ -29,7 +29,6 @@ def last_updated(metric_id):
 
 
 def metrics(school_level):
-    school_level = SchoolLevel.objects.get(pk=school_level)
     if school_level.name == "RS":
         order_by = "id"
     else:
