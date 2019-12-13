@@ -29,6 +29,11 @@ def last_updated(metric_id):
 
 
 def metrics(school_level):
+    school_level = SchoolLevel.objects.get(pk=school_level)
+    if school_level.name == "RS":
+        order_by = "id"
+    else:
+        order_by = "school"
     metrics = (
         Metric.objects.filter(goal__school__school_level=school_level)
         .distinct()
@@ -38,7 +43,7 @@ def metrics(school_level):
     for metric in metrics:
         measures = metric.measure_set.filter(
             school__school_level=school_level, is_current=True
-        ).order_by("school")
+        ).order_by(order_by)
         if measures:
             metric_data = {
                 "metric": metric,
