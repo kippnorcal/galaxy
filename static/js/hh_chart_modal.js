@@ -77,9 +77,4 @@ $('.hh_value').click(function (event) {
             var myChart = new Chart(ctx, config);
         }
     });
-    $.ajax({
-        data: { 'page': window.location.origin + page },
-        type: 'POST',
-        url: '/pageview/',
-    });
 });
