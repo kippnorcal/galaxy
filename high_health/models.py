@@ -62,7 +62,7 @@ class Measure(models.Model):
     @property
     def school_year(self):
         year = int(self.date.strftime("%y"))
-        if self.date.month >= 7 and self.date.month < 12:
+        if self.date.month >= 7 and self.date.month <= 12:
             return f"{year}-{year+1}"
         else:
             return f"{year-1}-{year}"
