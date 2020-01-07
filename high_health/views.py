@@ -64,7 +64,10 @@ def chart_label(measures):
 
 
 def school_year_range(today=datetime.today()):
-    year = int(today.strftime("%Y"))
+    if today.month >= 7 and today.month <= 12:
+        year = today.year
+    else:
+        year = today.year - 1
     start_date = f"{year}-07-01"
     end_date = f"{year+1}-06-30"
     return start_date, end_date
