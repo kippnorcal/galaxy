@@ -15,5 +15,31 @@
             "definition": "Test Definition",
             "frequency": "YoY"
         }
+    },
+    {
+        "model": "accounts.site",
+        "pk": 1,
+        "fields": {
+            "name": "Test Site"
+        }
+    },
+    {
+        "model": "high_health.measure",
+        "pk": 1,
+        "fields": {
+            "metric": 1,
+            "school": 1
+        }
+    },
+    {
+        "model": "high_health.goal",
+        "pk": 1,
+        "fields": {
+            "metric": 1,
+            "school": 1,
+            "goal_type": "ABOVE",
+            "previous_outcome": 90,
+            "target": 100
+        }
     }
 ]
