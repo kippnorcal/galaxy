@@ -16,9 +16,9 @@ class TestMeasureModel:
         expected = f"{self.measure.year}-{self.measure.month} {self.measure.school}: {self.measure.metric}"
         assert str(self.measure) == expected
 
-    def test_value_max_length_5(self):
+    def test_value_max_digits_5(self):
         with pytest.raises(ValidationError):
-            self.measure.value = 111111
+            self.measure.value = 1000.00
             self.measure.full_clean()
 
     def test_value_max_decimal_2(self):
