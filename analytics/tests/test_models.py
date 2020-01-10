@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 import pytest
 
-from ..models import PageView, Search, Login
+from analytics.models import PageView, Search, Login
 from catalog.models import Report
 
 class TestPageViewModel:
