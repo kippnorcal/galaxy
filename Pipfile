@@ -4,21 +4,20 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pytest = "*"
+pytest-django = "*"
+pytest-cov = "*"
 
 [packages]
 django = "*"
 psycopg2-binary = "*"
 python3-saml = "*"
-redgreenunittest = "*"
 gunicorn = "*"
 python-dateutil = "*"
 djangorestframework = "*"
 requests = "*"
 django-filter = "*"
 rollbar = "*"
-pytest = "*"
-pytest-django = "*"
-pytest-cov = "*"
 
 [requires]
 python_version = "3.7"
