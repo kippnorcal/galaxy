@@ -1,3 +1,5 @@
+from decimal import *
+
 from django.core.exceptions import ValidationError
 import pytest
 
@@ -20,20 +22,48 @@ class TestGoalModel:
 
     def test_previous_outcome_max_digits_5(self):
         with pytest.raises(ValidationError):
-            self.goal.previous_outcome = 1000.00
+            self.goal.previous_outcome = Decimal('9999.99')
             self.goal.full_clean()
+
+    def test_previous_outcome_allows_up_to_5_digits(self):
+        self.goal.previous_outcome = Decimal('9.99')
+        self.goal.full_clean()
+        self.goal.previous_outcome = Decimal('99.99')
+        self.goal.full_clean()
+        self.goal.previous_outcome = Decimal('999.99')
+        self.goal.full_clean()
 
     def test_previous_outcome_max_decimal_2(self):
         with pytest.raises(ValidationError):
-            self.goal.previous_outcome = 0.111
+            self.goal.previous_outcome = Decimal('9.999')
             self.goal.full_clean()
+
+    def test_previous_outcome_allows_up_to_2_decimal(self):
+        self.goal.previous_outcome = Decimal('99.9')
+        self.goal.full_clean()
+        self.goal.previous_outcome = Decimal('99.99')
+        self.goal.full_clean()
 
     def test_target_max_digits_5(self):
         with pytest.raises(ValidationError):
-            self.goal.target = 1000.00
+            self.goal.target = Decimal('9999.99')
             self.goal.full_clean()
+
+    def test_target_allows_up_to_5_digits(self):
+        self.goal.target = Decimal('9.99')
+        self.goal.full_clean()
+        self.goal.target = Decimal('99.99')
+        self.goal.full_clean()
+        self.goal.target = Decimal('999.99')
+        self.goal.full_clean()
 
     def test_target_max_decimal_2(self):
         with pytest.raises(ValidationError):
-            self.goal.target = 0.111
+            self.goal.target = Decimal('9.999')
             self.goal.full_clean()
+
+    def test_target_allows_up_to_2_decimal(self):
+        self.goal.target = Decimal('99.9')
+        self.goal.full_clean()
+        self.goal.target = Decimal('99.99')
+        self.goal.full_clean()
