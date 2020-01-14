@@ -37,8 +37,9 @@ class TestMeasureModel:
         today = datetime.date.today()
         assert self.measure.date == today
 
-    def test_is_current_default_value(self):
-        assert self.measure.is_current == True
+    def test_is_current_default_value_is_true(self):
+        measure = Measure()
+        assert measure.is_current == True
     
     def test_year(self):
         today = datetime.date.today()
