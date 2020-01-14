@@ -15,7 +15,16 @@ class TestGoalModel:
         expected = f"{self.goal.school} - {self.goal.metric}"
         assert str(self.goal) == expected
 
-    def test_goal_type_invalid(self):
+    def test_goal_type_allows_defined_choices(self):
+        try:
+            self.goal.goal_type = "ABOVE"
+            self.goal.full_clean()
+            self.goal.goal_type = "BELOW"
+            self.goal.full_clean()
+        except ValidationError:
+            pytest.fail("Selecting defined choices should not throw validation error")
+
+    def test_goal_type_does_not_allow_undefined_choice(self):
         with pytest.raises(ValidationError):
             self.goal.goal_type = "Test"
             self.goal.full_clean()

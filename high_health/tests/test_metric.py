@@ -34,6 +34,20 @@ class TestMetricModel:
         except ValidationError:
             pytest.fail("Blank essential question should not throw validation error")
 
+    def test_frequency_allows_defined_choices(self):
+        try:
+            self.metric.frequency = "MoM"
+            self.metric.full_clean()
+            self.metric.frequency = "YoY"
+            self.metric.full_clean()
+        except ValidationError:
+            pytest.fail("Selecting defined choices should not throw validation error")
+
+    def test_frequency_does_not_allow_undefined_choice(self):
+        with pytest.raises(ValidationError):
+            self.metric.frequency = "Test"
+            self.metric.full_clean()
+
     def test_report_can_be_null(self):
         self.metric.report = None
         try:
