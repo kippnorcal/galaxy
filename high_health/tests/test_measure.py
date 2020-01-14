@@ -1,11 +1,12 @@
 import calendar
 import datetime
+from decimal import *
 
 from django.core.exceptions import ValidationError
 import pytest
 
-from high_health.models import Measure, Goal
-
+from high_health.models import Goal, Measure, Metric
+from accounts.models import Site
 
 class TestMeasureModel:
     @pytest.fixture(autouse=True)
@@ -41,11 +42,11 @@ class TestMeasureModel:
         measure = Measure()
         assert measure.is_current == True
     
-    def test_year(self):
-        today = datetime.date.today()
-        assert self.measure.year == today.year
+    def test_measure_year_returns_date_year(self):
+        self.measure.date = datetime.date.today()
+        assert self.measure.year == self.measure.date.year
 
-    def test_school_year(self):
+    def test_school_year_returns_expected_value(self):
         for month in range(1, 7):
             self.measure.date = datetime.date(2020, month, 1)
             assert self.measure.school_year == "19-20"
@@ -53,13 +54,19 @@ class TestMeasureModel:
             self.measure.date = datetime.date(2019, month, 1)
             assert self.measure.school_year == "19-20"
     
-    def test_month(self):
-        today = datetime.date.today()
-        assert self.measure.month == today.month
+    def test_measure_month_returns_date_month(self):
+        self.measure.date = datetime.date.today()
+        assert self.measure.month == self.measure.date.month
     
-    def test_month_name(self):
+    def test_month_name_returns_expected_value(self):
         assert self.measure.month_name == calendar.month_abbr[self.measure.date.month]
 
-    def test_goal(self):
-        assert self.measure.goal.target == 100
-        assert self.measure.goal.previous_outcome == 90
+    def test_goal_returns_expected_object(self):
+        test_goal = Goal.objects.get(pk=1)
+        test_goal.school = Site.objects.get(pk=1)
+        test_goal.metric = Metric.objects.get(pk=1)
+        test_goal.previous_outcome = Decimal('90.00')
+        test_goal.target = Decimal('100.00')
+        self.measure.school = Site.objects.get(pk=1)
+        self.measure.metric = Metric.objects.get(pk=1)
+        assert self.measure.goal == test_goal

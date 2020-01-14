@@ -37,9 +37,7 @@
         "fields": {
             "metric": 1,
             "school": 1,
-            "goal_type": "ABOVE",
-            "previous_outcome": 90,
-            "target": 100
+            "goal_type": "ABOVE"
         }
     }
 ]
