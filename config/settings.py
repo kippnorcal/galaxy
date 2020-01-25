@@ -173,6 +173,8 @@ if int(os.getenv("SSL", default=0)):
     SESSION_COOKIE_HTTPONLY = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTOCOL", "https")
 
+USE_X_FORWARDED_PORT = True
+
 ROLLBAR = {
     "access_token": os.getenv("ROLLBAR_TOKEN"),
     "environment": "development" if DEBUG else "production",
