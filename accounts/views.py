@@ -148,6 +148,7 @@ def acs(request):
     auth = init_saml_auth(request)
     auth.process_response()
     errors = auth.get_errors()
+    print(auth.get_last_response_xml())
     print(errors)
     not_auth_warn = not auth.is_authenticated()
 
