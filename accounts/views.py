@@ -27,13 +27,14 @@ from saml.saml_settings import SAML_SETTINGS
 
 
 def prepare_django_request(request):
+    request.META["SERVER_PORT"] = 443
     result = {
         "https": "on" if int(getenv("SSL", default=0)) else "off",
         "http_host": request.META["HTTP_HOST"],
         "script_name": request.META["PATH_INFO"],
         "get_data": request.GET.copy(),
         "post_data": request.POST.copy(),
-        "server_port": 443,
+        "server_port": request,META["SERVER_PORT"],
     }
     print(result)
     return result
