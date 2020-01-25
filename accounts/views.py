@@ -148,6 +148,7 @@ def acs(request):
     auth.process_response()
     errors = auth.get_errors()
     print(errors)
+    print(auth.get_last_error_reason())
     not_auth_warn = not auth.is_authenticated()
 
     if not errors:
