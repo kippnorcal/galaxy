@@ -33,7 +33,7 @@ def prepare_django_request(request):
         "script_name": request.META["PATH_INFO"],
         "get_data": request.GET.copy(),
         "post_data": request.POST.copy(),
-        "port": request.META["SERVER_PORT"],
+        "server_port": 443,
     }
     print(result)
     return result
