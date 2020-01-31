@@ -36,13 +36,11 @@ def prepare_django_request(request):
         "post_data": request.POST.copy(),
         "server_port": request.META["SERVER_PORT"],
     }
-    print(result)
     return result
 
 
 def init_saml_auth(request):
     req = prepare_django_request(request)
-    print(SAML_SETTINGS)
     auth = OneLogin_Saml2_Auth(req, old_settings=SAML_SETTINGS)
     return auth
 
@@ -56,7 +54,6 @@ def get_first_attr(dict, key):
 
 def get_saml_attributes(request):
     if "samlUserdata" in request.session:
-        paint_logout = True
         if len(request.session["samlUserdata"]) > 0:
             attrs = request.session["samlUserdata"].items()
             attrs = dict(attrs)
@@ -107,7 +104,6 @@ def metadata(request):
     saml_settings = SAML_SETTINGS
     metadata = saml_settings.get_sp_metadata()
     errors = saml_settings.validate_metadata(metadata)
-
     if len(errors) == 0:
         resp = HttpResponse(content=metadata, content_type="text/xml")
     else:
@@ -150,12 +146,7 @@ def acs(request):
     req = prepare_django_request(request)
     auth = init_saml_auth(request)
     auth.process_response()
-    print(auth.process_response())
     errors = auth.get_errors()
-    print(auth.get_last_response_xml())
-    print(errors)
-    print(auth.is_authenticated())
-    not_auth_warn = not auth.is_authenticated()
 
     if not errors:
         request.session["samlUserdata"] = auth.get_attributes()
