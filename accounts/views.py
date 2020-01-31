@@ -34,7 +34,7 @@ def prepare_django_request(request):
         "script_name": request.META["PATH_INFO"],
         "get_data": request.GET.copy(),
         "post_data": request.POST.copy(),
-        "server_port": request.META["SERVER_PORT"]
+        "server_port": request.META["SERVER_PORT"],
     }
     print(result)
     return result
@@ -149,9 +149,11 @@ def acs(request):
     req = prepare_django_request(request)
     auth = init_saml_auth(request)
     auth.process_response()
+    print(auth.process_response())
     errors = auth.get_errors()
     print(auth.get_last_response_xml())
     print(errors)
+    print(auth.is_authenticated())
     not_auth_warn = not auth.is_authenticated()
 
     if not errors:
