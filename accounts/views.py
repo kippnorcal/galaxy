@@ -42,6 +42,7 @@ def prepare_django_request(request):
 
 def init_saml_auth(request):
     req = prepare_django_request(request)
+    print(SAML_SETTINGS)
     auth = OneLogin_Saml2_Auth(req, old_settings=SAML_SETTINGS)
     return auth
 
