@@ -116,9 +116,22 @@ $ docker-compose down
 
 ### Running pytest (server must be running)
 
+Run tests
+
 ```
 $ docker-compose run web pytest
 ```
+
+Run tests and check coverage for all modules
+```
+$ docker-compose run web pytest --cov=.
+```
+
+Run tests and check coverage for a specific module
+```
+$ docker-compose run web pytest --cov=accounts accounts
+```
+
 
 ### Collect static files for production
 

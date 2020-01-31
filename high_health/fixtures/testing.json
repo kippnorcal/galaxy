@@ -1,0 +1,43 @@
+[
+    {
+        "model": "high_health.essentialquestion",
+        "pk": 1,
+        "fields": {
+            "name": "Test Essential Question",
+            "description": "Test Description"
+        }
+    },
+    {
+        "model": "high_health.metric",
+        "pk": 1,
+        "fields": {
+            "name": "Test Metric",
+            "definition": "Test Definition",
+            "frequency": "YoY"
+        }
+    },
+    {
+        "model": "accounts.site",
+        "pk": 1,
+        "fields": {
+            "name": "Test Site"
+        }
+    },
+    {
+        "model": "high_health.measure",
+        "pk": 1,
+        "fields": {
+            "metric": 1,
+            "school": 1
+        }
+    },
+    {
+        "model": "high_health.goal",
+        "pk": 1,
+        "fields": {
+            "metric": 1,
+            "school": 1,
+            "goal_type": "ABOVE"
+        }
+    }
+]

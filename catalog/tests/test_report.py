@@ -48,6 +48,10 @@ class TestReportModel:
         site_root = "/t/Test"
         assert self.report.site_root() == site_root
 
+    def test_target_site_returns_correctly(self):
+        target_site = "Test"
+        assert self.report.target_site() == target_site
+
     def test_model_manager_queryset_returns_expected_results(self):
         expected = Report.objects.filter(is_active=True)
         actual = Report.active.all()
@@ -61,3 +65,24 @@ class TestReportModel:
         actual = Report.active.for_user(user)
         assert actual.count() == expected.count()
         assert list(actual) == list(expected)
+
+    def test_report_clean_fails_when_category_does_not_match(self):
+        self.report.subcategory.category = Category.objects.get(pk=1)
+        self.report.category = Category.objects.get(pk=2)
+        with pytest.raises(ValidationError):
+            self.report.clean()
+
+    def test_report_clean_succeeds_when_subcategory_is_none(self):
+        self.report.subcategory = None
+        try:
+            self.report.clean()
+        except ValidationError:
+            pytest.fail("Blank subcategory should not raise validation error")
+
+    def test_report_clean_succeeds_when_subcategory_matches(self):
+        self.report.subcategory.category = Category.objects.get(pk=1)
+        self.report.category = Category.objects.get(pk=1)
+        try:
+            self.report.clean()
+        except ValidationError:
+            pytest.fail("Matching subcategory's category should not raise validation error")
