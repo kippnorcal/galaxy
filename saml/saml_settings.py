@@ -4,7 +4,7 @@ from onelogin.saml2.settings import OneLogin_Saml2_Settings
 
 saml_settings = {
     "strict": True,
-    "debug": True,
+    "debug": False,
     "sp": {
         "entityId": f"{getenv('APP_DOMAIN')}/metadata/",
         "assertionConsumerService": {
