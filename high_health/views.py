@@ -115,7 +115,7 @@ def distinct_months(prior_year_measures, current_year_measures):
 
 
 def distinct_years(measures):
-    return [measure.year for measure in measures]
+    return [measure.school_year for measure in measures]
 
 
 def year_bound_measures(metric_id, school_id, previous_year=False):
