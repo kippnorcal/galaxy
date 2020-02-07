@@ -50,7 +50,7 @@ def metrics(school_level):
                 "measures": measures,
             }
             data.append(metric_data)
-    return data
+    return sorted(data, key=lambda d: d["last_updated"], reverse=True)
 
 
 def last_value(values):
