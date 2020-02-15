@@ -2,14 +2,15 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 import pytest
 
-from .models import PageView, Search, Login
-
+from analytics.models import PageView, Search, Login
+from catalog.models import Report
 
 class TestPageViewModel:
     @pytest.fixture(autouse=True)
     def setUp(self, db, django_db_setup):
         self.user = User.objects.get(pk=1)
         self.pageview = PageView.objects.get(pk=1)
+        self.report = Report.objects.get(pk=1)
 
     def test_string_representation(self):
         assert str(self.pageview) == self.pageview.page
@@ -30,6 +31,26 @@ class TestPageViewModel:
             self.pageview.full_clean()
         except ValidationError:
             pytest.fail("Null user should not throw validation error")
+
+    def test_page_obect(self):
+        self.pageview.page = "/test/1"
+        assert self.pageview.page_object == "test"
+
+    def test_page_id(self):
+        self.pageview.page = "/test/1"
+        assert self.pageview.page_id == "1"
+
+    def test_display_name_high_health(self):
+        self.pageview.page = "/high_health/1"
+        assert self.pageview.display_name == "High Health"
+
+    def test_display_name_report(self):
+        self.pageview.page = "/report/1"
+        assert self.pageview.display_name == self.report.name
+
+    def test_display_name_else(self):
+        self.pageview.page = "/test_page/1"
+        assert self.pageview.display_name == self.pageview.page
 
 
 class TestSearchModel:

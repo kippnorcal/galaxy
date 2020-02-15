@@ -1,0 +1,71 @@
+[
+    {
+        "model": "high_health.metric",
+        "pk": 1,
+        "fields": {
+            "name": "Test Metric",
+            "definition": "Test Definition",
+            "frequency": "YoY"
+        }
+    },
+    {
+        "model": "accounts.site",
+        "pk": 1,
+        "fields": {
+            "name": "Test Site"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$100000$kGH9JTSNboqT$vDQwd/ntedfHV8TupSWTPa9AaqG7NPUxzcNXdjkpnvM=",
+            "username": "some_user",
+            "email": "some.user@example.com"
+        }
+    },
+    {
+        "model": "accounts.role",
+        "pk": 1,
+        "fields": {
+            "name": "Test Role"
+        }
+    },
+    {
+        "model": "accounts.job",
+        "pk": 1,
+        "fields": {
+            "name": "Test Site",
+            "role": 1
+        }
+    },
+    {
+        "model": "accounts.profile",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "email": "some.user@example.com",
+            "employee_number": "-1",
+            "job_title": 1,
+            "site": 1
+        }
+    },
+    {
+        "model": "high_health.goal",
+        "pk": 1,
+        "fields": {
+            "metric": 1,
+            "school": 1,
+            "goal_type": "ABOVE"
+        }
+    },
+    {
+        "model": "high_health.measure",
+        "pk": 1,
+        "fields": {
+            "metric": 1,
+            "school": 1,
+            "value": 100
+        }
+    }
+]

@@ -1,36 +1,42 @@
 [
-	{
-		"model": "accounts.role",
-		"pk": 1,
-		"fields": {
-			"name": "Test Role"
-		}
-	},
-	{
-		"model": "accounts.site",
-		"pk": 1,
-		"fields": {
-			"name": "Test Site"
-		}
-	},
-	{
-		"model": "accounts.job",
-		"pk": 1,
-		"fields": {
-			"name": "Test Site",
-			"role": 1
-		}
-	},
-	{
-		"model": "accounts.profile",
-		"pk": 1,
-		"fields": {
-			"user": 1,
-			"email": "some.user@example.com",
-			"employee_number": "-1",
-			"job_title": 1,
-			"site": 1
-		}
-	}
-
+    {
+        "model": "accounts.role",
+        "pk": 1,
+        "fields": {
+            "name": "Test Role"
+        }
+    },
+    {
+        "model": "accounts.schoollevel",
+        "pk": 1,
+        "fields": {
+            "name": "ZZ"
+        }
+    },
+    {
+        "model": "accounts.site",
+        "pk": 1,
+        "fields": {
+            "name": "Test Site"
+        }
+    },
+    {
+        "model": "accounts.job",
+        "pk": 1,
+        "fields": {
+            "name": "Test Site",
+            "role": 1
+        }
+    },
+    {
+        "model": "accounts.profile",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "email": "some.user@example.com",
+            "employee_number": "-1",
+            "job_title": 1,
+            "site": 1
+        }
+    }
 ]
