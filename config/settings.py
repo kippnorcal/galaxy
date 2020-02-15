@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -171,6 +172,8 @@ if int(os.getenv("SSL", default=0)):
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_HTTPONLY = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTOCOL", "https")
+
+USE_X_FORWARDED_PORT = True
 
 ROLLBAR = {
     "access_token": os.getenv("ROLLBAR_TOKEN"),

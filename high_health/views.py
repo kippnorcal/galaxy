@@ -50,7 +50,7 @@ def metrics(school_level):
                 "measures": measures,
             }
             data.append(metric_data)
-    return data
+    return sorted(data, key=lambda d: d["last_updated"], reverse=True)
 
 
 def last_value(values):
@@ -115,7 +115,7 @@ def distinct_months(prior_year_measures, current_year_measures):
 
 
 def distinct_years(measures):
-    return [measure.year for measure in measures]
+    return [measure.school_year for measure in measures]
 
 
 def year_bound_measures(metric_id, school_id, previous_year=False):

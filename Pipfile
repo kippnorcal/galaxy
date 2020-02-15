@@ -17,6 +17,7 @@ django-filter = "*"
 rollbar = "*"
 pytest = "*"
 pytest-django = "*"
+whitenoise = "*"
 pytest-cov = "*"
 
 [requires]
