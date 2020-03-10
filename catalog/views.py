@@ -152,7 +152,10 @@ def report(request, report_id):
     page_views = page_views.aggregate(views=Count("user", distinct=True))
     if page_views:
         context["viewed_by"] = page_views["views"]
-    return render(request, "report.html", context)
+    response = render(request, "report.html", context)
+    response.cookies["sessionid"]["samesite"] = "None"
+    response.cookies["csrftoken"]["samesite"] = "None"
+    return response
 
 
 @login_required
