@@ -134,6 +134,8 @@ def report(request, report_id):
         "auth_ticket": auth_ticket,
         "viewed_by": 0,
         "ssl": getenv("SSL", default=0),
+        "feedback": None,
+        "avg_feedback": None,
     }
     feedback = (
         Feedback.objects.filter(user=request.user).filter(report=report_id).last()
@@ -153,7 +155,6 @@ def report(request, report_id):
     if page_views:
         context["viewed_by"] = page_views["views"]
     response = render(request, "report.html", context)
-    response.cookies["sessionid"]["samesite"] = "None"
     response.cookies["csrftoken"]["samesite"] = "None"
     return response
 
