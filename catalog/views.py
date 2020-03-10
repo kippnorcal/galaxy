@@ -155,7 +155,8 @@ def report(request, report_id):
     if page_views:
         context["viewed_by"] = page_views["views"]
     response = render(request, "report.html", context)
-    response.cookies["csrftoken"]["samesite"] = "None"
+    # response.cookies["csrftoken"]["samesite"] = "None"
+    print(response.cookies)
     return response
 
 
