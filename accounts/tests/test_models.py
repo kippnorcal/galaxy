@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 import pytest
 
-from accounts.models import Job, Role, Site, Profile
+from accounts.models import Job, Role, Site, Profile, SchoolLevel
 from catalog.models import Report, Favorite
 
 
@@ -17,6 +17,20 @@ class TestRoleModel:
         with pytest.raises(ValidationError):
             self.role.name = "x" * 101
             self.role.full_clean()
+
+
+class TestSchoolLevelModel:
+    @pytest.fixture(autouse=True)
+    def setup(self, db, django_db_setup):
+        self.schoollevel = SchoolLevel.objects.get(pk=1)
+
+    def test_string_representation(self):
+        assert str(self.schoollevel) == self.schoollevel.name
+
+    def test_name_max_length_2(self):
+        with pytest.raises(ValidationError):
+            self.schoollevel.name = "x" * 3
+            self.schoollevel.full_clean()
 
 
 class TestJobModel:

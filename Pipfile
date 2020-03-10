@@ -9,7 +9,6 @@ verify_ssl = true
 django = "*"
 psycopg2-binary = "*"
 python3-saml = "*"
-redgreenunittest = "*"
 gunicorn = "*"
 python-dateutil = "*"
 djangorestframework = "*"
@@ -19,6 +18,7 @@ rollbar = "*"
 pytest = "*"
 pytest-django = "*"
 whitenoise = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.7"
