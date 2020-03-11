@@ -134,8 +134,6 @@ def report(request, report_id):
         "auth_ticket": auth_ticket,
         "viewed_by": 0,
         "ssl": getenv("SSL", default=0),
-        "feedback": None,
-        "avg_feedback": None,
     }
     feedback = (
         Feedback.objects.filter(user=request.user).filter(report=report_id).last()
@@ -143,7 +141,7 @@ def report(request, report_id):
     avg_feedback = Feedback.objects.filter(report=report_id).aggregate(Avg("score"))
     if feedback:
         context["feedback"] = feedback
-    if avg_feedback and avg_feedback.get("score__avg") is not None:
+    if avg_feedback and avg_feedback["score__avg"] is not None:
         context["avg_feedback"] = round(avg_feedback["score__avg"], 1)
     if getenv("SSL", default=0):
         page = request.build_absolute_uri()
@@ -154,10 +152,7 @@ def report(request, report_id):
     page_views = page_views.aggregate(views=Count("user", distinct=True))
     if page_views:
         context["viewed_by"] = page_views["views"]
-    response = render(request, "report.html", context)
-    # response.cookies["csrftoken"]["samesite"] = "None"
-    print(response.cookies)
-    return response
+    return render(request, "report.html", context)
 
 
 @login_required
