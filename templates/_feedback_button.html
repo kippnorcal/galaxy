@@ -1,4 +1,5 @@
-<i class="feedback-btn pl-3 {{ feedback|yesno:"fas,far" }} fa-comment fa-lg text-primary" data-toggle="collapse" data-target="#feedback-form" aria-expanded="false" aria-controls="feedback-form"></i>
+<i class="feedback-btn pl-3 {{ feedback|yesno:"fas,far" }} fa-comment fa-lg text-success" data-toggle="collapse"
+  data-target="#feedback-form" aria-expanded="false" aria-controls="feedback-form"></i>
 <div class="collapse" id="feedback-form">
   <div class="card">
     <div class="card-header">Give us Feedback!</div>
@@ -10,7 +11,7 @@
           <div class="row">
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
               {% for i in "xxxxx" %}
-                {% include "_sentiment_button.html" with score=forloop.counter %}
+              {% include "_sentiment_button.html" with score=forloop.counter %}
               {% endfor %}
             </div>
           </div>
@@ -21,10 +22,10 @@
         </div>
       </div>
       <div class="card-footer">
-        <button type="button" class="btn btn-secondary" data-toggle="collapse" data-target="#feedback-form">Close</button>
+        <button type="button" class="btn btn-secondary" data-toggle="collapse"
+          data-target="#feedback-form">Close</button>
         <button type="submit" class="btn btn-primary">Submit</button>
       </div>
     </form>
   </div>
 </div>
-

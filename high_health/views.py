@@ -154,18 +154,18 @@ def find_axis_min(values, goal):
 def get_goal_color(goal, value):
     if goal.goal_type == "ABOVE":
         if value >= goal.target:
-            return "#29a745"  # success
+            return "var(--success-color)"
         elif value >= goal.previous_outcome:
-            return "#6c757d"  # secondary
+            return "var(--secondary-color)"
         else:
-            return "#dc3545"  # danger
+            return "var(--danger-color)"
     else:
         if value <= goal.target:
-            return "#29a745"  # success
+            return "var(--success-color)"
         elif value <= goal.previous_outcome:
-            return "#6c757d"  # secondary
+            return "var(--secondary-color)"
         else:
-            return "#dc3545"  # danger
+            return "var(--danger-color)"
 
 
 def monthly_data(metric_id, school_id):
