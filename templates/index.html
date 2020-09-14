@@ -13,8 +13,8 @@
   <div class="row">
     {% for stat in stats %}
     <div class="col-sm-2 {% if stat == stats|first %}offset-sm-2{% endif %} text-center">
-      <h1 class="text-dark-green">{{ stat.value|intcomma }}</h1>
-      <h5 class="text-dark-blue">{{ stat.metric }}</h5>
+      <h1 class="text-stat text-success">{{ stat.value|intcomma }}</h1>
+      <h5 class="text-brand">{{ stat.metric }}</h5>
     </div>
     {% endfor %}
   </div>
