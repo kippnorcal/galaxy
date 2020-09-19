@@ -1,7 +1,26 @@
+:root {
+  --brand-color: #0B2C59;
+  --primary-color: #185EBC;
+  --success-color: #61B346;
+  --secondary-color: #84878A;
+  --warning-color: #FFB648;
+  --offset-color: #F47D4E;
+  --danger-color: #E8605D;
+  --info-color: #5F9CDA;
+  --muted-color: #C9C9C9;
+  --light-color: #F0F0F0;
+  --white-color: #FFFFFF;
+  --dark-color: #212529;
+}
+
 h1 {
   font-size: 1.875em;
-  color: #255694;
+  color: var(--brand-color);
   font-weight: 300;
+}
+
+.text-primary, a {
+  color: var(--primary-color) !important;
 }
 
 .fav-icon {
@@ -17,7 +36,7 @@ h1 {
 }
 
 .navbar-dark {
-  background-color: #255694 !important;
+  background-color: var(--brand-color) !important;
 }
 
 .galaxy-banner{
@@ -27,7 +46,7 @@ h1 {
 }
 
 .footer{
-  background-color: #0e1015;
+  background-color: var(--brand-color);
 }
 
 .footer > .container {
@@ -93,7 +112,7 @@ h1 {
   z-index: 1; /* Stay on top */
   top: 0; /* Stay at the top */
   right: 0;
-  background-color: #fff; /* White */
+  background-color: var(--white-color);
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 60px; /* Place content 60px from the top */
   transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
@@ -108,14 +127,14 @@ h1 {
   padding: 8px 8px 8px 32px;
   text-decoration: none;
   font-size: 25px;
-  color: #818181;
+  color: var(--muted-color);
   display: block;
   transition: 0.3s;
 }
 
 /* When you mouse over the navigation links, change their color */
 .sidenav a:hover {
-  color: #f1f1f1;
+  color: var(--light-color);
 }
 
 /* Position and style the close button (top right corner) */
@@ -153,45 +172,86 @@ h1 {
 }
 
 .btn-warning {
-  color: #212529;
-  background-color: #F7941E;
-  border-color: #F7941E;
+  color: var(--brand-color) !important;
+  background-color: var(--warning-color);
+  border-color: var(--warning-color);
 }
 
 .btn-warning:hover {
-  color: #212529;
-  background-color: #439539;
-  border-color: #439539;
+  color: var(--dark-color);
+  background-color: var(--success-color);
+  border-color: var(--success-color);
 }
 
-.btn-warning:focus, .btn-warning.focus {
-  box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.5);
+.btn-success {
+  color: var(--light-color) !important;
+  background-color: var(--success-color);
+  border-color: var(--success-color);
 }
 
-.btn-warning.disabled, .btn-warning:disabled {
-  color: #212529;
-  background-color: #F7941E;
-  border-color: #F7941E;
+.btn-info {
+  color: var(--dark-color) !important;
+  background-color: var(--info-color);
+  border-color:  var(--info-color);
 }
 
-.btn-warning:not(:disabled):not(.disabled):active, .btn-warning:not(:disabled):not(.disabled).active,
-.show > .btn-warning.dropdown-toggle {
-  color: #212529;
-  background-color: #F7941E;
-  border-color: #F7941E;
+.badge-primary {
+  color: var(--white-color) !important;
+  background-color: var(--primary-color);
+  border-color:  var(--primary-color);
 }
 
-.btn-warning:not(:disabled):not(.disabled):active:focus, .btn-warning:not(:disabled):not(.disabled).active:focus,
-.show > .btn-warning.dropdown-toggle:focus {
-  box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.5);
-}
 
-.text-dark-orange {
-  color: #E27425 !important;
+.text-stat {
   font-weight: bold;
 }
 
-.text-dark-blue {
-  color: rgb(27, 61, 120) !important;
+.text-footer {
+  color: var(--light-color) !important;
+}
 
+.text-footer a:hover {
+  color: var(--success-color) !important;
+}
+
+.text-secondary {
+  color: var(--secondary-color) !important;
+}
+
+.text-info {
+  color: var(--info-color) !important;
+}
+
+.text-danger {
+  color: var(--danger-color) !important;
+}
+
+.text-success {
+  color: var(--success-color) !important;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: var(--light-color) !important;
+}
+
+.btn-outline-primary {
+  color: var(--primary-color) !important;
+  border-color: var(--primary-color);
+}
+
+.btn-outline-danger {
+  color: var(--danger-color) !important;
+  border-color: var(--danger-color);
+}
+
+.btn-outline-danger:hover {
+  color: var(--light-color) !important;
+  background-color: var(--danger-color);
+  border-color: var(--danger-color);
+}
+
+.btn-outline-primary:hover {
+  color: var(--light-color) !important;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
 }

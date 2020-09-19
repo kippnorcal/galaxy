@@ -2,7 +2,7 @@ name: Dokku Deploy to production
 on:
   push:
     branches: 
-      - master
+      - main
 jobs:
   build:
     runs-on: [ubuntu-latest]
