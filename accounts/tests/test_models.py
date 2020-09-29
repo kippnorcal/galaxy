@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 import pytest
 
 from accounts.models import Job, Role, Site, Profile, SchoolLevel
@@ -108,3 +109,9 @@ class TestProfileModel:
         after_count = self.profile.favorites.all().count()
         assert before_count != after_count
         del favorite
+
+    def test_email_is_unique(self):
+        existing_email = self.profile.email
+        with pytest.raises(IntegrityError):
+            profile = Profile(email=existing_email)
+            profile.save()
