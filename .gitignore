@@ -110,3 +110,4 @@ certs/
 *.swp
 data/
 !data/nginx/app.conf
+.DS_Store
