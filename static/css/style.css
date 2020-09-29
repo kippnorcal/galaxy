@@ -202,42 +202,8 @@ h1 {
 }
 
 
-.btn-warning:focus, .btn-warning.focus {
-  box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.5); /* TODO: Replace with var */
-}
-
-.btn-warning.disabled, .btn-warning:disabled {
-  color: var(--dark-color);
-  background-color: var(--warning-color);
-  border-color: var(--warning-color);
-}
-
-.btn-warning:not(:disabled):not(.disabled):active, .btn-warning:not(:disabled):not(.disabled).active,
-.show > .btn-warning.dropdown-toggle {
-  color: var(--dark-color);
-  background-color: var(--warning-color);
-  border-color: var(--warning-color);
-}
-
-.btn-warning:not(:disabled):not(.disabled):active:focus, .btn-warning:not(:disabled):not(.disabled).active:focus,
-.show > .btn-warning.dropdown-toggle:focus {
-  box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.5); /* TODO: Replace with var */
-}
-
-.text-dark-orange {
-  color: var(--offset-color) !important;
+.text-stat {
   font-weight: bold;
-}
-
-.text-dark-blue {
-  color: var(--brand-color) !important;
-
-}
-
-.text-dark-green {
-  color: var(--success-color) !important;
-  font-weight: bold;
-
 }
 
 .text-footer {
