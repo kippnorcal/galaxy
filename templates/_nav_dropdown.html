@@ -28,18 +28,29 @@
       <h6 class="dropdown-header text-dark">{{ subcategory.name }}</h6>
       {% for report in reports %}
       {% if report.subcategory == subcategory %}
-      <a class="dropdown-item text-secondary small" href="{% url "report" report.id %}"><span
-          class="ml-3">{{ report.name }}</span></a>
-      {% endif %}
-      {% endfor %}
-      <div class="dropdown-divider"></div>
-      {% endif %}
-      {% endfor %}
-      {% for report in reports %}
-      {% if report.category == category and report.subcategory not in subcategories %}
-      <a class="dropdown-item text-secondary small" href="{% url "report" report.id %}">{{ report.name }}</a>
-      {% endif %}
-      {% endfor %}
+      {% if report.is_embedded %}
+      <a class="dropdown-item text-secondary small" href="{% url "report" report.id %}">
+        {% else %}
+        <a class="dropdown-item text-secondary small" href="{{ report.url }}">
+          {% endif %}
+          <span class="ml-3">{{ report.name }}</span>
+        </a>
+        {% endif %}
+        {% endfor %}
+        <div class="dropdown-divider"></div>
+        {% endif %}
+        {% endfor %}
+        {% for report in reports %}
+        {% if report.category == category and report.subcategory not in subcategories %}
+        {% if report.is_embedded %}
+        <a class="dropdown-item text-secondary small" href="{% url "report" report.id %}">
+          {% else %}
+          <a class="dropdown-item text-secondary small" href="{{ report.url }}">
+            {% endif %}
+            {{ report.name }}
+          </a>
+          {% endif %}
+          {% endfor %}
     </div>
   </li>
   {% endfor %}
