@@ -114,3 +114,8 @@ class TestProfileModel:
         with pytest.raises(IntegrityError):
             profile = Profile(employee_number=existing_employee_number)
             profile.save()
+
+    def test_employee_number_cannot_be_blank(self):
+        self.profile.employee_number = None
+        with pytest.raises(ValidationError):
+            self.profile.full_clean()
