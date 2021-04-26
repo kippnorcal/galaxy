@@ -61,7 +61,7 @@ class JobAdmin(admin.ModelAdmin):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.PROTECT, blank=True, null=True)
     employee_number = models.CharField(max_length=5, blank=True)
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     job_title = models.ForeignKey(Job, on_delete=models.PROTECT, blank=True, null=True)
     site = models.ForeignKey(Site, on_delete=models.PROTECT, blank=True, null=True)
     avatar_url = models.URLField(max_length=2000, blank=True)
