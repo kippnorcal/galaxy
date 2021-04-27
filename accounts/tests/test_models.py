@@ -83,13 +83,6 @@ class TestProfileModel:
             self.profile.employee_number = "x" * 6
             self.profile.full_clean()
 
-    def test_employee_number_can_be_blank(self):
-        self.profile.employee_number = None
-        try:
-            self.profile.full_clean()
-        except ValidationError:
-            pytest.fail("Blank employee_number should not throw validation error")
-
     def test_avatar_url_max_length_5(self):
         with pytest.raises(ValidationError):
             self.profile.avatar_url = "x" * 2001
@@ -115,3 +108,14 @@ class TestProfileModel:
         with pytest.raises(IntegrityError):
             profile = Profile(email=existing_email)
             profile.save()
+
+    def test_employee_number_is_unique(self):
+        existing_employee_number = self.profile.employee_number
+        with pytest.raises(IntegrityError):
+            profile = Profile(employee_number=existing_employee_number)
+            profile.save()
+
+    def test_employee_number_cannot_be_blank(self):
+        self.profile.employee_number = None
+        with pytest.raises(ValidationError):
+            self.profile.full_clean()
