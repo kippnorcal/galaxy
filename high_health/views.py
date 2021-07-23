@@ -63,7 +63,7 @@ def chart_label(measures):
         return measures.first().school_year
 
 
-def school_year_range(today=datetime.today()):
+def school_year_range(today):
     if today.month >= 7 and today.month <= 12:
         year = today.year
     else:
@@ -119,11 +119,14 @@ def distinct_years(measures):
 
 
 def year_bound_measures(metric_id, school_id, previous_year=False):
+    latest_measure_date = (
+        Measure.objects.filter(metric=metric_id, school=school_id).latest("date").date
+    )
     if previous_year:
-        a_year_ago = datetime.today() - relativedelta(years=1)
+        a_year_ago = latest_measure_date - relativedelta(years=1)
         date_range = school_year_range(a_year_ago)
     else:
-        date_range = school_year_range()
+        date_range = school_year_range(latest_measure_date)
     return Measure.objects.filter(
         metric=metric_id, school=school_id, date__range=date_range
     ).order_by("date")
@@ -297,4 +300,3 @@ class MeasureViewSet(viewsets.ModelViewSet):
     serializer_class = MeasureSerializer
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ("is_current",)
-
