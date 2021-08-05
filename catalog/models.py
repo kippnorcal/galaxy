@@ -22,6 +22,7 @@ class Category(models.Model):
 
 
 class CategoryAdmin(admin.ModelAdmin):
+    list_display = ("name", "sort_order")
     list_filter = ("is_active",)
 
 
@@ -40,6 +41,7 @@ class SubCategory(models.Model):
 
 
 class SubCategoryAdmin(admin.ModelAdmin):
+    list_display = ("name", "category", "sort_order")
     list_filter = ("is_active", "category")
 
 
@@ -125,7 +127,7 @@ class Report(models.Model):
 
 
 class ReportAdmin(admin.ModelAdmin):
-    list_display = ("name", "is_active", "is_embedded", "is_tabbed")
+    list_display = ("name", "is_active", "sort_order", "is_embedded", "is_tabbed")
     list_filter = (
         "category",
         "subcategory",
