@@ -38,14 +38,16 @@ def navbar(request):
         subcategories = None
         school_levels = None
     if request.user.is_authenticated:
-        reports = Report.active.for_user(request.user)
+        reports = Report.active.for_user(request.user).order_by("sort_order", "name")
         if reports:
             category_list = reports.values_list("category").distinct()
-            categories = Category.objects.filter(id__in=category_list).order_by("id")
+            categories = Category.objects.filter(id__in=category_list).order_by(
+                "sort_order", "name"
+            )
             subcategory_list = reports.values_list("subcategory").distinct()
             subcategories = SubCategory.objects.filter(
                 id__in=subcategory_list
-            ).order_by("id")
+            ).order_by("sort_order", "name")
             school_levels = SchoolLevel.objects.all().order_by("id")
         else:
             categories = None
