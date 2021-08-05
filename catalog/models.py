@@ -11,6 +11,7 @@ from accounts.models import Role, Site, Profile
 class Category(models.Model):
     name = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
+    sort_order = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -28,6 +29,7 @@ class SubCategory(models.Model):
     name = models.CharField(max_length=100)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     is_active = models.BooleanField(default=True)
+    sort_order = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.category}: {self.name}"
@@ -77,6 +79,7 @@ class Report(models.Model):
     roles = models.ManyToManyField(Role, default=roles_default)
     sites = models.ManyToManyField(Site, default=sites_default)
     is_active = models.BooleanField(default=True)
+    sort_order = models.IntegerField(default=0)
     is_embedded = models.BooleanField(default=True)
     is_tabbed = models.BooleanField(default=False)
     height = models.IntegerField(default=850)
