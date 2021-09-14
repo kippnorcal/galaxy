@@ -32,6 +32,7 @@ $('.hh_value').click(function (event) {
                         borderColor: '#0071CE',
                         backgroundColor: '#0071CE',
                         data: response['data']['values'],
+                        spanGaps: true,
                         lineTension: 0,
                     }]
                 }

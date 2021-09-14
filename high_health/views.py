@@ -212,11 +212,12 @@ def yearly_data(metric_id, school_id):
         "date"
     )
     values = distinct_values(measures)
+    non_null_values = list(filter(None, values))
     goal = Goal.objects.get(metric=metric_id, school=school_id)
     target = round(goal.target)
     goal_type = goal.goal_type
-    axis_min = find_axis_min(values, target)
-    axis_max = find_axis_max(values, target)
+    axis_min = find_axis_min(non_null_values, target)
+    axis_max = find_axis_max(non_null_values, target)
     goal_color = get_goal_color(goal, values[-1])
 
     return {
