@@ -12,6 +12,7 @@ $('.hh_value').click(function (event) {
                         label: response['data']['py_label'],
                         fill: false,
                         data: response['data']['previous_year'],
+                        spanGaps: true,
                         lineTension: 0,
                     }, {
                         label: response['data']['cy_label'],
@@ -19,6 +20,7 @@ $('.hh_value').click(function (event) {
                         borderColor: '#0071CE',
                         backgroundColor: '#0071CE',
                         data: response['data']['current_year'],
+                        spanGaps: true,
                         lineTension: 0,
                     }]
                 }
