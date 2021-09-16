@@ -182,11 +182,12 @@ def monthly_data(metric_id, school_id):
     py_values = distinct_values(py_measures)
     months = distinct_months(py_measures, cy_measures)
     values = cy_values + py_values
+    non_null_values = list(filter(None, values))
     goal = Goal.objects.get(metric=metric_id, school=school_id)
     target = round(goal.target)
     goal_type = goal.goal_type
-    axis_min = find_axis_min(values, target)
-    axis_max = find_axis_max(values, target)
+    axis_min = find_axis_min(non_null_values, target)
+    axis_max = find_axis_max(non_null_values, target)
     goal_color = get_goal_color(goal, cy_values[-1])
 
     return {
@@ -211,11 +212,12 @@ def yearly_data(metric_id, school_id):
         "date"
     )
     values = distinct_values(measures)
+    non_null_values = list(filter(None, values))
     goal = Goal.objects.get(metric=metric_id, school=school_id)
     target = round(goal.target)
     goal_type = goal.goal_type
-    axis_min = find_axis_min(values, target)
-    axis_max = find_axis_max(values, target)
+    axis_min = find_axis_min(non_null_values, target)
+    axis_max = find_axis_max(non_null_values, target)
     goal_color = get_goal_color(goal, values[-1])
 
     return {
