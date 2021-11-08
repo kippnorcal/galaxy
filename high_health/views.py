@@ -23,7 +23,11 @@ from .serializers import (
 
 def last_updated(metric_id):
     try:
-        return Measure.objects.filter(metric=metric_id).latest("date").date
+        return (
+            Measure.objects.filter(metric=metric_id, is_current=True)
+            .latest("date")
+            .date
+        )
     except Measure.DoesNotExist:
         return None
 
