@@ -15,7 +15,7 @@ Data Portal web app
 1. Clone this repo
 
 ```
-$  git clone https://github.com/kipp-bayarea/galaxy.git
+$  git clone https://github.com/kippnorcal/galaxy.git
 ```
 
 2. Install Pipenv
