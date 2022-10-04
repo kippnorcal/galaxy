@@ -157,6 +157,7 @@ def find_axis_min(values, goal):
 
 
 def get_goal_color(goal, value):
+    # Adding a comment
     # SUCCESS_COLOR = "#61B346"
     SUCCESS_COLOR = "#84878A"
     SECONDARY_COLOR = "#84878A"
