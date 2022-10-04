@@ -5,6 +5,7 @@ RUN apt-get update
 RUN apt-get install -y libxml2-dev libxmlsec1-dev
 RUN pip install pipenv
 COPY Pipfile .
+RUN pipenv lock
 RUN pipenv requirements > requirements.txt
 RUN pip install -r requirements.txt
 COPY ./ .
