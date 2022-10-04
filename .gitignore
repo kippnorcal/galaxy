@@ -111,3 +111,4 @@ certs/
 data/
 !data/nginx/app.conf
 .DS_Store
+.idea
