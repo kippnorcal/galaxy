@@ -44,9 +44,7 @@ def metrics(school_level):
     )
     data = []
     for metric in metrics:
-        measures = metric.measure_set.filter(
-            school__school_level=school_level, is_current=True
-        ).order_by(order_by)
+        measures = metric.measure_set.filter(school__school_level=school_level, is_current=True).order_by(order_by)
         if measures:
             metric_data = {
                 "metric": metric,
@@ -159,11 +157,13 @@ def find_axis_min(values, goal):
 
 
 def get_goal_color(goal, value):
-    SUCCESS_COLOR = "#61B346"
+    # Adding a comment
+    # SUCCESS_COLOR = "#61B346"
+    SUCCESS_COLOR = "#84878A"
     SECONDARY_COLOR = "#84878A"
     DANGER_COLOR = "#E8605D"
 
-    if goal.goal_type == "ABOVE":
+    if goal.goal_type.upper() == "ABOVE":
         if value >= goal.target:
             return SUCCESS_COLOR
         elif value >= goal.previous_outcome:

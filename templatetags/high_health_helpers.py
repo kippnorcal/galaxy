@@ -1,11 +1,19 @@
+import logging
+
 from django import template
 
 register = template.Library()
 
 
+logger = logging.getLogger('django')
+
+
 @register.filter
 def goal_format(measure):
-    if measure.goal.goal_type == "ABOVE":
+    # This method creates a tag that determines the color of the text
+    # Color codings found in css file
+    # For now, success is grey
+    if measure.goal.goal_type.upper() == "ABOVE":
         if measure.value >= measure.goal.target:
             return "success"
         elif measure.value >= measure.goal.previous_outcome:
@@ -45,4 +53,3 @@ def goal_distance(measure):
 register.filter("goal_format", goal_format)
 register.filter("addstr", addstr)
 register.filter("goal_distance", goal_distance)
-

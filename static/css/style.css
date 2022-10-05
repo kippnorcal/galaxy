@@ -1,7 +1,7 @@
 :root {
   --brand-color: #0B2C59;
   --primary-color: #185EBC;
-  --success-color: #61B346;
+  --success-color: #84878A;
   --secondary-color: #84878A;
   --warning-color: #FFB648;
   --offset-color: #F47D4E;
@@ -11,6 +11,8 @@
   --light-color: #F0F0F0;
   --white-color: #FFFFFF;
   --dark-color: #212529;
+  /* Galaxy Green is the former color for --success-color */
+  --galaxy-green: #61B346;
 }
 
 h1 {
@@ -179,14 +181,14 @@ h1 {
 
 .btn-warning:hover {
   color: var(--dark-color);
-  background-color: var(--success-color);
-  border-color: var(--success-color);
+  background-color: var(--galaxy-green);
+  border-color: var(--galaxy-green);
 }
 
 .btn-success {
   color: var(--light-color) !important;
-  background-color: var(--success-color);
-  border-color: var(--success-color);
+  background-color: var(--galaxy-green);
+  border-color: var(--galaxy-green);
 }
 
 .btn-info {
@@ -211,7 +213,7 @@ h1 {
 }
 
 .text-footer a:hover {
-  color: var(--success-color) !important;
+  color: var(--galaxy-green) !important;
 }
 
 .text-secondary {
