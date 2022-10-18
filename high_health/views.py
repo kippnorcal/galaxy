@@ -173,8 +173,8 @@ def get_goal_color(goal, value):
     else:
         if value <= goal.target:
             return SUCCESS_COLOR
-        elif value <= goal.previous_outcome:
-            return SECONDARY_COLOR
+        # elif value <= goal.previous_outcome:
+        #    return SECONDARY_COLOR
         else:
             return DANGER_COLOR
 
