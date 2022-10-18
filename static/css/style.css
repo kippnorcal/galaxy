@@ -1,7 +1,7 @@
 :root {
   --brand-color: #0B2C59;
   --primary-color: #185EBC;
-  --success-color: #84878A;
+  --success-color: #61B346;
   --secondary-color: #84878A;
   --warning-color: #FFB648;
   --offset-color: #F47D4E;
@@ -11,7 +11,6 @@
   --light-color: #F0F0F0;
   --white-color: #FFFFFF;
   --dark-color: #212529;
-  /* Galaxy Green is the former color for --success-color */
   --galaxy-green: #61B346;
 }
 
