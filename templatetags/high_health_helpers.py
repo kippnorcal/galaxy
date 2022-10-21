@@ -23,8 +23,8 @@ def goal_format(measure):
     else:
         if measure.value <= measure.goal.target:
             return "success"
-        # elif measure.value <= measure.goal.previous_outcome:
-        #    return "secondary"
+        elif measure.value <= measure.goal.previous_outcome:
+            return "secondary"
         else:
             return "danger"
 

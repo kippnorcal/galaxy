@@ -20,6 +20,7 @@ from .serializers import (
     MeasureSerializer,
 )
 
+import logging
 
 def last_updated(metric_id):
     try:
@@ -157,9 +158,7 @@ def find_axis_min(values, goal):
 
 
 def get_goal_color(goal, value):
-    # Adding a comment
-    # SUCCESS_COLOR = "#61B346"
-    SUCCESS_COLOR = "#84878A"
+    SUCCESS_COLOR = "#61B346"
     SECONDARY_COLOR = "#84878A"
     DANGER_COLOR = "#E8605D"
 
@@ -173,8 +172,8 @@ def get_goal_color(goal, value):
     else:
         if value <= goal.target:
             return SUCCESS_COLOR
-        # elif value <= goal.previous_outcome:
-        #    return SECONDARY_COLOR
+        elif value <= goal.previous_outcome:
+           return SECONDARY_COLOR
         else:
             return DANGER_COLOR
 

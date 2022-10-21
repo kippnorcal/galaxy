@@ -105,6 +105,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost",
+    "https://stg.kippgalaxy.org",
+    "https://kippgalaxy.org"
+    ]
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
