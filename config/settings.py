@@ -108,6 +108,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost",
+    "https://stg.kippgalaxy.org",
     "https://kippgalaxy.org"
     ]
 
