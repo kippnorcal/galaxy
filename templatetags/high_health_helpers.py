@@ -24,20 +24,41 @@ def goal_format(measure):
             school=measure.school)[0].value
         if previous_outcome is None:
             previous_outcome = measure.goal.previous_outcome
+        return mom_color_eval(measure, previous_outcome)
     else:
         previous_outcome = measure.goal.previous_outcome
+        return yoy_color_eval(measure, previous_outcome)
 
+
+def yoy_color_eval(measure, previous):
     if measure.goal.goal_type.upper() == "ABOVE":
-        if measure.value < measure.goal.target or measure.value < previous_outcome:
+        if measure.value >= measure.goal.target:
+            return "success"
+        elif measure.goal.target > measure.value >= previous:
+            return "secondary"
+        else:
             return "danger"
-        elif measure.value >= measure.goal.target and measure.value >= previous_outcome:
+    else:
+        if measure.value <= measure.goal.target:
+            return "success"
+        elif measure.goal.target < measure.value <= previous:
+            return "secondary"
+        else:
+            return "danger"
+
+
+def mom_color_eval(measure, previous):
+    if measure.goal.goal_type.upper() == "ABOVE":
+        if measure.value < previous:
+            return "danger"
+        elif measure.value >= measure.goal.target and measure.value >= previous:
             return "success"
         else:
             return "secondary"
     else:
-        if measure.value > measure.goal.target or measure.value > previous_outcome:
+        if measure.value > previous:
             return "danger"
-        elif measure.value <= measure.goal.target and measure.value <= previous_outcome:
+        elif measure.value <= measure.goal.target and measure.value <= previous:
             return "success"
         else:
             return "secondary"
