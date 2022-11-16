@@ -70,12 +70,20 @@ LOGGING = {
             "filename": os.path.join(BASE_DIR, "debug.log"),
             "maxBytes": 1024 * 1024 * 15,  # 15MB
             "backupCount": 10,
-        }
+        },
+        "console": {
+            "class": "logging.StreamHandler",
+        },
     },
     "loggers": {
         "django": {"handlers": ["file"], "level": "DEBUG", "propagate": True},
         "django.utils.autoreload": {"level": "INFO"},
         "django.db.backends": {"level": "INFO"},
+        "console": {
+            "handlers": ['console'],
+            "level": "INFO",
+            "propagate": True
+        },
     },
 }
 

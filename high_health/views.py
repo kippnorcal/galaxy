@@ -1,3 +1,4 @@
+import logging
 import math
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -20,7 +21,14 @@ from .serializers import (
     MeasureSerializer,
 )
 
-import logging
+logger = logging.getLogger('console')
+
+
+# Goal Colors
+SUCCESS_COLOR = "#61B346"
+SECONDARY_COLOR = "#84878A"
+DANGER_COLOR = "#E8605D"
+
 
 def last_updated(metric_id):
     try:
@@ -67,7 +75,7 @@ def chart_label(measures):
 
 
 def school_year_range(today):
-    if today.month >= 7 and today.month <= 12:
+    if 7 <= today.month <= 12:
         year = today.year
     else:
         year = today.year - 1
@@ -157,26 +165,47 @@ def find_axis_min(values, goal):
     return axis_min
 
 
-def get_goal_color(goal, value):
-    SUCCESS_COLOR = "#61B346"
-    SECONDARY_COLOR = "#84878A"
-    DANGER_COLOR = "#E8605D"
-
+def yoy_color_eval(goal, value):
     if goal.goal_type.upper() == "ABOVE":
         if value >= goal.target:
             return SUCCESS_COLOR
-        elif value >= goal.previous_outcome:
+        elif goal.previous_outcome <= value < goal.target:
             return SECONDARY_COLOR
         else:
             return DANGER_COLOR
     else:
         if value <= goal.target:
             return SUCCESS_COLOR
-        elif value <= goal.previous_outcome:
+        elif goal.previous_outcome >= value > goal.target:
            return SECONDARY_COLOR
         else:
             return DANGER_COLOR
 
+
+def mom_color_eval(goal, value, previous):
+    if goal.goal_type.upper() == "ABOVE":
+        if value < previous:
+            return DANGER_COLOR
+        elif value >= goal.target and value >= previous:
+            return SUCCESS_COLOR
+        else:
+            return SECONDARY_COLOR
+    else:
+        if value > previous:
+           return DANGER_COLOR
+        elif value <= goal.target and value <= previous:
+            logger.info(previous)
+            return SUCCESS_COLOR
+        else:
+            return SECONDARY_COLOR
+
+
+def get_last_years_value(month, measures):
+    """This function is grabbing the data from this time last year for MoM comparison"""
+    try:
+        return [measure for measure in measures if measure.month == month][0].value
+    except IndexError:
+        return None
 
 def monthly_data(metric_id, school_id):
     cy_measures = year_bound_measures(metric_id, school_id)
@@ -191,7 +220,12 @@ def monthly_data(metric_id, school_id):
     goal_type = goal.goal_type
     axis_min = find_axis_min(non_null_values, target)
     axis_max = find_axis_max(non_null_values, target)
-    goal_color = get_goal_color(goal, cy_values[-1])
+
+    #  The below block is part of a patch to change how MoM measures are evaluated
+    current_month = cy_measures.reverse()[0].month
+    last_year_value = get_last_years_value(current_month, py_measures)
+
+    goal_color = mom_color_eval(goal, cy_values[-1], last_year_value)
 
     return {
         "frequency": "monthly",
@@ -221,7 +255,7 @@ def yearly_data(metric_id, school_id):
     goal_type = goal.goal_type
     axis_min = find_axis_min(non_null_values, target)
     axis_max = find_axis_max(non_null_values, target)
-    goal_color = get_goal_color(goal, values[-1])
+    goal_color = yoy_color_eval(goal, values[-1])
 
     return {
         "frequency": "yearly",

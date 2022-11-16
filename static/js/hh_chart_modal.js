@@ -64,7 +64,7 @@ $('.hh_value').click(function (event) {
                         borderWidth: 2,
                         label: {
                             backgroundColor: response['data']['goal_color'],
-                            content: 'Min Health: ' + response['data']['goal_type'].toLowerCase() + ' ' + response['data']['goal'],
+                            content: 'High Health: ' + response['data']['goal_type'].toLowerCase() + ' ' + response['data']['goal'],
                             enabled: true
                         }
                     }]
