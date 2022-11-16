@@ -1,3 +1,4 @@
+import logging
 import math
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -20,8 +21,6 @@ from .serializers import (
     MeasureSerializer,
 )
 
-import logging
-
 logger = logging.getLogger('console')
 
 
@@ -29,6 +28,7 @@ logger = logging.getLogger('console')
 SUCCESS_COLOR = "#61B346"
 SECONDARY_COLOR = "#84878A"
 DANGER_COLOR = "#E8605D"
+
 
 def last_updated(metric_id):
     try:
@@ -165,14 +165,6 @@ def find_axis_min(values, goal):
     return axis_min
 
 
-def get_goal_color(goal, value, mom_value=None):
-    #  This if statement is part of a patch to change how the MoM measures are evaluated
-    if mom_value:
-        return mom_color_eval(goal, value, mom_value)
-    else:
-        return yoy_color_eval(goal, value)
-
-
 def yoy_color_eval(goal, value):
     if goal.goal_type.upper() == "ABOVE":
         if value >= goal.target:
@@ -233,7 +225,6 @@ def monthly_data(metric_id, school_id):
     current_month = cy_measures.reverse()[0].month
     last_year_value = get_last_years_value(current_month, py_measures)
 
-    # goal_color = get_goal_color(goal, cy_values[-1], last_year_value)
     goal_color = mom_color_eval(goal, cy_values[-1], last_year_value)
 
     return {
@@ -264,7 +255,6 @@ def yearly_data(metric_id, school_id):
     goal_type = goal.goal_type
     axis_min = find_axis_min(non_null_values, target)
     axis_max = find_axis_max(non_null_values, target)
-    # goal_color = get_goal_color(goal, values[-1])
     goal_color = yoy_color_eval(goal, values[-1])
 
     return {

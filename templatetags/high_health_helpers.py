@@ -13,7 +13,6 @@ logger = logging.getLogger('console')
 def goal_format(measure):
     # This method creates a tag that determines the color of the text
     # Color codings found in css file
-
     if measure.metric.frequency == "MoM":
         current_month = measure.month
         last_year = measure.year - 1
