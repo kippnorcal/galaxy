@@ -16,11 +16,14 @@ def goal_format(measure):
     if measure.metric.frequency == "MoM":
         current_month = measure.month
         last_year = measure.year - 1
-        previous_outcome = Measure.objects.filter(
-            metric=measure.metric.id,
-            date__month=current_month,
-            date__year=last_year,
-            school=measure.school)[0].value
+        try:
+            previous_outcome = Measure.objects.filter(
+                metric=measure.metric.id,
+                date__month=current_month,
+                date__year=last_year,
+                school=measure.school)[0].value
+        except IndexError:
+            previous_outcome = measure.goal.previous_outcome
         if previous_outcome is None:
             previous_outcome = measure.goal.previous_outcome
         return mom_color_eval(measure, previous_outcome)
