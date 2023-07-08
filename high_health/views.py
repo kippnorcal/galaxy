@@ -177,7 +177,7 @@ def yoy_color_eval(goal, value):
         if value <= goal.target:
             return SUCCESS_COLOR
         elif goal.previous_outcome >= value > goal.target:
-           return SECONDARY_COLOR
+            return SECONDARY_COLOR
         else:
             return DANGER_COLOR
 
