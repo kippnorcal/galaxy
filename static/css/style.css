@@ -20,6 +20,10 @@ h1 {
   font-weight: 300;
 }
 
+span[id="metric-hover"] {
+  cursor: pointer
+}
+
 .text-primary, a {
   color: var(--primary-color) !important;
 }
