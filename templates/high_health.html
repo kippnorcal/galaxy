@@ -40,7 +40,7 @@
         {% for metric in metrics %}
         <tr>
           <td class="text-center eq" data-toggle="popover" data-trigger="hover"
-            title="{{ metric.metric.essential_question }}"
+            title="{% if metric.metric.essential_question.name == 'Priority' %}P{% else %} {% end if %}"
             data-content="{{ metric.metric.essential_question.description }}">
             {{ metric.metric.essential_question }}
           </td>
