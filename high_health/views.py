@@ -177,12 +177,15 @@ def yoy_color_eval(goal, value):
         if value <= goal.target:
             return SUCCESS_COLOR
         elif goal.previous_outcome >= value > goal.target:
-           return SECONDARY_COLOR
+            return SECONDARY_COLOR
         else:
             return DANGER_COLOR
 
 
-def mom_color_eval(goal, value, previous):
+def mom_color_eval(goal, value, previous, bypass=False):
+    if bypass:
+        return SECONDARY_COLOR
+
     if goal.goal_type.upper() == "ABOVE":
         if value < previous:
             return DANGER_COLOR
@@ -207,6 +210,7 @@ def get_last_years_value(month, measures):
     except IndexError:
         return None
 
+
 def monthly_data(metric_id, school_id):
     cy_measures = year_bound_measures(metric_id, school_id)
     py_measures = year_bound_measures(metric_id, school_id, previous_year=True)
@@ -225,7 +229,11 @@ def monthly_data(metric_id, school_id):
     current_month = cy_measures.reverse()[0].month
     last_year_value = get_last_years_value(current_month, py_measures)
 
-    goal_color = mom_color_eval(goal, cy_values[-1], last_year_value)
+    # temporary bypass of color eval of % Staffed metric
+    if metric_id == 36:
+        goal_color = mom_color_eval(goal, cy_values[-1], last_year_value, bypass=True)
+    else:
+        goal_color = mom_color_eval(goal, cy_values[-1], last_year_value)
 
     return {
         "frequency": "monthly",

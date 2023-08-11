@@ -26,6 +26,8 @@
     <table class="table table-hover mt-3">
       <thead>
         <tr class="small text-center">
+                    <!--Essential Question renamed to Priority, but is still called EQ in models-->
+          <th>Priority</th>
           <th>Metric</th>
           <th>Updated</th>
           {% for school in schools %}
@@ -37,6 +39,17 @@
       <tbody>
         {% for metric in metrics %}
         <tr>
+          {% if metric.metric.essential_question.name == "Priority" %}
+            <td class="text-center eq" data-toggle="popover" data-trigger="hover"
+              title="{{ metric.metric.essential_question }}"
+              data-content="{{ metric.metric.essential_question.description }}">
+              P
+            </td>
+          {% else %}
+            <td class="text-center eq">
+              --
+            </td>
+          {% endif %}
           <td style="min-width:240px">
             <i class="fas fa-info-circle text-primary pl-1 metric-def" data-toggle="popover" data-trigger="hover"
               title="{{ metric.metric }}" data-content="{{ metric.metric.definition }}"></i>
@@ -63,7 +76,7 @@
             {% with "chart_"|addstr:measure.metric.id|addstr:"_"|addstr:measure.school.id as chart_id %}
             <span data-toggle="modal" data-target="#{{ modal_id }}" class="hh_value text-{{ measure|goal_format }}"
               data-metric-id="{{ measure.metric.id }}" data-school-id="{{ measure.school.id }}">
-              <span data-toggle="tooltip" data-placement="right" title="{{ measure|goal_distance }}">
+              <span id="metric-hover" data-toggle="tooltip" data-placement="right" title="{{ measure|goal_distance }}">
                 {{ measure.value|floatformat:"0" }}%
               </span>
             </span>

@@ -50,6 +50,10 @@ def yoy_color_eval(measure, previous):
 
 
 def mom_color_eval(measure, previous):
+    # Filtering the % Staffed metric out of evaluation
+    if measure.metric.id == 36:
+        return "secondary"
+
     if measure.goal.goal_type.upper() == "ABOVE":
         if measure.value < previous:
             return "danger"
