@@ -42,7 +42,11 @@
           <td class="text-center eq" data-toggle="popover" data-trigger="hover"
             title="{{ metric.metric.essential_question }}"
             data-content="{{ metric.metric.essential_question.description }}">
-            {{ metric.metric.essential_question }}
+            {% if metric.metric.essential_question=="Priority" %}
+              P
+            {% else %}
+              -
+            {% end if %}
           </td>
           <td style="min-width:240px">
             <i class="fas fa-info-circle text-primary pl-1 metric-def" data-toggle="popover" data-trigger="hover"
