@@ -201,7 +201,19 @@ def mom_color_eval(goal, value, previous, bypass=False):
         if value > previous:
            return DANGER_COLOR
         elif value <= goal.target and value <= previous:
-            logger.info(previous)
+            return SUCCESS_COLOR
+        else:
+            return SECONDARY_COLOR
+
+
+def mom_color_eval_no_py(goal, value):
+    if goal.goal_type.upper() == "ABOVE":
+        if value >= goal.target:
+            return SUCCESS_COLOR
+        else:
+            return SECONDARY_COLOR
+    else:
+        if value <= goal.target:
             return SUCCESS_COLOR
         else:
             return SECONDARY_COLOR
@@ -236,6 +248,8 @@ def monthly_data(metric_id, school_id):
     # temporary bypass of color eval of % Staffed metric
     if metric_id == 36:
         goal_color = mom_color_eval(goal, cy_values[-1], last_year_value, bypass=True)
+    elif last_year_value is None:
+        goal_color = mom_color_eval_no_py(goal, cy_values[-1])
     else:
         goal_color = mom_color_eval(goal, cy_values[-1], last_year_value)
 
