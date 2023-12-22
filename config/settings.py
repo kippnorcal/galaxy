@@ -194,5 +194,3 @@ ROLLBAR = {
     "root": BASE_DIR,
 }
 rollbar.init(**ROLLBAR)
-
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

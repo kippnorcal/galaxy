@@ -148,8 +148,6 @@ def distinct_values(measures):
 
 
 def find_axis_max(values, goal):
-    if not values:
-        return 100
     max_value = max(values)
     if math.ceil(goal + 2) > math.ceil(max_value):
         axis_max = math.ceil(goal + 2)
@@ -159,8 +157,6 @@ def find_axis_max(values, goal):
 
 
 def find_axis_min(values, goal):
-    if not values:
-        return 0
     min_value = min(values)
     if math.floor(goal - 2) <= math.floor(min_value - 2):
         axis_min = math.floor(goal - 2)
@@ -201,19 +197,7 @@ def mom_color_eval(goal, value, previous, bypass=False):
         if value > previous:
            return DANGER_COLOR
         elif value <= goal.target and value <= previous:
-            return SUCCESS_COLOR
-        else:
-            return SECONDARY_COLOR
-
-
-def mom_color_eval_no_py(goal, value):
-    if goal.goal_type.upper() == "ABOVE":
-        if value >= goal.target:
-            return SUCCESS_COLOR
-        else:
-            return SECONDARY_COLOR
-    else:
-        if value <= goal.target:
+            logger.info(previous)
             return SUCCESS_COLOR
         else:
             return SECONDARY_COLOR
@@ -248,8 +232,6 @@ def monthly_data(metric_id, school_id):
     # temporary bypass of color eval of % Staffed metric
     if metric_id == 36:
         goal_color = mom_color_eval(goal, cy_values[-1], last_year_value, bypass=True)
-    elif last_year_value is None:
-        goal_color = mom_color_eval_no_py(goal, cy_values[-1])
     else:
         goal_color = mom_color_eval(goal, cy_values[-1], last_year_value)
 

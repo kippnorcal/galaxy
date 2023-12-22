@@ -5,39 +5,24 @@ $('.hh_value').click(function (event) {
     var page = "/high_health/chart_data/" + metric_id + "/" + school_id
     $.get(page, function (response) {
         if (response['success']) {
-            if (response['data']['frequency'] == 'monthly')
-                if (response['data']['previous_year'].length > 0){
-                    var data = {
-                        labels: response['data']['months'],
-                        datasets: [{
-                            label: response['data']['py_label'],
-                            fill: false,
-                            data: response['data']['previous_year'],
-                            spanGaps: true,
-                            lineTension: 0,
-                        }, {
-                            label: response['data']['cy_label'],
-                            fill: false,
-                            borderColor: '#0071CE',
-                            backgroundColor: '#0071CE',
-                            data: response['data']['current_year'],
-                            spanGaps: true,
-                            lineTension: 0,
-                        }]
-                    }
-                } else {
-                    var data = {
-                        labels: response['data']['months'],
-                        datasets: [{
-                            label: response['data']['cy_label'],
-                            fill: false,
-                            borderColor: '#0071CE',
-                            backgroundColor: '#0071CE',
-                            data: response['data']['current_year'],
-                            spanGaps: true,
-                            lineTension: 0,
-                        }]
-                    }
+            if (response['data']['frequency'] == 'monthly') {
+                var data = {
+                    labels: response['data']['months'],
+                    datasets: [{
+                        label: response['data']['py_label'],
+                        fill: false,
+                        data: response['data']['previous_year'],
+                        spanGaps: true,
+                        lineTension: 0,
+                    }, {
+                        label: response['data']['cy_label'],
+                        fill: false,
+                        borderColor: '#0071CE',
+                        backgroundColor: '#0071CE',
+                        data: response['data']['current_year'],
+                        spanGaps: true,
+                        lineTension: 0,
+                    }]
                 }
             } else {
                 var data = {
