@@ -148,8 +148,6 @@ def distinct_values(measures):
 
 
 def find_axis_max(values, goal):
-    if not values:
-        return 100
     max_value = max(values)
     if math.ceil(goal + 2) > math.ceil(max_value):
         axis_max = math.ceil(goal + 2)
@@ -159,8 +157,6 @@ def find_axis_max(values, goal):
 
 
 def find_axis_min(values, goal):
-    if not values:
-        return 0
     min_value = min(values)
     if math.floor(goal - 2) <= math.floor(min_value - 2):
         axis_min = math.floor(goal - 2)
