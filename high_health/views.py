@@ -53,14 +53,16 @@ def metrics(school_level):
     )
     data = []
     for metric in metrics:
-        measures = metric.measure_set.filter(school__school_level=school_level, is_current=True).order_by(order_by)
-        if measures:
-            metric_data = {
-                "metric": metric,
-                "last_updated": last_updated(metric.id),
-                "measures": measures,
-            }
-            data.append(metric_data)
+        # Note: Summer 2024 - filtering out all HH reports except ADA, CA, and Suspensions
+        if metric.id in (2, 3, 5):
+            measures = metric.measure_set.filter(school__school_level=school_level, is_current=True).order_by(order_by)
+            if measures:
+                metric_data = {
+                    "metric": metric,
+                    "last_updated": last_updated(metric.id),
+                    "measures": measures,
+                }
+                data.append(metric_data)
     return sorted(data, key=lambda d: d["last_updated"], reverse=True)
 
 
