@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 from itertools import chain, groupby
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import PermissionDenied
 from django.db.models import Avg
 from django.http import JsonResponse
@@ -41,7 +42,15 @@ def last_updated(metric_id):
         return None
 
 
-def metrics(school_level):
+def get_schools(school_level):
+    if school_level.name == "RS":
+        schools = Site.objects.filter(school_level=school_level).order_by("id")
+    else:
+        schools = Site.objects.filter(school_level=school_level)
+    return schools
+
+
+def get_metrics(school_level):
     if school_level.name == "RS":
         order_by = "school__id"
     else:
@@ -51,18 +60,27 @@ def metrics(school_level):
         .distinct()
         .order_by("id")
     )
+    return metrics
+
+
+def get_measures(hh_metrics, schools):
     data = []
-    for metric in metrics:
+    for metric in hh_metrics:
         # Note: Summer 2024 - filtering out all HH reports except ADA, CA, and Suspensions
+        measure_models = []
         if metric.id in (2, 3, 5):
-            measures = metric.measure_set.filter(school__school_level=school_level, is_current=True).order_by(order_by)
-            if measures:
-                metric_data = {
-                    "metric": metric,
-                    "last_updated": last_updated(metric.id),
-                    "measures": measures,
-                }
-                data.append(metric_data)
+            for school in schools:
+                try:
+                    school_measure = Measure.objects.get(metric=metric, school=school, is_current=True)
+                except ObjectDoesNotExist:
+                    school_measure = None
+                measure_models.append(school_measure)
+            metric_data = {
+                "metric": metric,
+                "last_updated": last_updated(metric.id),
+                "measures": measure_models,
+            }
+            data.append(metric_data)
     return sorted(data, key=lambda d: d["last_updated"], reverse=True)
 
 
@@ -314,16 +332,16 @@ def chart_data(request, metric_id, school_id):
     check_permissions, login_url="/unauthorized", redirect_field_name=None
 )
 def high_health(request, school_level=None):
-    # TODO: Convert to query school level by name instead of id
     school_level = SchoolLevel.objects.get(pk=school_level)
-    if school_level.name == "RS":
-        schools = Site.objects.filter(school_level=school_level).order_by("id")
-    else:
-        schools = Site.objects.filter(school_level=school_level)
+
+    schools = get_schools(school_level)
+    school_metrics = get_metrics(school_level)
+    metrics_and_measures = get_measures(school_metrics, schools)
+
     context = {
         "school_level": school_level,
         "schools": schools,
-        "metrics": metrics(school_level),
+        "metrics": metrics_and_measures,
         "school_levels": SchoolLevel.objects.all(),
     }
     return render(request, "high_health.html", context)
