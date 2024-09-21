@@ -63,11 +63,11 @@
             </span>
           </td>
           {% for measure in metric.measures %}
-          {% if measure is None or measure.value is None %}
-            <td class="text-center">
-              <span class="text-muted"  id="metric-hover" data-toggle="tooltip" data-placement="right" title="No data for this school and metric">
-                N/A
-              </span>
+          {% if measure.value is None %}
+          <td class="text-center">
+            <span class="text-muted">
+              N/A
+            </span>
           </td>
           {% else %}
           <td
