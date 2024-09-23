@@ -54,7 +54,8 @@ def metrics(school_level):
     data = []
     for metric in metrics:
         # Note: Summer 2024 - filtering out all HH reports except ADA, CA, and Suspensions
-        if metric.id in (2, 3, 5):
+        # Temporarily commenting out metric 3 - chronic absence
+        if metric.id in (2, 5):
             measures = metric.measure_set.filter(school__school_level=school_level, is_current=True).order_by(order_by)
             if measures:
                 metric_data = {
