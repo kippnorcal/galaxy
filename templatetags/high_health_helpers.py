@@ -1,4 +1,5 @@
 import logging
+from typing import Union
 
 from django import template
 from high_health.models import Measure
@@ -10,7 +11,7 @@ logger = logging.getLogger('console')
 
 
 @register.filter
-def goal_format(measure):
+def goal_format(measure: Measure) -> str:
     # This method creates a tag that determines the color of the text
     # Color codings found in css file
     if measure.metric.frequency == "MoM":
@@ -32,7 +33,7 @@ def goal_format(measure):
         return yoy_color_eval(measure, previous_outcome)
 
 
-def yoy_color_eval(measure, previous):
+def yoy_color_eval(measure: Measure, previous: Union[int, None]) -> str:
     if measure.goal.goal_type.upper() == "ABOVE":
         if measure.value >= measure.goal.target:
             return "success"
