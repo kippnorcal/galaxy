@@ -1,10 +1,12 @@
 import logging
 import math
+from typing import List
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from itertools import chain, groupby
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import PermissionDenied
 from django.db.models import Avg
 from django.http import JsonResponse
@@ -30,6 +32,14 @@ SECONDARY_COLOR = "#84878A"
 DANGER_COLOR = "#E8605D"
 
 
+def get_schools(school_level):
+    if school_level.name == "RS":
+        schools = Site.objects.filter(school_level=school_level).order_by("id")
+    else:
+        schools = Site.objects.filter(school_level=school_level)
+    return schools
+
+
 def last_updated(metric_id):
     try:
         return (
@@ -51,13 +61,19 @@ def metrics(school_level):
         .distinct()
         .order_by("id")
     )
+    return metrics
+
+
+def get_measures(hh_metrics, schools):
     data = []
-    for metric in metrics:
+    for metric in hh_metrics:
         # Note: Summer 2024 - filtering out all HH reports except ADA, CA, and Suspensions
         # Temporarily commenting out metric 3 - chronic absence
         if metric.id in (2, 5):
             measures = metric.measure_set.filter(school__school_level=school_level, is_current=True).order_by(order_by)
             if measures:
+                if len(measures) != len(schools):
+                    measures = fill_missing_measures(measures, schools)
                 metric_data = {
                     "metric": metric,
                     "last_updated": last_updated(metric.id),
@@ -65,6 +81,12 @@ def metrics(school_level):
                 }
                 data.append(metric_data)
     return sorted(data, key=lambda d: d["last_updated"], reverse=True)
+
+
+def fill_missing_measures(measures, schools: List[Site]):
+    missing_indexes = set([index for index, measure in enumerate(measures) if measure.school not in schools])
+    filled_list = [measure if index not in missing_indexes else None for index, measure in enumerate(measures)]
+    return filled_list
 
 
 def last_value(values):
@@ -317,14 +339,15 @@ def chart_data(request, metric_id, school_id):
 def high_health(request, school_level=None):
     # TODO: Convert to query school level by name instead of id
     school_level = SchoolLevel.objects.get(pk=school_level)
-    if school_level.name == "RS":
-        schools = Site.objects.filter(school_level=school_level).order_by("id")
-    else:
-        schools = Site.objects.filter(school_level=school_level)
+
+    schools = get_schools(school_level)
+    school_metrics = get_metrics(school_level)
+    metrics_and_measures = get_measures(school_metrics, schools)
+
     context = {
         "school_level": school_level,
         "schools": schools,
-        "metrics": metrics(school_level),
+        "metrics": metrics_and_measures,
         "school_levels": SchoolLevel.objects.all(),
     }
     return render(request, "high_health.html", context)
