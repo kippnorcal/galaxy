@@ -50,7 +50,21 @@ def yoy_color_eval(measure: Measure, previous: Union[int, None]) -> str:
             return "danger"
 
 
-def mom_color_eval(measure, previous):
+def get_mom_previous_outcome(measure: Measure) -> Union[int, None]:
+    current_month = measure.month
+    last_year = measure.year - 1
+    try:
+        previous_outcome = Measure.objects.filter(
+            metric=measure.metric.id,
+            date__month=current_month,
+            date__year=last_year,
+            school=measure.school)[0].value
+    except IndexError:
+        previous_outcome = None
+    return previous_outcome
+
+
+def mom_color_eval(measure, previous: Union[int, None]) -> str:
     # Filtering the % Staffed metric out of evaluation
     if measure.metric.id == 36:
         return "secondary"
