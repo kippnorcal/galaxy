@@ -15,18 +15,7 @@ def goal_format(measure: Measure) -> str:
     # This method creates a tag that determines the color of the text
     # Color codings found in css file
     if measure.metric.frequency == "MoM":
-        current_month = measure.month
-        last_year = measure.year - 1
-        try:
-            previous_outcome = Measure.objects.filter(
-                metric=measure.metric.id,
-                date__month=current_month,
-                date__year=last_year,
-                school=measure.school)[0].value
-        except IndexError:
-            previous_outcome = measure.goal.previous_outcome
-        if previous_outcome is None:
-            previous_outcome = measure.goal.previous_outcome
+        previous_outcome = get_mom_previous_outcome(measure)
         return mom_color_eval(measure, previous_outcome)
     else:
         previous_outcome = measure.goal.previous_outcome
@@ -37,13 +26,17 @@ def yoy_color_eval(measure: Measure, previous: Union[int, None]) -> str:
     if measure.goal.goal_type.upper() == "ABOVE":
         if measure.value >= measure.goal.target:
             return "success"
+        elif previous is None:
+            return "secondary"
         elif measure.goal.target > measure.value >= previous:
             return "secondary"
         else:
             return "danger"
-    else:
+    elif measure.goal.goal_type.upper() != "ABOVE":
         if measure.value <= measure.goal.target:
             return "success"
+        elif previous is None:
+            return "secondary"
         elif measure.goal.target < measure.value <= previous:
             return "secondary"
         else:
@@ -66,18 +59,25 @@ def get_mom_previous_outcome(measure: Measure) -> Union[int, None]:
 
 def mom_color_eval(measure, previous: Union[int, None]) -> str:
     # Filtering the % Staffed metric out of evaluation
-    if measure.metric.id == 36:
-        return "secondary"
-
     if measure.goal.goal_type.upper() == "ABOVE":
-        if measure.value < previous:
+        if previous is None:
+            if measure.value >= measure.goal.target:
+                return "success"
+            else:
+                return "secondary"
+        elif measure.value < previous:
             return "danger"
         elif measure.value >= measure.goal.target and measure.value >= previous:
             return "success"
         else:
             return "secondary"
     else:
-        if measure.value > previous:
+        if previous is None:
+            if measure.value >= measure.goal.target:
+                return "success"
+            else:
+                return "secondary"
+        elif measure.value > previous:
             return "danger"
         elif measure.value <= measure.goal.target and measure.value <= previous:
             return "success"
