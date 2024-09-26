@@ -32,14 +32,6 @@ SECONDARY_COLOR = "#84878A"
 DANGER_COLOR = "#E8605D"
 
 
-def get_schools(school_level):
-    if school_level.name == "RS":
-        schools = Site.objects.filter(school_level=school_level).order_by("id")
-    else:
-        schools = Site.objects.filter(school_level=school_level)
-    return schools
-
-
 def last_updated(metric_id):
     try:
         return (
@@ -61,18 +53,12 @@ def metrics(school_level):
         .distinct()
         .order_by("id")
     )
-    return metrics
-
-
-def get_measures(hh_metrics, schools):
     data = []
-    for metric in hh_metrics:
+    for metric in metrics:
         # Note: Summer 2024 - filtering out all HH reports except ADA, CA, and Suspensions
         if metric.id in (2, 3, 5):
             measures = metric.measure_set.filter(school__school_level=school_level, is_current=True).order_by(order_by)
             if measures:
-                if len(measures) != len(schools):
-                    measures = fill_missing_measures(measures, schools)
                 metric_data = {
                     "metric": metric,
                     "last_updated": last_updated(metric.id),
@@ -346,7 +332,7 @@ def high_health(request, school_level=None):
     context = {
         "school_level": school_level,
         "schools": schools,
-        "metrics": metrics_and_measures,
+        "metrics": metrics(school_level),
         "school_levels": SchoolLevel.objects.all(),
     }
     return render(request, "high_health.html", context)
