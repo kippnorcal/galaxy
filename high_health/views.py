@@ -1,10 +1,12 @@
 import logging
 import math
+from typing import List
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from itertools import chain, groupby
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import PermissionDenied
 from django.db.models import Avg
 from django.http import JsonResponse
@@ -54,8 +56,7 @@ def metrics(school_level):
     data = []
     for metric in metrics:
         # Note: Summer 2024 - filtering out all HH reports except ADA, CA, and Suspensions
-        # Temporarily commenting out metric 3 - chronic absence
-        if metric.id in (2, 5):
+        if metric.id in (2, 3, 5):
             measures = metric.measure_set.filter(school__school_level=school_level, is_current=True).order_by(order_by)
             if measures:
                 metric_data = {
@@ -65,6 +66,12 @@ def metrics(school_level):
                 }
                 data.append(metric_data)
     return sorted(data, key=lambda d: d["last_updated"], reverse=True)
+
+
+def fill_missing_measures(measures, schools: List[Site]):
+    missing_indexes = set([index for index, measure in enumerate(measures) if measure.school not in schools])
+    filled_list = [measure if index not in missing_indexes else None for index, measure in enumerate(measures)]
+    return filled_list
 
 
 def last_value(values):
@@ -320,7 +327,8 @@ def high_health(request, school_level=None):
     if school_level.name == "RS":
         schools = Site.objects.filter(school_level=school_level).order_by("id")
     else:
-        schools = Site.objects.filter(school_level=school_level)
+        # Filtering out Stockton HS
+        schools = Site.objects.filter(school_level=school_level).exclude(id=36)
     context = {
         "school_level": school_level,
         "schools": schools,
