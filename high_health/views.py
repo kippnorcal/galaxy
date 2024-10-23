@@ -333,7 +333,6 @@ def high_health(request, school_level=None):
         "school_level": school_level,
         "schools": schools,
         "metrics": metrics(school_level),
-        "school_levels": SchoolLevel.objects.all(),
     }
     return render(request, "high_health.html", context)
 
