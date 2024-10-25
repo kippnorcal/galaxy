@@ -328,7 +328,7 @@ def high_health(request, school_level=None):
         schools = Site.objects.filter(school_level=school_level).order_by("id")
     else:
         # Filtering out Stockton HS
-        schools = Site.objects.filter(school_level=school_level).exclude(id=36).order_by("id")
+        schools = Site.objects.filter(school_level=school_level).exclude(id=36)
     context = {
         "school_level": school_level,
         "schools": schools,
