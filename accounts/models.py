@@ -60,9 +60,9 @@ class JobAdmin(admin.ModelAdmin):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.PROTECT, blank=True, null=True)
-    first_name = models.CharField(max_length=50,blank=True, null=True)
-    last_name = models.CharField(max_length=50,blank=True, null=True)
-    nickname = models.CharField(max_length=50,blank=True, null=True)
+    first_name = models.CharField(max_length=50, blank=True, null=True)
+    last_name = models.CharField(max_length=50, blank=True, null=True)
+    nickname = models.CharField(max_length=50, blank=True, null=True)
     employee_number = models.CharField(unique=True, max_length=5)
     email = models.EmailField(unique=True)
     job_title = models.ForeignKey(Job, on_delete=models.PROTECT, blank=True, null=True)
