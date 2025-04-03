@@ -6,8 +6,26 @@ from rest_framework import serializers
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ("id", "email", "username", "is_active", "is_staff")
-        read_only_fields = ("email", "username", "is_staff")
+        fields = (
+            "id",
+            "email",
+            "first_name",
+            "last_name",
+            "username",
+            "is_active",
+            "is_staff",
+            "last_login",
+            "date_joined"
+        )
+        read_only_fields = (
+            "id",
+            "email",
+            "first_name",
+            "last_name",
+            "username",
+            "is_staff",
+            "last_login",
+            "date_joined")
 
 
 class RoleSerializer(serializers.HyperlinkedModelSerializer):
@@ -49,4 +67,14 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ("id", "employee_number", "email", "job_title", "site", "user")
+        fields = (
+            "id",
+            "employee_number",
+            "first_name",
+            "last_name",
+            "nickname",
+            "email",
+            "job_title",
+            "site",
+            "user"
+        )
