@@ -3,6 +3,18 @@ from django.contrib import admin
 from django.contrib.auth.models import User, Group
 
 
+class TableauPermissionsGroup(models.Model):
+    group_id = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ("name",)
+
+
 class Role(models.Model):
     name = models.CharField(max_length=100)
     permission_groups = models.ManyToManyField(Group)

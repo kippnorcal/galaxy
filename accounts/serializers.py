@@ -1,4 +1,4 @@
-from .models import Role, SchoolLevel, Site, Job, Profile
+from .models import Role, SchoolLevel, Site, Job, Profile, TableauPermissionsGroup
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -77,4 +77,14 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
             "job_title",
             "site",
             "user"
+        )
+
+class TableauPermissionsGroupSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = TableauPermissionsGroup
+        fields = (
+            "id",
+            "group_id",
+            "name",
+            "is_active"
         )
