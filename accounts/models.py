@@ -40,6 +40,7 @@ class Site(models.Model):
     school_level = models.ForeignKey(
         SchoolLevel, on_delete=models.PROTECT, null=True, blank=True
     )
+    tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True)
 
     def __str__(self):
         return self.name
@@ -56,6 +57,7 @@ class SiteAdmin(admin.ModelAdmin):
 class Job(models.Model):
     name = models.CharField(max_length=100)
     role = models.ForeignKey(Role, on_delete=models.PROTECT, blank=True, null=True)
+    tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True)
 
     def __str__(self):
         return self.name
@@ -81,6 +83,8 @@ class Profile(models.Model):
     site = models.ForeignKey(Site, on_delete=models.PROTECT, blank=True, null=True)
     avatar_url = models.URLField(max_length=2000, blank=True)
     favorites = models.ManyToManyField("catalog.Report", through="catalog.Favorite")
+    base_tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True)
+    tableau_permission_exceptions = models.ManyToManyField(TableauPermissionsGroup, blank=True)
 
     def __str__(self):
         return self.email
