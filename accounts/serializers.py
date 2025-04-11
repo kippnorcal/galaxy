@@ -28,6 +28,17 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             "date_joined")
 
 
+class TableauPermissionsGroupSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = TableauPermissionsGroup
+        fields = (
+            "id",
+            "group_id",
+            "name",
+            "is_active"
+        )
+
+
 class RoleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Role
@@ -36,10 +47,11 @@ class RoleSerializer(serializers.HyperlinkedModelSerializer):
 
 class JobSerializer(serializers.HyperlinkedModelSerializer):
     role = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all())
+    tableau_permissions = TableauPermissionsGroupSerializer(many=True, read_only=True)
 
     class Meta:
         model = Job
-        fields = ("id", "name", "role")
+        fields = ("id", "name", "role", "tableau_permissions")
 
 
 class SchoolLevelSerializer(serializers.HyperlinkedModelSerializer):
@@ -52,10 +64,11 @@ class SiteSerializer(serializers.HyperlinkedModelSerializer):
     school_level = serializers.PrimaryKeyRelatedField(
         queryset=SchoolLevel.objects.all(), required=False, allow_null=True
     )
+    tableau_permissions = TableauPermissionsGroupSerializer(many=True, read_only=True)
 
     class Meta:
         model = Site
-        fields = ("id", "name", "is_school", "school_level")
+        fields = ("id", "name", "is_school", "school_level", "tableau_permissions")
 
 
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
@@ -64,6 +77,8 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     user = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(), required=False, allow_null=True
     )
+    base_tableau_permissions = TableauPermissionsGroupSerializer(many=True, read_only=True)
+    tableau_permission_exceptions = TableauPermissionsGroupSerializer(many=True, read_only=True)
 
     class Meta:
         model = Profile
@@ -76,15 +91,9 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
             "email",
             "job_title",
             "site",
-            "user"
+            "user",
+            "base_tableau_permissions",
+            "tableau_permission_exceptions"
         )
 
-class TableauPermissionsGroupSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = TableauPermissionsGroup
-        fields = (
-            "id",
-            "group_id",
-            "name",
-            "is_active"
-        )
+
