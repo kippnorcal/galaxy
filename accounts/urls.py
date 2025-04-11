@@ -10,6 +10,7 @@ router.register(r"jobs", views.JobViewSet)
 router.register(r"school_levels", views.SchoolLevelViewSet)
 router.register(r"sites", views.SiteLevelViewSet)
 router.register(r"profiles", views.ProfileViewSet)
+router.register(r"tableau_permission_groups", views.TableauGroupViewSet)
 
 urlpatterns = [
     path("login/", views.saml_login, name="login"),
