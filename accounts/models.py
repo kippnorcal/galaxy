@@ -3,6 +3,18 @@ from django.contrib import admin
 from django.contrib.auth.models import User, Group
 
 
+class TableauPermissionsGroup(models.Model):
+    group_id = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ("name",)
+
+
 class Role(models.Model):
     name = models.CharField(max_length=100)
     permission_groups = models.ManyToManyField(Group)
@@ -28,6 +40,7 @@ class Site(models.Model):
     school_level = models.ForeignKey(
         SchoolLevel, on_delete=models.PROTECT, null=True, blank=True
     )
+    tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True)
 
     def __str__(self):
         return self.name
@@ -44,6 +57,7 @@ class SiteAdmin(admin.ModelAdmin):
 class Job(models.Model):
     name = models.CharField(max_length=100)
     role = models.ForeignKey(Role, on_delete=models.PROTECT, blank=True, null=True)
+    tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True)
 
     def __str__(self):
         return self.name
@@ -69,6 +83,8 @@ class Profile(models.Model):
     site = models.ForeignKey(Site, on_delete=models.PROTECT, blank=True, null=True)
     avatar_url = models.URLField(max_length=2000, blank=True)
     favorites = models.ManyToManyField("catalog.Report", through="catalog.Favorite")
+    base_tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True, related_name="base_permissions")
+    tableau_permission_exceptions = models.ManyToManyField(TableauPermissionsGroup, blank=True, related_name="permission_exceptions")
 
     def __str__(self):
         return self.email
