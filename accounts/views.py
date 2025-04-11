@@ -11,7 +11,7 @@ from onelogin.saml2.auth import OneLogin_Saml2_Auth
 from onelogin.saml2.settings import OneLogin_Saml2_Settings
 from onelogin.saml2.utils import OneLogin_Saml2_Utils
 
-from .models import Role, Job, SchoolLevel, Site, Profile
+from .models import Role, Job, SchoolLevel, Site, Profile, TableauPermissionsGroup
 from analytics.models import Login
 
 from rest_framework import viewsets
@@ -22,6 +22,7 @@ from .serializers import (
     SchoolLevelSerializer,
     SiteSerializer,
     ProfileSerializer,
+    TableauPermissionsGroupSerializer
 )
 from saml.saml_settings import SAML_SETTINGS
 
@@ -191,3 +192,7 @@ class SiteLevelViewSet(viewsets.ModelViewSet):
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all().order_by("id")
     serializer_class = ProfileSerializer
+
+class TableauGroupViewSet(viewsets.ModelViewSet):
+    queryset = TableauPermissionsGroup.objects.all().order_by("id")
+    serializer_class = TableauPermissionsGroupSerializer
