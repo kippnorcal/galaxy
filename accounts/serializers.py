@@ -77,7 +77,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     user = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(), required=False, allow_null=True
     )
-    base_tableau_permissions = TableauPermissionsGroupSerializer(many=True)
+    base_tableau_permissions = TableauPermissionsGroupSerializer(many=True, required=False)
     tableau_permission_exceptions = TableauPermissionsGroupSerializer(many=True, read_only=True)
 
     class Meta:
