@@ -77,8 +77,21 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     user = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(), required=False, allow_null=True
     )
-    base_tableau_permissions = TableauPermissionsGroupSerializer(many=True, required=False)
     tableau_permission_exceptions = TableauPermissionsGroupSerializer(many=True, read_only=True)
+
+    # Used for writing (POST/PATCH)
+    base_tableau_permissions_update = serializers.PrimaryKeyRelatedField(
+        queryset=TableauPermissionsGroup.objects.all(),
+        many=True,
+        write_only=True,
+    )
+
+    # Used for reading (GET)
+    base_tableau_permissions = TableauPermissionsGroupSerializer(
+        source='base_tableau_permissions',
+        many=True,
+        read_only=True,
+    )
 
     class Meta:
         model = Profile
@@ -93,20 +106,6 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
             "site",
             "user",
             "base_tableau_permissions",
+            "base_tableau_permissions_update",
             "tableau_permission_exceptions"
         )
-
-    def update(self, instance, validated_data):
-        # Extract nested base_tableau_permissions
-        base_perms_data = validated_data.pop('base_tableau_permissions', None)
-
-        # Update regular fields
-        instance = super().update(instance, validated_data)
-
-        # Manually set the M2M relationship
-        if base_perms_data is not None:
-            # Expecting list of dicts like: [{"id": 1, "name": "Analyst"}, ...]
-            group_ids = [item['id'] for item in base_perms_data if 'id' in item]
-            instance.base_tableau_permissions.set(group_ids)
-
-        return instance
