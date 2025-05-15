@@ -111,5 +111,6 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
                 perm_id = perm_data.get('id')
                 perm = BaseTableauPermission.objects.get(id=perm_id)
                 instance.base_tableau_permissions.add(perm)
+            instance.save()
 
         return instance
