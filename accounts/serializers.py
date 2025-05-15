@@ -78,20 +78,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
         queryset=User.objects.all(), required=False, allow_null=True
     )
     tableau_permission_exceptions = TableauPermissionsGroupSerializer(many=True, read_only=True)
-
-    # Used for writing (POST/PATCH)
-    base_tableau_permissions_update = serializers.PrimaryKeyRelatedField(
-        queryset=TableauPermissionsGroup.objects.all(),
-        many=True,
-        write_only=True,
-    )
-
-    # Used for reading (GET)
-    base_tableau_permissions = TableauPermissionsGroupSerializer(
-        source='base_tableau_permissions',
-        many=True,
-        read_only=True,
-    )
+    base_tableau_permissions = TableauPermissionsGroupSerializer(many=True, required=False)
 
     class Meta:
         model = Profile
@@ -106,6 +93,5 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
             "site",
             "user",
             "base_tableau_permissions",
-            "base_tableau_permissions_update",
             "tableau_permission_exceptions"
         )
