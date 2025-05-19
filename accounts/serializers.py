@@ -46,7 +46,7 @@ class RoleSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class JobSerializer(serializers.HyperlinkedModelSerializer):
-    role = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all())
+    role = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all(), required=False, allow_null=True)
     tableau_permissions = serializers.PrimaryKeyRelatedField(
         queryset=TableauPermissionsGroup.objects.all(), many=True, required=False
     )
@@ -82,10 +82,10 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
         queryset=User.objects.all(), required=False, allow_null=True
     )
     tableau_permission_exceptions = serializers.PrimaryKeyRelatedField(
-        queryset=TableauPermissionsGroup.objects.all(), many=True, required=False
+        queryset=TableauPermissionsGroup.objects.all(), many=True, required=False, allow_null=True
     )
     base_tableau_permissions = serializers.PrimaryKeyRelatedField(
-        queryset=TableauPermissionsGroup.objects.all(), many=True, required=False
+        queryset=TableauPermissionsGroup.objects.all(), many=True, required=False, allow_null=True
     )
 
     class Meta:
