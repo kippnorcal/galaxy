@@ -155,7 +155,12 @@ def acs(request):
         user = find_or_create_user(request)
         login(request, user)
         track_login(request, user)
-        connect_profile(user)
+        try:
+            # Check to see if a profile is associated with the user
+            _ = Profile.objects.get(user=user)
+        except Profile.DoesNotExist:
+            # If no profile exists, call connect_profile
+            connect_profile(user)
         save_avatar(request, user)
         return HttpResponseRedirect(auth.redirect_to(f"{base_url}/profile"))
     else:
