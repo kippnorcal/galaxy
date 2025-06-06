@@ -69,9 +69,15 @@ def get_saml_attributes(request):
 
 def find_or_create_user(request):
     attrs = get_saml_attributes(request)
-    if User.objects.filter(email=attrs["email"]).exists():
-        user = User.objects.get(email=attrs["email"])
+    if User.objects.filter(username=attrs["username"]).exists():
+        # If user exists, get it and update the info from OneLogin
+        user = User.objects.get(username=attrs["username"])
+        user.first_name = attrs["first_name"]
+        user.last_name = attrs["last_name"]
+        user.email = attrs["email"]
+        user.save()
     else:
+        # If user doesn't exist, create it with info from OneLogin
         user = User(
             username=attrs["username"],
             first_name=attrs["first_name"],
@@ -83,6 +89,7 @@ def find_or_create_user(request):
 
 
 def connect_profile(user):
+    # Note: Emails between UKG and OneLogin must match (case-sensitive) when staff log in for the first time.
     if Profile.objects.filter(email__iexact=user.email).exists():
         profile = Profile.objects.get(email__iexact=user.email)
         profile.user = user
