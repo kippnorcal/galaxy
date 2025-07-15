@@ -55,6 +55,11 @@ class JobSerializer(serializers.HyperlinkedModelSerializer):
         model = Job
         fields = ("id", "name", "role", "tableau_permissions")
 
+    def validate_name(self, value):
+        if Job.objects.filter(name__iexact=value).exists():
+            raise serializers.ValidationError(f'Job with name "{value}" already exists.')
+        return value
+
 
 class SchoolLevelSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
