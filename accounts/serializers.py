@@ -81,8 +81,8 @@ class SiteSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
-    job_title = serializers.PrimaryKeyRelatedField(queryset=Job.objects.all())
-    site = serializers.PrimaryKeyRelatedField(queryset=Site.objects.all())
+    job_title = serializers.PrimaryKeyRelatedField(queryset=Job.objects.all(), required=False, allow_null=True)
+    site = serializers.PrimaryKeyRelatedField(queryset=Site.objects.all(), required=False, allow_null=True)
     user = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(), required=False, allow_null=True
     )
