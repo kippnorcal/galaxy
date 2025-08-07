@@ -41,6 +41,7 @@ class Site(models.Model):
         SchoolLevel, on_delete=models.PROTECT, null=True, blank=True
     )
     tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True, null=True)
+    is_active = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -50,7 +51,7 @@ class Site(models.Model):
 
 
 class SiteAdmin(admin.ModelAdmin):
-    list_display = ("__str__",)
+    list_display = ("__str__", "is_active", "is_school", "school_level")
     list_filter = ("is_school", "school_level")
 
 
