@@ -29,6 +29,7 @@ class Metric(models.Model):
     )
     report = models.ForeignKey(Report, on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField(default=datetime.date.today)
+    is_active = models.BooleanField(default=False)
 
     @property
     def year(self):
@@ -42,7 +43,7 @@ class Metric(models.Model):
 
 
 class MetricAdmin(admin.ModelAdmin):
-    list_display = ("__str__", "year")
+    list_display = ("__str__", "frequency", "year", "is_active")
     list_filter = ("essential_question", "date")
 
 

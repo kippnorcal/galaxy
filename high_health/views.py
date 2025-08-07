@@ -56,7 +56,7 @@ def metrics(school_level):
     data = []
     for metric in metrics:
         # Note: Summer 2024 - filtering out all HH reports except ADA, CA, and Suspensions
-        if metric.id in (2, 3, 5):
+        if metric.is_active:
             measures = metric.measure_set.filter(school__school_level=school_level, is_current=True).order_by(order_by)
             if measures:
                 metric_data = {
@@ -322,13 +322,11 @@ def chart_data(request, metric_id, school_id):
     check_permissions, login_url="/unauthorized", redirect_field_name=None
 )
 def high_health(request, school_level=None):
-    # TODO: Convert to query school level by name instead of id
     school_level = SchoolLevel.objects.get(pk=school_level)
     if school_level.name == "RS":
         schools = Site.objects.filter(school_level=school_level).order_by("id")
     else:
-        # Filtering out Stockton HS
-        schools = Site.objects.filter(school_level=school_level).exclude(id=36)
+        schools = Site.objects.filter(school_level=school_level).exclude(is_active=False).order_by("name")
     context = {
         "school_level": school_level,
         "schools": schools,
