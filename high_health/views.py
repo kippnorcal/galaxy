@@ -43,7 +43,7 @@ def last_updated(metric_id):
         return None
 
 
-def metrics(school_level):
+def metrics(school_level, schools):
     if school_level.name == "RS":
         order_by = "school__id"
     else:
@@ -55,10 +55,10 @@ def metrics(school_level):
     )
     data = []
     for metric in metrics:
-        # Note: Summer 2024 - filtering out all HH reports except ADA, CA, and Suspensions
         if metric.is_active:
             measures = metric.measure_set.filter(school__school_level=school_level, is_current=True).order_by(order_by)
             if measures:
+                measures = measures.filter(school__in=schools)
                 metric_data = {
                     "metric": metric,
                     "last_updated": last_updated(metric.id),
@@ -324,13 +324,13 @@ def chart_data(request, metric_id, school_id):
 def high_health(request, school_level=None):
     school_level = SchoolLevel.objects.get(pk=school_level)
     if school_level.name == "RS":
-        schools = Site.objects.filter(school_level=school_level).order_by("id")
+        schools = Site.objects.filter(school_level=school_level).exclude(is_active=False).order_by("id")
     else:
         schools = Site.objects.filter(school_level=school_level).exclude(is_active=False).order_by("name")
     context = {
         "school_level": school_level,
         "schools": schools,
-        "metrics": metrics(school_level),
+        "metrics": metrics(school_level, schools),
     }
     return render(request, "high_health.html", context)
 
