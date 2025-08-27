@@ -27,7 +27,7 @@ class Role(models.Model):
 
 
 class SchoolLevel(models.Model):
-    name = models.CharField(max_length=2)
+    name = models.CharField(max_length=3)
     display_name = models.CharField(max_length=25, null=True, blank=True)
 
     def __str__(self):
