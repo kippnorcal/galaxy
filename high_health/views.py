@@ -44,6 +44,8 @@ def last_updated(metric_id):
 
 
 def metrics(school_level, schools):
+    for school in schools:
+        logger.debug(f"Calculating metrics for {school.name}")
     if school_level.name == "RS":
         order_by = "school__id"
     else:
@@ -239,11 +241,7 @@ def monthly_data(metric_id, school_id):
     current_month = cy_measures.reverse()[0].month
     last_year_value = get_last_years_value(current_month, py_measures)
 
-    # temporary bypass of color eval of % Staffed metric
-    if metric_id == 36:
-        goal_color = mom_color_eval(goal, cy_values[-1], last_year_value, bypass=True)
-    else:
-        goal_color = mom_color_eval(goal, cy_values[-1], last_year_value)
+    goal_color = mom_color_eval(goal, cy_values[-1], last_year_value)
 
     return {
         "frequency": "monthly",
