@@ -48,7 +48,7 @@ def navbar(request):
             subcategories = SubCategory.objects.filter(
                 id__in=subcategory_list
             ).order_by("sort_order", "name")
-            school_levels = SchoolLevel.objects.all().order_by("id")
+            school_levels = SchoolLevel.objects.get_ordered()
         else:
             categories = None
             reports = None

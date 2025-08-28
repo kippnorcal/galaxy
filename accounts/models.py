@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Case, When, Value, IntegerField
 from django.contrib import admin
 from django.contrib.auth.models import User, Group
 
@@ -26,7 +27,23 @@ class Role(models.Model):
         ordering = ("name",)
 
 
+class SchoolLevelManager(models.Manager):
+    def get_ordered(self):
+        """Method to ensure Regional school level is displayed last"""
+        qs = self.get_queryset()
+        last_id = 5
+        qs = qs.annotate(
+            custom_order=Case(
+                When(id=last_id, then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField(),
+            )
+        ).order_by('custom_order', 'id')
+        return qs
+
+
 class SchoolLevel(models.Model):
+    objects = SchoolLevelManager()
     name = models.CharField(max_length=3)
     display_name = models.CharField(max_length=25, null=True, blank=True)
 
