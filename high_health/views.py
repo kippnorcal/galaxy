@@ -232,7 +232,7 @@ def monthly_data(metric_id, school_id):
     values = cy_values + py_values
     non_null_values = list(filter(None, values))
     goal = Goal.objects.get(metric=metric_id, school=school_id)
-    target = round(goal.target)
+    target = round(goal.target, 2)
     goal_type = goal.goal_type
     axis_min = find_axis_min(non_null_values, target)
     axis_max = find_axis_max(non_null_values, target)
