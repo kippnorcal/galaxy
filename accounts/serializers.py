@@ -106,5 +106,6 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
             "site",
             "user",
             "base_tableau_permissions",
-            "tableau_permission_exceptions"
+            "tableau_permission_exceptions",
+            "is_contractor"
         )
