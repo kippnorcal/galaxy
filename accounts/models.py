@@ -107,6 +107,8 @@ class Profile(models.Model):
     tableau_permission_exceptions = models.ManyToManyField(
         TableauPermissionsGroup, blank=True, null=True, related_name="permission_exceptions"
     )
+    is_contractor = models.BooleanField(default=False, help_text="Denotes if the profile belongs to a contractor."
+                                            "If checked, the profile will not be deactivated by the Galaxy connector.")
 
     def __str__(self):
         return self.email
