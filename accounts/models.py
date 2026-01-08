@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Case, When, Value, IntegerField
+from django.db.models import Case, When, Value, IntegerField, Q
 from django.contrib import admin
 from django.contrib.auth.models import User, Group
 
@@ -57,7 +57,7 @@ class Site(models.Model):
     school_level = models.ForeignKey(
         SchoolLevel, on_delete=models.PROTECT, null=True, blank=True
     )
-    tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True, null=True)
+    tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True, null=True, related_name="site_permissions")
     is_active = models.BooleanField(default=False)
 
     def __str__(self):
@@ -75,7 +75,7 @@ class SiteAdmin(admin.ModelAdmin):
 class Job(models.Model):
     name = models.CharField(max_length=100)
     role = models.ForeignKey(Role, on_delete=models.PROTECT, blank=True, null=True)
-    tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True, null=True)
+    tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True, null=True, related_name="job_permissions")
 
     def __str__(self):
         return self.name
