@@ -103,6 +103,9 @@ class Report(models.Model):
                     "There is a mismatch between category and subcategory"
                 )
 
+    def get_report_permissions(self):
+        return self.tableau_permissions.all()
+
     def __str__(self):
         return self.name
 
