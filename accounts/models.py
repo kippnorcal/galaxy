@@ -110,6 +110,17 @@ class Profile(models.Model):
     is_contractor = models.BooleanField(default=False, help_text="Denotes if the profile belongs to a contractor."
                                             "If checked, the profile will not be deactivated by the Galaxy connector.")
 
+    def get_profile_permissions(self):
+        q = Q(base_permission=self) | Q(permission_exceptions=self)
+
+        if self.job_id:
+            q |= Q(job_permission_id=self.job)
+
+        if self.site_id:
+            q |= Q(site_permission_id=self.site)
+
+        return TableauPermissionGroup.objects.filter(q).distinct()
+
     def __str__(self):
         return self.email
 
