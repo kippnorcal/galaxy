@@ -57,7 +57,7 @@ class Site(models.Model):
     school_level = models.ForeignKey(
         SchoolLevel, on_delete=models.PROTECT, null=True, blank=True
     )
-    tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True, null=True)
+    tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True)
     is_active = models.BooleanField(default=False)
 
     def __str__(self):
@@ -74,8 +74,8 @@ class SiteAdmin(admin.ModelAdmin):
 
 class Job(models.Model):
     name = models.CharField(max_length=100)
-    role = models.ForeignKey(Role, on_delete=models.PROTECT, blank=True, null=True)
-    tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True, null=True)
+    role = models.ForeignKey(Role, on_delete=models.PROTECT, blank=True)
+    tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True)
 
     def __str__(self):
         return self.name
@@ -102,10 +102,10 @@ class Profile(models.Model):
     avatar_url = models.URLField(max_length=2000, blank=True)
     favorites = models.ManyToManyField("catalog.Report", through="catalog.Favorite")
     base_tableau_permissions = models.ManyToManyField(
-        TableauPermissionsGroup, blank=True, null=True, related_name="base_permissions"
+        TableauPermissionsGroup, blank=True, related_name="base_permissions"
     )
     tableau_permission_exceptions = models.ManyToManyField(
-        TableauPermissionsGroup, blank=True, null=True, related_name="permission_exceptions"
+        TableauPermissionsGroup, blank=True, related_name="permission_exceptions"
     )
     permission_exceptions_note = models.TextField(blank=True)
     is_contractor = models.BooleanField(default=False, help_text="Denotes if the profile belongs to a contractor."
