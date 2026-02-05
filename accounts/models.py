@@ -74,7 +74,7 @@ class SiteAdmin(admin.ModelAdmin):
 
 class Job(models.Model):
     name = models.CharField(max_length=100)
-    role = models.ForeignKey(Role, on_delete=models.PROTECT, blank=True)
+    role = models.ForeignKey(Role, on_delete=models.PROTECT, blank=True, null=True)
     tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True)
 
     def __str__(self):
