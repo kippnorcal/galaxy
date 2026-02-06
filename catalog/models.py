@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.forms.models import ModelChoiceField
 from urllib.parse import urlparse
-from accounts.models import Role, Site, Profile
+from accounts.models import Role, Site, Profile, TableauPermissionsGroup
 
 
 class Category(models.Model):
@@ -79,6 +79,7 @@ class Report(models.Model):
     )
     description = models.TextField(blank=True)
     roles = models.ManyToManyField(Role, default=roles_default)
+    tableau_permissions_groups = models.ManyToManyField(TableauPermissionsGroup, default=roles_default)
     sites = models.ManyToManyField(Site, default=sites_default)
     is_active = models.BooleanField(default=True)
     sort_order = models.IntegerField(default=0)
