@@ -143,8 +143,12 @@ def report(request, report_id):
     avg_feedback = Feedback.objects.filter(report=report_id).aggregate(Avg("score"))
     if feedback:
         context["feedback"] = feedback
+    else:
+        context["feedback"] = None
     if avg_feedback and avg_feedback["score__avg"] is not None:
         context["avg_feedback"] = round(avg_feedback["score__avg"], 1)
+    else:
+        context["avg_feedback"] = None
     if getenv("SSL", default=0):
         page = request.build_absolute_uri()
         page = page.replace("http", "https")
@@ -154,6 +158,8 @@ def report(request, report_id):
     page_views = page_views.aggregate(views=Count("user", distinct=True))
     if page_views:
         context["viewed_by"] = page_views["views"]
+    else:
+        context["viewed_by"] = 0
     return render(request, "report.html", context)
 
 
