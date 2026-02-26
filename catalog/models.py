@@ -123,6 +123,9 @@ class Report(models.Model):
         site = self.path().split("site/")[1].split("/")[0]
         return site
 
+    def get_report_permissions(self):
+        return self.tableau_permissions.all()
+
     class Meta:
         ordering = ("name",)
 
