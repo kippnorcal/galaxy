@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Case, When, Value, IntegerField
+from django.db.models import Case, When, Value, IntegerField, Q
 from django.contrib import admin
 from django.contrib.auth.models import User, Group
 
@@ -112,6 +112,17 @@ class Profile(models.Model):
                                             "If checked, the profile will not be deactivated by the Galaxy connector.")
     contractor_end_date = models.DateField(blank=True, null=True)
     contractor_note = models.TextField(blank=True)
+
+    def get_profile_permissions(self):
+        q = Q(base_permission=self) | Q(permission_exceptions=self)
+
+        if self.job_id:
+            q |= Q(job_permission_id=self.job)
+
+        if self.site_id:
+            q |= Q(site_permission_id=self.site)
+
+        return TableauPermissionGroup.objects.filter(q).distinct()
 
     def __str__(self):
         return self.email
