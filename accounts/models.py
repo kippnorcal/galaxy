@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import Case, When, Value, IntegerField, Q
 from django.contrib import admin
 from django.contrib.auth.models import User, Group
+from django.utils.functional import cached_property
 
 
 class TableauPermissionsGroup(models.Model):
@@ -113,6 +114,7 @@ class Profile(models.Model):
     contractor_end_date = models.DateField(blank=True, null=True)
     contractor_note = models.TextField(blank=True)
 
+    @cached_property
     def get_profile_permissions(self):
         q = (
                 Q(base_permissions=self) |
