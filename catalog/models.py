@@ -56,8 +56,8 @@ class ReportManager(models.Manager):
             profile = None
         if user.is_authenticated and profile:
             return self.get_queryset().filter(
-                roles=user.profile.job_title.role, sites=user.profile.site
-            )
+                tableau_permissions_groups__in=user.profile.get_profile_permissions(), sites=user.profile.site
+            ).distinct()
         else:
             return None
 
