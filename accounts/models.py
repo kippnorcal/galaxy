@@ -76,6 +76,7 @@ class Job(models.Model):
     name = models.CharField(max_length=100)
     role = models.ForeignKey(Role, on_delete=models.PROTECT, blank=True, null=True)
     tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True, related_name="job_permissions")
+    galaxy_permission_groups = models.ManyToManyField(Group, blank=True)
 
     def __str__(self):
         return self.name
