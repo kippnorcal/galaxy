@@ -114,15 +114,20 @@ class Profile(models.Model):
     contractor_note = models.TextField(blank=True)
 
     def get_profile_permissions(self):
-        q = Q(base_permission=self) | Q(permission_exceptions=self)
+        q = (
+                Q(base_permissions=self) |
+                Q(permission_exceptions=self)
+        )
 
-        if self.job_id:
-            q |= Q(job_permission_id=self.job)
+        # Add job-based permissions if job exists
+        if self.job_title_id:
+            q |= Q(job_permissions__id=self.job_title_id)
 
+        # Add site-based permissions if site exists
         if self.site_id:
-            q |= Q(site_permission_id=self.site)
+            q |= Q(site_permissions__id=self.site_id)
 
-        return TableauPermissionGroup.objects.filter(q).distinct()
+        return TableauPermissionsGroup.objects.filter(q).distinct()
 
     def __str__(self):
         return self.email
