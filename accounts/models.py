@@ -108,8 +108,7 @@ class Profile(models.Model):
         TableauPermissionsGroup, blank=True, related_name="permission_exceptions"
     )
     permission_exceptions_note = models.TextField(blank=True)
-    is_contractor = models.BooleanField(default=False, help_text="Denotes if the profile belongs to a contractor."
-                                            "If checked, the profile will not be deactivated by the Galaxy connector.")
+    is_contractor = models.BooleanField(default=False, help_text="Denotes if the profile belongs to a contractor.")
     contractor_end_date = models.DateField(blank=True, null=True)
     contractor_note = models.TextField(blank=True)
 
