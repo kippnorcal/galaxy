@@ -27,17 +27,7 @@
       <h3 class="card-title text-center pt-3">{{ profile.first_name }} {{ profile.last_name }}</h3>
       <h6 class="text-center text-muted">{{ profile.job_title }}</h6>
       <ul class="list-unstyled pt-3">
-        <hr class="col-sm-3">
-        <li class="text-center"><i class="fas fa-map-marker-alt pr-3" data-toggle="tooltip" data-placement="left"
-            title="Work Location"></i>{{ profile.site }}</li>
-        <li class=" text-center"><i class="far fa-envelope pr-3" data-toggle="tooltip" data-placement="left"
-            title="Email"></i><a href="mailto:{{ profile.email }}">{{ profile.email}}</a></li>
-        <li class="text-center"><i class="far fa-user-circle pr-3" data-toggle="tooltip" data-placement="left"
-            title="Role"></i>{{ profile.job_title.role }}</li>
-        <li class="text-center"><i class="far fa-clock pr-3" data-toggle="tooltip" data-placement="left"
-            title="Last Login"></i>{{ user.last_login|localtime }}</li>
-      </ul>
-      <div class="text-center">
+        <div class="text-center">
         {% if request.user.is_staff %}
         <a href="{% url 'admin:index' %}" class="btn btn-success">
           <i class="fas fa-rocket"></i>
@@ -50,6 +40,23 @@
           <strong>FAQs</strong>
         </a>
         {% endif %}
+        <hr class="col-sm-3">
+        <li class="text-center"><i class="fas fa-map-marker-alt pr-3" data-toggle="tooltip" data-placement="left"
+            title="Work Location"></i>{{ profile.site }}</li>
+        <li class=" text-center"><i class="far fa-envelope pr-3" data-toggle="tooltip" data-placement="left"
+            title="Email"></i><a href="mailto:{{ profile.email }}">{{ profile.email}}</a></li>
+        <li class="text-center"><i class="far fa-clock pr-3" data-toggle="tooltip" data-placement="left"
+            title="Last Login"></i>{{ user.last_login|localtime }}</li>
+      </ul>
+      <hr class="col-sm-3">
+      <div class="profile-permissions">
+        <ul class="list-unstyled pt-3">
+        <li class="text-center"><i class="far fa-user-circle pr-3" data-toggle="tooltip" data-placement="left"
+                title="Group Header"></i>Permission Groups</li>
+        </ul>
+        {% for group in profile.get_profile_permissions %}
+          <span class="badge badge-secondary">{{ group }}</span>
+        {% endfor %}
       </div>
 
     </div>
