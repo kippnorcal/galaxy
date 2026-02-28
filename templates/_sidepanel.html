@@ -48,6 +48,6 @@
 
     <hr class="col-sm-10">
     <!--Report visibility-->
-    {% include "_report_role_stats.html" with collapse_id="visible-to" icon_type="fas fa-user-tag" collapse_title="visible to roles" roles=report.roles.all %}
+    {% include "_report_role_stats.html" with icon_type="fas fa-user-tag" info_title="visible to groups" groups=report.tableau_permissions_groups.all %}
   </div>
 </div>
