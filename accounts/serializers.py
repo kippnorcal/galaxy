@@ -46,14 +46,13 @@ class RoleSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class JobSerializer(serializers.HyperlinkedModelSerializer):
-    role = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all(), required=False, allow_null=True)
     tableau_permissions = serializers.PrimaryKeyRelatedField(
         queryset=TableauPermissionsGroup.objects.all(), many=True, required=False
     )
 
     class Meta:
         model = Job
-        fields = ("id", "name", "role", "tableau_permissions")
+        fields = ("id", "name", "tableau_permissions")
 
     def validate_name(self, value):
         if Job.objects.filter(name__iexact=value).exists():
