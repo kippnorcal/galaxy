@@ -1,5 +1,5 @@
 from .models import Category, SubCategory, Report, Favorite, Feedback, PublicStat
-from accounts.models import Role, Site, Profile, TableauPermissionsGroup
+from accounts.models import Site, Profile, TableauPermissionsGroup
 from django.contrib.auth.models import User
 from rest_framework import serializers
 

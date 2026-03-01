@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.forms.models import ModelChoiceField
 from urllib.parse import urlparse
-from accounts.models import Role, Site, Profile, TableauPermissionsGroup
+from accounts.models import Site, Profile, TableauPermissionsGroup
 
 
 class Category(models.Model):
