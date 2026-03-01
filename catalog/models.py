@@ -78,7 +78,6 @@ class Report(models.Model):
         SubCategory, on_delete=models.PROTECT, null=True, blank=True
     )
     description = models.TextField(blank=True)
-    roles = models.ManyToManyField(Role, default=roles_default)
     tableau_permissions_groups = models.ManyToManyField(TableauPermissionsGroup, blank=True)
     sites = models.ManyToManyField(Site, default=sites_default)
     is_active = models.BooleanField(default=True)
@@ -135,7 +134,6 @@ class ReportAdmin(admin.ModelAdmin):
     list_filter = (
         "category",
         "subcategory",
-        "roles",
         "sites",
         "owner",
         "is_active",
