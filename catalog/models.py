@@ -56,8 +56,8 @@ class ReportManager(models.Manager):
             profile = None
         if user.is_authenticated and profile:
             return self.get_queryset().filter(
-                roles=user.profile.job_title.role, sites=user.profile.site
-            )
+                tableau_permissions_groups__in=user.profile.get_profile_permissions, sites=user.profile.site
+            ).distinct()
         else:
             return None
 
@@ -79,7 +79,7 @@ class Report(models.Model):
     )
     description = models.TextField(blank=True)
     roles = models.ManyToManyField(Role, default=roles_default)
-    tableau_permissions_groups = models.ManyToManyField(TableauPermissionsGroup, default=roles_default)
+    tableau_permissions_groups = models.ManyToManyField(TableauPermissionsGroup, blank=True)
     sites = models.ManyToManyField(Site, default=sites_default)
     is_active = models.BooleanField(default=True)
     sort_order = models.IntegerField(default=0)
@@ -122,6 +122,9 @@ class Report(models.Model):
     def target_site(self):
         site = self.path().split("site/")[1].split("/")[0]
         return site
+
+    def get_report_permissions(self):
+        return self.tableau_permissions.all()
 
     class Meta:
         ordering = ("name",)

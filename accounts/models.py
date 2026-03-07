@@ -1,7 +1,8 @@
 from django.db import models
-from django.db.models import Case, When, Value, IntegerField
+from django.db.models import Case, When, Value, IntegerField, Q
 from django.contrib import admin
 from django.contrib.auth.models import User, Group
+from django.utils.functional import cached_property
 
 
 class TableauPermissionsGroup(models.Model):
@@ -57,7 +58,7 @@ class Site(models.Model):
     school_level = models.ForeignKey(
         SchoolLevel, on_delete=models.PROTECT, null=True, blank=True
     )
-    tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True)
+    tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True, related_name="site_permissions")
     is_active = models.BooleanField(default=False)
 
     def __str__(self):
@@ -75,7 +76,8 @@ class SiteAdmin(admin.ModelAdmin):
 class Job(models.Model):
     name = models.CharField(max_length=100)
     role = models.ForeignKey(Role, on_delete=models.PROTECT, blank=True, null=True)
-    tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True)
+    tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True, related_name="job_permissions")
+    galaxy_permission_groups = models.ManyToManyField(Group, blank=True)
 
     def __str__(self):
         return self.name
@@ -108,10 +110,26 @@ class Profile(models.Model):
         TableauPermissionsGroup, blank=True, related_name="permission_exceptions"
     )
     permission_exceptions_note = models.TextField(blank=True)
-    is_contractor = models.BooleanField(default=False, help_text="Denotes if the profile belongs to a contractor."
-                                            "If checked, the profile will not be deactivated by the Galaxy connector.")
+    is_contractor = models.BooleanField(default=False, help_text="Denotes if the profile belongs to a contractor.")
     contractor_end_date = models.DateField(blank=True, null=True)
     contractor_note = models.TextField(blank=True)
+
+    @cached_property
+    def get_profile_permissions(self):
+        q = (
+                Q(base_permissions=self) |
+                Q(permission_exceptions=self)
+        )
+
+        # Add job-based permissions if job exists
+        if self.job_title_id:
+            q |= Q(job_permissions__id=self.job_title_id)
+
+        # Add site-based permissions if site exists
+        if self.site_id:
+            q |= Q(site_permissions__id=self.site_id)
+
+        return TableauPermissionsGroup.objects.filter(q).distinct()
 
     def __str__(self):
         return self.email
