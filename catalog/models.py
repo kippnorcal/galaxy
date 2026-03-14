@@ -63,8 +63,10 @@ class ReportManager(models.Manager):
 
 
 class Report(models.Model):
+
     def roles_default():
-        return Role.objects.all()
+        # Deprecated method; Removing breaks migrations
+        return None
 
     def sites_default():
         return Site.objects.all()
