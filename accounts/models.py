@@ -18,6 +18,7 @@ class TableauPermissionsGroup(models.Model):
 
 
 class Role(models.Model):
+    """This model is deprecated"""
     name = models.CharField(max_length=100)
     permission_groups = models.ManyToManyField(Group)
 
