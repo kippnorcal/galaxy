@@ -32,7 +32,7 @@ def yoy_color_eval(measure: Measure, previous: Union[int, None]) -> str:
             return "secondary"
         else:
             return "danger"
-    elif measure.goal.goal_type.upper() != "ABOVE":
+    else:
         if measure.value <= measure.goal.target:
             return "success"
         elif previous is None:
@@ -58,7 +58,6 @@ def get_mom_previous_outcome(measure: Measure) -> Union[int, None]:
 
 
 def mom_color_eval(measure, previous: Union[int, None]) -> str:
-    # Filtering the % Staffed metric out of evaluation
     if measure.goal.goal_type.upper() == "ABOVE":
         if previous is None:
             if measure.value >= measure.goal.target:
