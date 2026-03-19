@@ -18,6 +18,7 @@ class TableauPermissionsGroup(models.Model):
 
 
 class Role(models.Model):
+    """This model is deprecated"""
     name = models.CharField(max_length=100)
     permission_groups = models.ManyToManyField(Group)
 
@@ -75,7 +76,6 @@ class SiteAdmin(admin.ModelAdmin):
 
 class Job(models.Model):
     name = models.CharField(max_length=100)
-    role = models.ForeignKey(Role, on_delete=models.PROTECT, blank=True, null=True)
     tableau_permissions = models.ManyToManyField(TableauPermissionsGroup, blank=True, related_name="job_permissions")
     galaxy_permission_groups = models.ManyToManyField(Group, blank=True)
 
@@ -88,7 +88,6 @@ class Job(models.Model):
 
 class JobAdmin(admin.ModelAdmin):
     list_display = ("__str__",)
-    list_filter = ("role",)
     search_fields = ["name"]
 
 
@@ -140,7 +139,7 @@ class Profile(models.Model):
 
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ("__str__", "job_title")
-    list_filter = ("site", "job_title__role")
+    list_filter = ("site", "job_title")
     search_fields = [
         "user__first_name",
         "user__last_name",
