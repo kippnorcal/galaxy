@@ -40,16 +40,15 @@
           <strong>FAQs</strong>
         </a>
         <hr class="col-sm-3">
-          <ul class="list-unstyled pt-3">
-          <li class="text-center"><i class="fas fa-map-marker-alt pr-3" data-toggle="tooltip" data-placement="left"
-              title="Work Location"></i>{{ profile.site }}</li>
-          <li class=" text-center"><i class="far fa-envelope pr-3" data-toggle="tooltip" data-placement="left"
-              title="Email"></i><a href="mailto:{{ profile.email }}">{{ profile.email}}</a></li>
-          <li class="text-center"><i class="far fa-clock pr-3" data-toggle="tooltip" data-placement="left"
-              title="Last Login"></i>{{ user.last_login|localtime }}</li>
+        <li class="text-center"><i class="fas fa-map-marker-alt pr-3" data-toggle="tooltip" data-placement="left"
+            title="Work Location"></i>{{ profile.site }}</li>
+        <li class=" text-center"><i class="far fa-envelope pr-3" data-toggle="tooltip" data-placement="left"
+            title="Email"></i><a href="mailto:{{ profile.email }}">{{ profile.email}}</a></li>
+        <li class="text-center"><i class="far fa-clock pr-3" data-toggle="tooltip" data-placement="left"
+            title="Last Login"></i>{{ user.last_login|localtime }}</li>
       </ul>
       <hr class="col-sm-3">
-      <div class="profile-permissions">
+      <div class="profile-permissions" style="margin-bottom: 20px;">
         <ul class="list-unstyled pt-3">
         <li class="text-center"><i class="far fa-user-circle pr-3" data-toggle="tooltip" data-placement="left"
                 title="Group Header"></i>Permission Groups</li>

@@ -178,6 +178,7 @@ def find_axis_min(values, goal):
 
 
 def yoy_color_eval(goal, value):
+    """If updating the logic here, also update the `yoy_color_eval` function in high_health_helpers.py."""
     if goal.goal_type.upper() == "ABOVE":
         if value >= goal.target:
             return SUCCESS_COLOR
@@ -194,25 +195,34 @@ def yoy_color_eval(goal, value):
             return DANGER_COLOR
 
 
-def mom_color_eval(goal, value, previous, bypass=False):
-    if bypass:
-        return SECONDARY_COLOR
+def mom_color_eval(goal, value, previous):
+    """If updating the logic here, also update the `mom_color_eval` function in high_health_helpers.py."""
 
     if goal.goal_type.upper() == "ABOVE":
-        if value < previous:
+        if previous is not None:
+            if value < previous:
+                return DANGER_COLOR
+            elif value >= goal.target and value >= previous:
+                return SUCCESS_COLOR
+            else:
+                return SECONDARY_COLOR
+        elif value >= goal.target:
+            return SUCCESS_COLOR
+        else:
             return DANGER_COLOR
-        elif value >= goal.target and value >= previous:
-            return SUCCESS_COLOR
-        else:
-            return SECONDARY_COLOR
     else:
-        if value > previous:
-           return DANGER_COLOR
-        elif value <= goal.target and value <= previous:
-            logger.info(previous)
-            return SUCCESS_COLOR
+        if previous is not None:
+            if value > previous:
+               return DANGER_COLOR
+            elif value <= goal.target and value <= previous:
+                logger.info(previous)
+                return SUCCESS_COLOR
+            else:
+                return SECONDARY_COLOR
+        elif value >= goal.target:
+            return DANGER_COLOR
         else:
-            return SECONDARY_COLOR
+            return SUCCESS_COLOR
 
 
 def get_last_years_value(month, measures):
