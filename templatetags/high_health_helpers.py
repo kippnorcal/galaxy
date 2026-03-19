@@ -72,7 +72,7 @@ def mom_color_eval(measure, previous: Union[int, None]) -> str:
             return "secondary"
     else:
         if previous is None:
-            if measure.value >= measure.goal.target:
+            if measure.value <= measure.goal.target:
                 return "success"
             else:
                 return "secondary"
