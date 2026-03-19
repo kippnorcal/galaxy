@@ -1,56 +1,99 @@
 $('.hh_value').click(function (event) {
     event.preventDefault();
-    var metric_id = $(this).attr("data-metric-id");
-    var school_id = $(this).attr("data-school-id");
-    var page = "/high_health/chart_data/" + metric_id + "/" + school_id
-    $.get(page, function (response) {
-        if (response['success']) {
-            if (response['data']['frequency'] == 'monthly') {
-                var data = {
-                    labels: response['data']['months'],
-                    datasets: [{
-                        label: response['data']['py_label'],
-                        fill: false,
-                        data: response['data']['previous_year'],
-                        spanGaps: true,
-                        lineTension: 0,
-                    }, {
-                        label: response['data']['cy_label'],
-                        fill: false,
-                        borderColor: '#0071CE',
-                        backgroundColor: '#0071CE',
-                        data: response['data']['current_year'],
-                        spanGaps: true,
-                        lineTension: 0,
-                    }]
-                }
-            } else {
-                var data = {
-                    labels: response['data']['years'],
-                    datasets: [{
-                        fill: false,
-                        borderColor: '#0071CE',
-                        backgroundColor: '#0071CE',
-                        data: response['data']['values'],
-                        spanGaps: true,
-                        lineTension: 0,
-                    }]
-                }
+
+    const $el = $(this);
+    const metricId = $el.data("metric-id");
+    const schoolId = $el.data("school-id");
+    const page = `/high_health/chart_data/${metricId}/${schoolId}`;
+
+    function baseDataset(data, label = null, color = null, options = {}) {
+        return {
+            label,
+            fill: false,
+            data,
+            spanGaps: true,
+            tension: 0,
+            borderWidth: options.borderWidth || 2,
+            borderDash: options.borderDash || [],
+            ...(color && {
+                borderColor: color,
+                backgroundColor: color
+            })
+        };
+    }
+
+    function hasRealData(arr) {
+        return Array.isArray(arr) && arr.some(v => v !== null && v !== undefined);
+    }
+
+    $.get(page)
+        .done(function (response) {
+            if (!response.success) return;
+
+            const d = response.data;
+            let data;
+            let datasets = [];
+
+            if (d.frequency === 'monthly') {
+            datasets = [];
+
+            // Previous year → dashed + lighter emphasis
+            if (d.previous_year.length > 0) {
+                datasets.push(
+                    baseDataset(
+                        d.previous_year,
+                        d.py_label,
+                        '#d4d4d4', // softer gray instead of strong color
+                        {
+                            borderDash: [6, 4],
+                            borderWidth: 2
+                        }
+                    )
+                );
             }
-            var options = {
+
+            // Current year → solid + stronger emphasis
+            datasets.push(
+                baseDataset(
+                    d.current_year,
+                    d.cy_label,
+                    '#0071CE',
+                    {
+                        borderWidth: 3
+                    }
+                )
+            );
+
+            console.log(datasets);
+
+            data = {
+                labels: d.months,
+                datasets: datasets
+            };
+        } else {
+                datasets = [
+                    baseDataset(d.values, null, '#0071CE')
+                ];
+
+                data = {
+                    labels: d.years,
+                    datasets: datasets
+                };
+            }
+
+            const options = {
                 title: {
                     display: true,
-                    text: response['data']['metric']
+                    text: d.metric
                 },
                 legend: {
-                    display: response['data']['frequency'] == 'monthly' ? true : false
+                    display: true
                 },
                 scales: {
                     yAxes: [{
-                        display: true,
                         ticks: {
-                            min: response['data']['axis_min'],
-                            max: response['data']['axis_max'],
+                            min: d.axis_min,
+                            max: d.axis_max
                         }
                     }]
                 },
@@ -59,25 +102,37 @@ $('.hh_value').click(function (event) {
                         type: 'line',
                         mode: 'horizontal',
                         scaleID: 'y-axis-0',
-                        value: response['data']['goal'],
-                        borderColor: response['data']['goal_color'],
+                        value: d.goal,
+                        borderColor: d.goal_color,
                         borderWidth: 2,
                         label: {
-                            backgroundColor: response['data']['goal_color'],
-                            content: 'High Health: ' + response['data']['goal_type'].toLowerCase() + ' ' + response['data']['goal'],
+                            backgroundColor: d.goal_color,
+                            content: `High Health: ${d.goal_type.toLowerCase()} ${d.goal}`,
                             enabled: true
                         }
                     }]
                 }
-            }
-            var config = {
+            };
+
+            const config = {
                 type: 'line',
                 data: data,
                 options: options
+            };
+
+            const chart_id = `chart_${metricId}_${schoolId}`;
+            const ctx = document.getElementById(chart_id).getContext('2d');
+
+            // Prevent duplicate charts on repeated clicks
+            window.myCharts = window.myCharts || {};
+
+            if (window.myCharts[chart_id]) {
+                window.myCharts[chart_id].destroy();
             }
-            var chart_id = 'chart_' + metric_id + '_' + school_id;
-            var ctx = document.getElementById(chart_id).getContext('2d');
-            var myChart = new Chart(ctx, config);
-        }
-    });
+
+            window.myCharts[chart_id] = new Chart(ctx, config);
+        })
+        .fail(function () {
+            console.error("Failed to load chart data:", page);
+        });
 });
