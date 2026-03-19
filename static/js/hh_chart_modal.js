@@ -43,7 +43,7 @@ $('.hh_value').click(function (event) {
                     baseDataset(
                         d.previous_year,
                         d.py_label,
-                        '#99999', // softer gray instead of strong color
+                        '#d4d4d4', // softer gray instead of strong color
                         {
                             borderDash: [6, 4],
                             borderWidth: 2
