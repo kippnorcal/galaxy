@@ -29,24 +29,24 @@
       <ul class="list-unstyled pt-3">
         <div class="text-center">
         {% if request.user.is_staff %}
-        <a href="{% url 'admin:index' %}" class="btn btn-success">
+        <a href="{% url 'admin:index' %}" class="btn btn-success" style="margin: 3px;">
           <i class="fas fa-rocket"></i>
           <strong>Mission Control</strong>
         </a>
-        {% else %}
+        {% endif %}
         <a href="https://docs.google.com/document/d/1j2LZKEQ_Tmy1mlZKRp5egECSsdjN3DWCg-65ZQvuNw4/edit?usp=drivesdk"
           class="btn btn-info">
           <i class="fas fa-question-circle"></i>
           <strong>FAQs</strong>
         </a>
-        {% endif %}
         <hr class="col-sm-3">
-        <li class="text-center"><i class="fas fa-map-marker-alt pr-3" data-toggle="tooltip" data-placement="left"
-            title="Work Location"></i>{{ profile.site }}</li>
-        <li class=" text-center"><i class="far fa-envelope pr-3" data-toggle="tooltip" data-placement="left"
-            title="Email"></i><a href="mailto:{{ profile.email }}">{{ profile.email}}</a></li>
-        <li class="text-center"><i class="far fa-clock pr-3" data-toggle="tooltip" data-placement="left"
-            title="Last Login"></i>{{ user.last_login|localtime }}</li>
+          <ul class="list-unstyled pt-3">
+          <li class="text-center"><i class="fas fa-map-marker-alt pr-3" data-toggle="tooltip" data-placement="left"
+              title="Work Location"></i>{{ profile.site }}</li>
+          <li class=" text-center"><i class="far fa-envelope pr-3" data-toggle="tooltip" data-placement="left"
+              title="Email"></i><a href="mailto:{{ profile.email }}">{{ profile.email}}</a></li>
+          <li class="text-center"><i class="far fa-clock pr-3" data-toggle="tooltip" data-placement="left"
+              title="Last Login"></i>{{ user.last_login|localtime }}</li>
       </ul>
       <hr class="col-sm-3">
       <div class="profile-permissions">

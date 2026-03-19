@@ -1,4 +1,4 @@
-from .models import Role, SchoolLevel, Site, Job, Profile, TableauPermissionsGroup
+from .models import SchoolLevel, Site, Job, Profile, TableauPermissionsGroup
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -39,21 +39,14 @@ class TableauPermissionsGroupSerializer(serializers.HyperlinkedModelSerializer):
         )
 
 
-class RoleSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Role
-        fields = ("id", "name")
-
-
 class JobSerializer(serializers.HyperlinkedModelSerializer):
-    role = serializers.PrimaryKeyRelatedField(queryset=Role.objects.all(), required=False, allow_null=True)
     tableau_permissions = serializers.PrimaryKeyRelatedField(
         queryset=TableauPermissionsGroup.objects.all(), many=True, required=False
     )
 
     class Meta:
         model = Job
-        fields = ("id", "name", "role", "tableau_permissions")
+        fields = ("id", "name", "tableau_permissions")
 
     def validate_name(self, value):
         if Job.objects.filter(name__iexact=value).exists():

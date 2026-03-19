@@ -1,5 +1,5 @@
 from .models import Category, SubCategory, Report, Favorite, Feedback, PublicStat
-from accounts.models import Role, Site, Profile, TableauPermissionsGroup
+from accounts.models import Site, Profile, TableauPermissionsGroup
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -21,7 +21,6 @@ class SubCategorySerializer(serializers.HyperlinkedModelSerializer):
 class ReportSerializer(serializers.HyperlinkedModelSerializer):
     category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
     subcategory = serializers.PrimaryKeyRelatedField(queryset=SubCategory.objects.all())
-    roles = serializers.PrimaryKeyRelatedField(many=True, queryset=Role.objects.all())
     tableau_permissions_groups = serializers.PrimaryKeyRelatedField(many=True, queryset=TableauPermissionsGroup.objects.all())
     sites = serializers.PrimaryKeyRelatedField(many=True, queryset=Site.objects.all())
     owner = serializers.PrimaryKeyRelatedField(
@@ -36,7 +35,6 @@ class ReportSerializer(serializers.HyperlinkedModelSerializer):
             "url",
             "category",
             "subcategory",
-            "roles",
             "tableau_permissions_groups",
             "sites",
             "is_active",
