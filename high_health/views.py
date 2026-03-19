@@ -178,6 +178,7 @@ def find_axis_min(values, goal):
 
 
 def yoy_color_eval(goal, value):
+    """If updating the logic here, also update the `yoy_color_eval` function in high_health_helpers.py."""
     if goal.goal_type.upper() == "ABOVE":
         if value >= goal.target:
             return SUCCESS_COLOR
@@ -194,9 +195,8 @@ def yoy_color_eval(goal, value):
             return DANGER_COLOR
 
 
-def mom_color_eval(goal, value, previous, bypass=False):
-    if bypass:
-        return SECONDARY_COLOR
+def mom_color_eval(goal, value, previous):
+    """If updating the logic here, also update the `mom_color_eval` function in high_health_helpers.py."""
 
     if goal.goal_type.upper() == "ABOVE":
         if previous is not None:
