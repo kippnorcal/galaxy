@@ -301,7 +301,7 @@ def check_permissions(user):
     allowed_groups = ["High Health", "Site Admin"]
     return (
         user.groups.filter(name__in=allowed_groups).exists()
-        or user.profile.job_title.role.permission_groups.filter(
+        or user.profile.job_title.galaxy_permission_groups.filter(
             name__in=allowed_groups
         ).exists()
     )
