@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseServerError
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth import login, logout
 
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
@@ -17,6 +17,7 @@ from analytics.models import Login
 from rest_framework import viewsets
 from .serializers import (
     UserSerializer,
+    GroupSerializer,
     JobSerializer,
     SchoolLevelSerializer,
     SiteSerializer,
@@ -179,6 +180,9 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by("id")
     serializer_class = UserSerializer
 
+class GroupViewSet(viewsets.ModelViewSet):
+    queryset = Group.objects.all().order_by("id")
+    serializer_class = GroupSerializer
 
 class JobViewSet(viewsets.ModelViewSet):
     queryset = Job.objects.all().order_by("id")
