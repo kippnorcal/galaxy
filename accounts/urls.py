@@ -5,6 +5,7 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r"users", views.UserViewSet)
+router.register(r"galaxy_permission_groups", views.GroupViewSet) # Naming to distinguish from Tableau permission groups
 router.register(r"jobs", views.JobViewSet)
 router.register(r"school_levels", views.SchoolLevelViewSet)
 router.register(r"sites", views.SiteLevelViewSet)

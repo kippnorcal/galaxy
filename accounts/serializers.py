@@ -1,5 +1,5 @@
 from .models import SchoolLevel, Site, Job, Profile, TableauPermissionsGroup
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
 
@@ -27,6 +27,18 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             "last_login",
             "date_joined")
 
+class GroupSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Group
+        fields = (
+            "id",
+            "name"
+        )
+        read_only_fields = (
+            "id",
+            "name"
+        )
+
 
 class TableauPermissionsGroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -43,10 +55,13 @@ class JobSerializer(serializers.HyperlinkedModelSerializer):
     tableau_permissions = serializers.PrimaryKeyRelatedField(
         queryset=TableauPermissionsGroup.objects.all(), many=True, required=False
     )
+    galaxy_permission_groups = serializers.PrimaryKeyRelatedField(
+        queryset=Group.objects.all(), many=True, required=False
+    )
 
     class Meta:
         model = Job
-        fields = ("id", "name", "tableau_permissions")
+        fields = ("id", "name", "tableau_permissions", "galaxy_permission_groups")
 
     def validate_name(self, value):
         if Job.objects.filter(name__iexact=value).exists():
