@@ -1,5 +1,6 @@
 import datetime
 from django.shortcuts import render
+from django.utils.dateparse import parse_datetime
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -46,14 +47,53 @@ class PageViewViewSet(viewsets.ModelViewSet):
     serializer_class = PageViewSerializer
     http_method_names = ["get", "head", "options"]
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        timestamp = self.request.query_params.get("timestamp")
+
+        if timestamp:
+            dt = parse_datetime(timestamp)
+            if dt is None:
+                raise ValidationError({"timestamp": "Invalid datetime format. Use ISO 8601."})
+
+            queryset = queryset.filter(timestamp__gt=dt)
+
+        return queryset
+
 
 class LoginViewSet(viewsets.ModelViewSet):
     queryset = Login.objects.all()
     serializer_class = LoginSerializer
     http_method_names = ["get", "head", "options"]
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        timestamp = self.request.query_params.get("timestamp")
+
+        if timestamp:
+            dt = parse_datetime(timestamp)
+            if dt is None:
+                raise ValidationError({"timestamp": "Invalid datetime format. Use ISO 8601."})
+
+            queryset = queryset.filter(timestamp__gt=dt)
+
+        return queryset
+
 
 class SearchViewSet(viewsets.ModelViewSet):
     queryset = Search.objects.all()
     serializer_class = SearchSerializer
     http_method_names = ["get", "head", "options"]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        timestamp = self.request.query_params.get("timestamp")
+
+        if timestamp:
+            dt = parse_datetime(timestamp)
+            if dt is None:
+                raise ValidationError({"timestamp": "Invalid datetime format. Use ISO 8601."})
+
+            queryset = queryset.filter(search_timestamp__gt=dt)
+
+        return queryset
