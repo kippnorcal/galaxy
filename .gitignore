@@ -112,3 +112,4 @@ data/
 !data/nginx/app.conf
 .DS_Store
 .idea
+stg.env
