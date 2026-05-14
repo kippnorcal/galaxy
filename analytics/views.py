@@ -49,7 +49,7 @@ class PageViewViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        timestamp = self.request.query_params.get("timestamp")
+        timestamp = self.request.query_params.get("since")
 
         if timestamp:
             dt = parse_datetime(timestamp)
@@ -68,7 +68,7 @@ class LoginViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        timestamp = self.request.query_params.get("timestamp")
+        timestamp = self.request.query_params.get("since")
 
         if timestamp:
             dt = parse_datetime(timestamp)
@@ -87,7 +87,7 @@ class SearchViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        timestamp = self.request.query_params.get("timestamp")
+        timestamp = self.request.query_params.get("since")
 
         if timestamp:
             dt = parse_datetime(timestamp)
