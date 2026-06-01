@@ -19,10 +19,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         )
         read_only_fields = (
             "id",
-            "email",
-            "first_name",
-            "last_name",
-            "username",
             "is_staff",
             "last_login",
             "date_joined")
