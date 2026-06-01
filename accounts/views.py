@@ -169,7 +169,7 @@ def acs(request):
             # If no profile exists, call connect_profile
             connect_profile(user)
         save_avatar(request, user)
-        return HttpResponseRedirect(auth.redirect_to(f"{base_url}/profile"))
+        return HttpResponseRedirect(auth.redirect_to(f"{base_url}/profile/"))
     else:
         if auth.get_settings().is_debug_active():
             error_reason = auth.get_last_error_reason()
