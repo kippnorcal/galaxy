@@ -1,4 +1,4 @@
-FROM python:3.11
+FROM python:3.11-bookworm
 ENV PYTHONUNBUFFERED 1
 WORKDIR /code
 RUN apt-get update
