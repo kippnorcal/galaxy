@@ -89,14 +89,6 @@ def find_or_create_user(request):
         return None
 
 
-def connect_profile(user):
-    # Note: Emails between UKG and OneLogin must match (case-sensitive) when staff log in for the first time.
-    if Profile.objects.filter(email__iexact=user.email).exists():
-        profile = Profile.objects.get(email__iexact=user.email)
-        profile.user = user
-        profile.save()
-
-
 def save_avatar(request, user):
     attrs = get_saml_attributes(request)
     try:
@@ -163,13 +155,6 @@ def acs(request):
         user = find_or_create_user(request)
         login(request, user)
         track_login(request, user)
-        try:
-            # Check to see if a profile is associated with the user
-            _ = Profile.objects.get(user=user)
-        except Profile.DoesNotExist:
-            # If no profile exists, call connect_profile
-            connect_profile(user)
-        save_avatar(request, user)
         return HttpResponseRedirect(auth.redirect_to(f"{base_url}/profile/"))
     else:
         if auth.get_settings().is_debug_active():
