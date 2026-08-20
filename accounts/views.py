@@ -69,31 +69,24 @@ def get_saml_attributes(request):
 
 def find_or_create_user(request):
     attrs = get_saml_attributes(request)
-    if User.objects.filter(username=attrs["username"]).exists():
-        # If user exists, get it and update the info from OneLogin
-        user = User.objects.get(username=attrs["username"])
-        user.first_name = attrs["first_name"]
-        user.last_name = attrs["last_name"]
-        user.email = attrs["email"]
-        user.save()
+    if Profile.objects.filter(email=attrs["email"]).exists():
+        profile = Profile.objects.filter(email=attrs["email"])[0]
+        if profile.user is None:
+            user = User(
+                username=attrs["username"],
+                first_name=attrs["first_name"],
+                last_name=attrs["last_name"],
+                email=attrs["email"],
+            )
+            user.save()
+            return user
+        elif profile.user.username != attrs["username"]:
+            User.objects.filter(pk=profile.user_id).update(username=attrs["username"])
+            return profile.user
+        else:
+            return profile.user
     else:
-        # If user doesn't exist, create it with info from OneLogin
-        user = User(
-            username=attrs["username"],
-            first_name=attrs["first_name"],
-            last_name=attrs["last_name"],
-            email=attrs["email"],
-        )
-        user.save()
-    return user
-
-
-def connect_profile(user):
-    # Note: Emails between UKG and OneLogin must match (case-sensitive) when staff log in for the first time.
-    if Profile.objects.filter(email__iexact=user.email).exists():
-        profile = Profile.objects.get(email__iexact=user.email)
-        profile.user = user
-        profile.save()
+        return None
 
 
 def save_avatar(request, user):
@@ -162,13 +155,6 @@ def acs(request):
         user = find_or_create_user(request)
         login(request, user)
         track_login(request, user)
-        try:
-            # Check to see if a profile is associated with the user
-            _ = Profile.objects.get(user=user)
-        except Profile.DoesNotExist:
-            # If no profile exists, call connect_profile
-            connect_profile(user)
-        save_avatar(request, user)
         return HttpResponseRedirect(auth.redirect_to(f"{base_url}/profile/"))
     else:
         if auth.get_settings().is_debug_active():
