@@ -69,23 +69,24 @@ def get_saml_attributes(request):
 
 def find_or_create_user(request):
     attrs = get_saml_attributes(request)
-    if User.objects.filter(username=attrs["username"]).exists():
-        # If user exists, get it and update the info from OneLogin
-        user = User.objects.get(username=attrs["username"])
-        user.first_name = attrs["first_name"]
-        user.last_name = attrs["last_name"]
-        user.email = attrs["email"]
-        user.save()
+    if Profile.objects.filter(email=attrs["email"]).exists():
+        profile = Profile.objects.filter(email=attrs["email"])[0]
+        if profile.user is None:
+            user = User(
+                username=attrs["username"],
+                first_name=attrs["first_name"],
+                last_name=attrs["last_name"],
+                email=attrs["email"],
+            )
+            user.save()
+            return user
+        elif profile.user.username != attrs["username"]:
+            User.objects.filter(pk=profile.user_id).update(username=attrs["username"])
+            return profile.user
+        else:
+            return profile.user
     else:
-        # If user doesn't exist, create it with info from OneLogin
-        user = User(
-            username=attrs["username"],
-            first_name=attrs["first_name"],
-            last_name=attrs["last_name"],
-            email=attrs["email"],
-        )
-        user.save()
-    return user
+        return None
 
 
 def connect_profile(user):
