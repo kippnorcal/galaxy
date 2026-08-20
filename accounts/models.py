@@ -18,7 +18,7 @@ class TableauPermissionsGroup(models.Model):
 
 
 class Role(models.Model):
-    """This model is deprecated"""
+    """This model is deprecated as of 2025; Unable to remove model from app"""
     name = models.CharField(max_length=100)
     permission_groups = models.ManyToManyField(Group)
 
@@ -100,7 +100,7 @@ class Profile(models.Model):
     email = models.EmailField(unique=True)
     job_title = models.ForeignKey(Job, on_delete=models.PROTECT, blank=True, null=True)
     site = models.ForeignKey(Site, on_delete=models.PROTECT, blank=True, null=True)
-    avatar_url = models.URLField(max_length=2000, blank=True)
+    avatar_url = models.URLField(max_length=2000, blank=True, null=True)
     favorites = models.ManyToManyField("catalog.Report", through="catalog.Favorite")
     base_tableau_permissions = models.ManyToManyField(
         TableauPermissionsGroup, blank=True, related_name="base_permissions"

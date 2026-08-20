@@ -64,7 +64,6 @@ $('.hh_value').click(function (event) {
                 )
             );
 
-            console.log(datasets);
 
             data = {
                 labels: d.months,
