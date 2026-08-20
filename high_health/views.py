@@ -215,7 +215,6 @@ def mom_color_eval(goal, value, previous):
             if value > previous:
                return DANGER_COLOR
             elif value <= goal.target and value <= previous:
-                logger.info(previous)
                 return SUCCESS_COLOR
             else:
                 return SECONDARY_COLOR
