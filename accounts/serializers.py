@@ -110,9 +110,11 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
             "site",
             "user",
             "base_tableau_permissions",
+        )
+        read_only_fields = (
             "tableau_permission_exceptions",
             "permission_exceptions_note",
             "is_contractor",
             "contractor_end_date",
-            "contractor_note"
+            "contractor_note",
         )
