@@ -1,5 +1,6 @@
 from os import getenv
 from django.conf import settings
+from django.db import transaction
 from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseServerError
 from django.shortcuts import render
@@ -69,24 +70,27 @@ def get_saml_attributes(request):
 
 def find_or_create_user(request):
     attrs = get_saml_attributes(request)
-    if Profile.objects.filter(email=attrs["email"]).exists():
-        profile = Profile.objects.filter(email=attrs["email"])[0]
-        if profile.user is None:
-            user = User(
+    profile = Profile.objects.filter(email=attrs["email"]).first()
+    if profile is None:
+        return None
+
+    if profile.user is None:
+        with transaction.atomic():
+            user = User.objects.create(
                 username=attrs["username"],
                 first_name=attrs["first_name"],
                 last_name=attrs["last_name"],
                 email=attrs["email"],
             )
-            user.save()
-            return user
-        elif profile.user.username != attrs["username"]:
-            User.objects.filter(pk=profile.user_id).update(username=attrs["username"])
-            return profile.user
-        else:
-            return profile.user
-    else:
-        return None
+            profile.user = user
+            profile.save(update_fields=["user"])
+        return user
+
+    if profile.user.username != attrs["username"]:
+        profile.user.username = attrs["username"]
+        profile.user.save(update_fields=["username"])
+
+    return profile.user
 
 
 def save_avatar(request, user):
