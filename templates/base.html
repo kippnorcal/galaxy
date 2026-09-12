@@ -21,7 +21,7 @@
   <link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}" media="screen,projection" />
 </head>
 
-<body class="d-flex flex-column h-100">
+<body class="d-flex flex-column h-100{% if ENVIRONMENT == 'STG' %} env-staging {% elif ENVIRONMENT == 'DEV' %} env-development {% endif %}">
   <header>
     {% include '_nav.html' %}
   </header>
