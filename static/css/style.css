@@ -1,5 +1,8 @@
 :root {
-  --brand-color: #0B2C59;
+  --prod-brand-color: #0B2C59;
+  --stg-brand-color: #EF7622;
+  --dev-brand-color: #6CC04A;
+  --brand-color: var(--prod-brand-color);
   --primary-color: #185EBC;
   --success-color: #61B346;
   --secondary-color: #84878A;
@@ -12,6 +15,14 @@
   --white-color: #FFFFFF;
   --dark-color: #212529;
   --galaxy-green: #61B346;
+}
+
+body.env-staging {
+  --brand-color: var(--stg-brand-color);
+}
+
+body.env-development {
+  --brand-color: var(--dev-brand-color);
 }
 
 h1 {
