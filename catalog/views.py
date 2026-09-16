@@ -1,5 +1,7 @@
 from os import getenv
 import re
+from urllib.parse import urlparse
+
 from django.conf import settings
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.urls import reverse
@@ -65,12 +67,13 @@ def navbar(request):
 
 def get_iframe_auth_ticket(user, site):
     url = getenv("TEST_TABLEAU_TRUSTED_URL")
-    r = requests.post(url, data={"username": user.email, "target_site": site})
-    #if r.text == "-1":
-    #    url = getenv("TABLEAU_TRUSTED_URL")
-    #    domain = getenv("USER_DOMAIN")
-    #    r = requests.post(url, data={"username": f"{domain}\{user}", "target_site": site})
-    return r.text
+    r = requests.post(url, data={"username": user.first_name, "target_site": site})
+    if r.text == "-1":
+        url = getenv("TABLEAU_TRUSTED_URL")
+        domain = getenv("USER_DOMAIN")
+        r = requests.post(url, data={"username": f"{domain}\{user}", "target_site": site})
+    trusted_host = urlparse(url).netloc
+    return r.text, trusted_host
 
 
 @csrf_exempt
@@ -131,15 +134,17 @@ def report(request, report_id):
         report=report_id, profile=request.user.profile
     ).exists()
     favorited_by = Favorite.objects.filter(report=report_id).count()
-    auth_ticket = get_iframe_auth_ticket(request.user, report.target_site())
+    auth_ticket, trusted_host = get_iframe_auth_ticket(request.user, report.target_site())
     context = {
         "report": report,
         "is_favorite": is_favorite,
         "favorited_by": favorited_by,
         "auth_ticket": auth_ticket,
+        "trusted_host": trusted_host,
         "viewed_by": 0,
         "ssl": getenv("SSL", default=0),
     }
+
     feedback = (
         Feedback.objects.filter(user=request.user).filter(report=report_id).last()
     )
