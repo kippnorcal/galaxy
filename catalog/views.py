@@ -70,7 +70,7 @@ def get_iframe_auth_ticket(user, site):
     logger = logging.getLogger(__name__)
     url = getenv("TABLEAU_TRUSTED_URL")
     domain = getenv("USER_DOMAIN")
-    r = requests.post(url, data={"username": f"{domain}\{user}", "target_site": site})
+    r = requests.post(url, data={"username": f"{domain}\{user.email}", "target_site": site})
 
     logger.info("Logging in with old method")
     logger.info(f"URL is: {url}")
