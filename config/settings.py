@@ -49,27 +49,34 @@ MIDDLEWARE = [
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{asctime} {levelname} {name} {message}",
+            "style": "{",
+        },
+    },
     "handlers": {
         "file": {
             "level": "INFO",
             "class": "logging.handlers.RotatingFileHandler",
             "filename": os.path.join(BASE_DIR, "debug.log"),
-            "maxBytes": 1024 * 1024 * 15,  # 15MB
+            "maxBytes": 1024 * 1024 * 15,
             "backupCount": 10,
+            "formatter": "verbose",
         },
         "console": {
             "class": "logging.StreamHandler",
+            "formatter": "verbose",
         },
+    },
+    "root": {
+        "handlers": ["file", "console"],
+        "level": "INFO",
     },
     "loggers": {
         "django": {"handlers": ["file"], "level": "DEBUG", "propagate": True},
         "django.utils.autoreload": {"level": "INFO"},
         "django.db.backends": {"level": "INFO"},
-        "console": {
-            "handlers": ['console'],
-            "level": "INFO",
-            "propagate": True
-        },
     },
 }
 
