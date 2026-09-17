@@ -66,8 +66,8 @@ def navbar(request):
 
 
 def get_iframe_auth_ticket(user, site):
-    url = getenv("TEST_TABLEAU_TRUSTED_URL")
-    r = requests.post(url, data={"username": user.first_name, "target_site": site})
+    url = getenv("TABLEAU_TRUSTED_URL")
+    r = requests.post(url, data={"username": user.email, "target_site": site})
     if r.text == "-1":
         url = getenv("TABLEAU_TRUSTED_URL")
         domain = getenv("USER_DOMAIN")
