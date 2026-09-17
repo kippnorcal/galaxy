@@ -73,7 +73,6 @@ def get_iframe_auth_ticket(user, site):
     logger.info("Logging in with new method")
     logger.info(f"Response is {r.text}")
     if r.text == "-1":
-        print("HERE")
         url = getenv("TABLEAU_TRUSTED_URL")
         domain = getenv("USER_DOMAIN")
         r = requests.post(url, data={"username": f"{domain}\{user}", "target_site": site})
