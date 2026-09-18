@@ -1,5 +1,7 @@
 from os import getenv
 import re
+from urllib.parse import urlparse
+
 from django.conf import settings
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.urls import reverse
@@ -66,8 +68,13 @@ def navbar(request):
 def get_iframe_auth_ticket(user, site):
     url = getenv("TABLEAU_TRUSTED_URL")
     domain = getenv("USER_DOMAIN")
-    r = requests.post(url, data={"username": f"{domain}\{user}", "target_site": site})
-    return r.text
+    # Ticket request process post Entra migration
+    r = requests.post(url, data={"username": user.email, "target_site": site})
+    if r.status_code == 500 or r.text == "-1":
+        # Ticket request process pre-Entra Migration
+        r = requests.post(url, data={"username": f"{domain}\{user.username}", "target_site":site})
+    trusted_host = urlparse(url).netloc
+    return r.text, trusted_host
 
 
 @csrf_exempt
@@ -128,15 +135,17 @@ def report(request, report_id):
         report=report_id, profile=request.user.profile
     ).exists()
     favorited_by = Favorite.objects.filter(report=report_id).count()
-    auth_ticket = get_iframe_auth_ticket(request.user, report.target_site())
+    auth_ticket, trusted_host = get_iframe_auth_ticket(request.user, report.target_site())
     context = {
         "report": report,
         "is_favorite": is_favorite,
         "favorited_by": favorited_by,
         "auth_ticket": auth_ticket,
+        "trusted_host": trusted_host,
         "viewed_by": 0,
         "ssl": getenv("SSL", default=0),
     }
+
     feedback = (
         Feedback.objects.filter(user=request.user).filter(report=report_id).last()
     )

@@ -70,7 +70,10 @@ def get_saml_attributes(request):
 
 def find_or_create_user(request):
     attrs = get_saml_attributes(request)
-    profile = Profile.objects.filter(email=attrs["email"]).first()
+    # All emails in Galaxy are lowercase
+    # A handful of users will not have lowercase emails coming from Entra
+    lowercase_email = attrs["email"].lower()
+    profile = Profile.objects.filter(email=lowercase_email).first()
     if profile is None:
         return None
 
