@@ -76,7 +76,7 @@ def get_iframe_auth_ticket(user, site):
     logger.info(f"Response is {r.status_code}")
     logger.info(f"Text is {r.text}")
     logger.info(f"Data is {data}")
-    if r.text == "-1":
+    if r.status_code == 500 or r.text == "-1":
         data = {"username": f"{domain}\{user.username}", "target_site":site}
         r = requests.post(url, data=data)
         logger.info(f"URL is: {url}")
