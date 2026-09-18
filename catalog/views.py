@@ -68,17 +68,21 @@ def navbar(request):
 def get_iframe_auth_ticket(user, site):
     import logging
     logger = logging.getLogger(__name__)
-    url = getenv("TEST_TABLEAU_TRUSTED_URL")
+    url = getenv("TABLEAU_TRUSTED_URL")
     domain = getenv("USER_DOMAIN")
-    r = requests.post(url, data={"username": f"{domain}\{user.username}", "target_site": site})
-    logger.info("Falling back to old method")
+    data = {"username": user.email, "target_site": site}
+    r = requests.post(url, data=data)
     logger.info(f"URL is: {url}")
-    logger.info(f"Response is {r.text}")
+    logger.info(f"Response is {r.status_code}")
+    logger.info(f"Text is {r.text}")
+    logger.info(f"Data is {data}")
     if r.text == "-1":
-        r = requests.post(url, data={"username": user.email, "target_site": site})
-        logger.info("Getting ticket with NEW method")
+        data = {"username": f"{domain}\{user.username}", "target_site":site}
+        r = requests.post(url, data=data)
         logger.info(f"URL is: {url}")
-        logger.info(f"Response is {r.text}")
+        logger.info(f"Response is {r.status_code}")
+        logger.info(f"Text is {r.text}")
+        logger.info(f"Data is {data}")
     trusted_host = urlparse(url).netloc
     logger.info(f"Trusted host is {trusted_host}")
     return r.text, trusted_host
