@@ -66,25 +66,14 @@ def navbar(request):
 
 
 def get_iframe_auth_ticket(user, site):
-    import logging
-    logger = logging.getLogger(__name__)
     url = getenv("TABLEAU_TRUSTED_URL")
     domain = getenv("USER_DOMAIN")
-    data = {"username": user.email, "target_site": site}
-    r = requests.post(url, data=data)
-    logger.info(f"URL is: {url}")
-    logger.info(f"Response is {r.status_code}")
-    logger.info(f"Text is {r.text}")
-    logger.info(f"Data is {data}")
+    # Ticket request process post Entra migration
+    r = requests.post(url, data={"username": user.email, "target_site": site})
     if r.status_code == 500 or r.text == "-1":
-        data = {"username": f"{domain}\{user.username}", "target_site":site}
-        r = requests.post(url, data=data)
-        logger.info(f"URL is: {url}")
-        logger.info(f"Response is {r.status_code}")
-        logger.info(f"Text is {r.text}")
-        logger.info(f"Data is {data}")
+        # Ticket request process pre-Entra Migration
+        r = requests.post(url, data={"username": f"{domain}\{user.username}", "target_site":site})
     trusted_host = urlparse(url).netloc
-    logger.info(f"Trusted host is {trusted_host}")
     return r.text, trusted_host
 
 
