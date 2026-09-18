@@ -69,16 +69,14 @@ def get_iframe_auth_ticket(user, site):
     import logging
     logger = logging.getLogger(__name__)
     url = getenv("TABLEAU_TRUSTED_URL")
-    domain = getenv("USER_DOMAIN")
-    r = requests.post(url, data={"username": f"{domain}\{user.email}", "target_site": site})
-
-    logger.info("Logging in with old method")
+    r = requests.post(url, data={"username": user.email, "target_site": site})
+    logger.info("Getting ticket with NEW method")
     logger.info(f"URL is: {url}")
     logger.info(f"Response is {r.text}")
     if r.text == "-1":
-        url = getenv("TABLEAU_TRUSTED_URL")
-        r = requests.post(url, data={"username": user.email, "target_site": site})
-        logger.info("Falling back to NEW method")
+        domain = getenv("USER_DOMAIN")
+        r = requests.post(url, data={"username": f"{domain}\{user.username}", "target_site": site})
+        logger.info("Falling back to old method")
         logger.info(f"URL is: {url}")
         logger.info(f"Response is {r.text}")
     trusted_host = urlparse(url).netloc
