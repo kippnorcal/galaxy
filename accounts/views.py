@@ -68,6 +68,20 @@ def get_saml_attributes(request):
         return attributes
 
 
+def _user_name_cleaning(name: str) -> str:
+    name = name.replace(" ", "")
+    name = name.replace("'", "")
+    name = name.replace(".", "")
+    name = name.replace("-", "")
+    return name.lower()
+
+
+def _generate_username(profile: Profile) -> str:
+    first_name_cleaned = _user_name_cleaning(profile.first_name)
+    last_name_cleaned = _user_name_cleaning(profile.last_name)
+    return f"{first_name_cleaned}.{last_name_cleaned}-{profile.employee_number}"
+
+
 def find_or_create_user(request):
     attrs = get_saml_attributes(request)
     # All emails in Galaxy are lowercase
@@ -77,13 +91,14 @@ def find_or_create_user(request):
     if profile is None:
         return None
 
+    # Most profiles should have a user, but this logic exists as a fallback in  case a user is missing
     if profile.user is None:
         with transaction.atomic():
             user = User.objects.create(
-                username=attrs["username"],
-                first_name=attrs["first_name"],
-                last_name=attrs["last_name"],
-                email=attrs["email"],
+                username=_generate_username(profile),
+                first_name=profile.first_name,
+                last_name=profile.last_name,
+                email=profile.email,
             )
             profile.user = user
             profile.save(update_fields=["user"])
