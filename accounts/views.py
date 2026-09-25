@@ -89,7 +89,7 @@ def find_or_create_user(request):
             profile.save(update_fields=["user"])
         return user
 
-    if profile.user.username != attrs["username"]:
+    if profile.user.username is not None and profile.user.username != attrs["username"]:
         profile.user.username = attrs["username"]
         profile.user.save(update_fields=["username"])
 
