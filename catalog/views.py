@@ -67,12 +67,8 @@ def navbar(request):
 
 def get_iframe_auth_ticket(user, site):
     url = getenv("TABLEAU_TRUSTED_URL")
-    domain = getenv("USER_DOMAIN")
     # Ticket request process post Entra migration
     r = requests.post(url, data={"username": user.email, "target_site": site})
-    if r.status_code == 500 or r.text == "-1":
-        # Ticket request process pre-Entra Migration
-        r = requests.post(url, data={"username": f"{domain}\{user.username}", "target_site":site})
     trusted_host = urlparse(url).netloc
     return r.text, trusted_host
 
